@@ -19,7 +19,7 @@ class RouteGenerator {
         const Scaffold(body: Center(child: Text('404 Not Found'))),
 
     // todo initial route
-    initialLocation: AppRoutes.onboarding,
+    initialLocation: AppRoutes.splash,
 
     routes: [
       // -------------------------------
@@ -27,12 +27,9 @@ class RouteGenerator {
       // -------------------------------
 
       GoRoute(
-        path: AppRoutes.splash,
-        name: AppRoutes.splash,
-        builder: (context, state) => const Scaffold(
-          body: SplashScreen(),
-        ),
-      ),
+          path: AppRoutes.splash,
+          name: AppRoutes.splash,
+          builder: (context, state) => const SplashScreen()),
 
       GoRoute(
         path: AppRoutes.onboarding,
