@@ -48,4 +48,11 @@ class AppColors {
   static const Color success = Color(0xFF69D895);
   static const Color warning = Color(0xFFF7931A);
   static const Color error = Color(0xFFF47E7E);
+
+  // ===== Others =====
+  static const Color currentBalance = Color(0xffB4BFD3);
+  static const Color cardWeekly = Color(0xFFF5F8FE);
+  static const Color viewAll = Color(0xFF192B4D);
+  static const Color marketItem = Color(0xff1E1F4B);
+  static const Color marketValue = Color(0xFF6079FA);
 }
