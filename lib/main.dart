@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/app_router.dart';
 import 'package:team_18_final_project/core/utils/app_theme.dart';
@@ -28,25 +29,32 @@ class FintechApp extends StatelessWidget {
   const FintechApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Team 18 Project',
-      debugShowCheckedModeBanner: false,
-
-      // Theme configuration
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-
-      // Routing
-      routerConfig: RouteGenerator.mainRoutingInOurApp,
-
-      // Builder to handle system UI overlay on theme changes
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
       builder: (context, child) {
-        final brightness = MediaQuery.of(context).platformBrightness;
-        final themeMode =
-            brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
-        AppTheme.setSystemUIOverlayStyle(themeMode);
-        return child ?? const SizedBox.shrink();
+        return MaterialApp.router(
+          title: 'Team 18 Project',
+          debugShowCheckedModeBanner: false,
+
+          // Theme configuration
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: ThemeMode.system,
+
+          // Routing
+          routerConfig: RouteGenerator.mainRoutingInOurApp,
+
+          // Builder to handle system UI overlay on theme changes
+          builder: (context, child) {
+            final brightness = MediaQuery.of(context).platformBrightness;
+            final themeMode =
+                brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+            AppTheme.setSystemUIOverlayStyle(themeMode);
+            return child ?? const SizedBox.shrink();
+          },
+        );
       },
     );
   }
