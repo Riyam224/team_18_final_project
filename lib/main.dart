@@ -43,13 +43,11 @@ class FintechApp extends StatelessWidget {
       // Builder to handle system UI overlay on theme changes
       builder: (context, child) {
         final brightness = MediaQuery.of(context).platformBrightness;
-        final themeMode = brightness == Brightness.dark
-            ? ThemeMode.dark
-            : ThemeMode.light;
+        final themeMode =
+            brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
         AppTheme.setSystemUIOverlayStyle(themeMode);
         return child ?? const SizedBox.shrink();
       },
     );
   }
 }
-
