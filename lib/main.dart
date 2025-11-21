@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/app_router.dart';
@@ -7,14 +6,6 @@ import 'package:team_18_final_project/core/utils/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Load environment variables with error handling
-  try {
-    await dotenv.load(fileName: '.env');
-  } catch (e) {
-    debugPrint('⚠️ Warning: Failed to load .env file: $e');
-    debugPrint('⚠️ App will continue with empty environment variables');
-  }
 
   // Initialize dependencies
   await setupDependencies();

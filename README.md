@@ -244,20 +244,35 @@ cd team_18_final_project
 flutter pub get
 ```
 
-### 3. Configure Environment Variables
-Create a `.env` file in the project root:
-```bash
-cp .env.example .env
-```
+### 3. Run the App
 
-Edit `.env` and add your CoinGecko API key:
-```env
-COINGECKO_API_KEY=your_actual_api_key_here
-```
-
-### 4. Run the App
+**Without API Key** (limited functionality):
 ```bash
 flutter run
+```
+
+**With CoinGecko API Key** (full functionality):
+```bash
+flutter run --dart-define=COINGECKO_API_KEY=your_api_key_here
+```
+
+> **Note**: Get your free API key from [CoinGecko API](https://www.coingecko.com/en/api/pricing)
+
+### 4. Build the App
+
+**Debug Build:**
+```bash
+flutter build apk --debug --dart-define=COINGECKO_API_KEY=your_api_key_here
+```
+
+**Release Build:**
+```bash
+flutter build apk --release --dart-define=COINGECKO_API_KEY=your_api_key_here
+```
+
+**iOS Build:**
+```bash
+flutter build ios --dart-define=COINGECKO_API_KEY=your_api_key_here
 ```
 
 ### 5. Run Tests
@@ -317,18 +332,38 @@ Core Layer (Shared Resources)
 
 ## Environment Configuration
 
-The app uses `flutter_dotenv` for environment variable management:
+The app uses **compile-time environment variables** via `--dart-define` for secure API key management.
 
 ### Required Variables
+
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `COINGECKO_API_KEY` | CoinGecko API authentication key | Yes |
+| `COINGECKO_API_KEY` | CoinGecko API authentication key | Optional (for full API access) |
+
+### How It Works
+
+1. API keys are passed at **build/run time** using `--dart-define`
+2. Keys are compiled into the app binary (not stored in files)
+3. No `.env` file needed - works out of the box for all team members
+
+### Usage Examples
+
+```bash
+# Run with API key
+flutter run --dart-define=COINGECKO_API_KEY=your_key_here
+
+# Build APK with API key
+flutter build apk --dart-define=COINGECKO_API_KEY=your_key_here
+
+# Run without API key (limited functionality)
+flutter run
+```
 
 ### Security Notes
-- Never commit `.env` file to version control
-- `.env` is listed in `.gitignore`
-- Use `.env.example` as a template
-- API key is automatically injected via Dio interceptor
+
+- API keys are passed at compile time, not stored in source files
+- Each team member uses their own API key
+- Get your free key from [CoinGecko API](https://www.coingecko.com/en/api/pricing)
 
 ## Dependencies
 
@@ -344,7 +379,6 @@ The app uses `flutter_dotenv` for environment variable management:
 | `dartz` | ^0.10.1 | Functional programming |
 | `equatable` | ^2.0.7 | Value equality |
 | `shared_preferences` | ^2.5.3 | Local storage |
-| `flutter_dotenv` | ^5.2.1 | Environment variables |
 | `flutter_svg` | ^2.2.1 | SVG support |
 | `carousel_slider` | ^5.1.1 | Carousel widgets |
 | `json_annotation` | ^4.9.0 | JSON serialization |
@@ -462,18 +496,25 @@ test: add unit tests for login bloc
 
 ### Common Issues
 
-**Issue: `.env` file not loading**
-```dart
-// Check console for warning message:
-⚠️ Warning: Failed to load .env file
-```
-**Solution**: Ensure `.env` exists in project root and contains valid key-value pairs
-
 **Issue: API requests failing with 401**
-```dart
+
+```
 🚫 Unauthorized. API key might be invalid or missing.
 ```
-**Solution**: Verify `COINGECKO_API_KEY` in `.env` is correct
+
+**Solution**: Make sure you're passing your API key when running:
+
+```bash
+flutter run --dart-define=COINGECKO_API_KEY=your_actual_key
+```
+
+**Issue: API key warning in console**
+
+```
+⚠️ [DioClient] Warning: COINGECKO_API_KEY not found
+```
+
+**Solution**: This is expected if you didn't provide an API key. The app will still run but some API features may not work.
 
 **Issue: Font not loading**
 **Solution**: Run `flutter clean && flutter pub get`
