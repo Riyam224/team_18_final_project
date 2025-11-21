@@ -1,41 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:team_18_final_project/core/utils/app_colors.dart';
-import '../config/app_text_styles.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'app_colors.dart';
 
 ThemeData buildLightTheme() {
-  return ThemeData(
+  final base = ThemeData.light();
+
+  return base.copyWith(
     brightness: Brightness.light,
     scaffoldBackgroundColor: AppColors.lightBackground,
     primaryColor: AppColors.primary,
-    fontFamily: 'Lato',
+    cardColor: AppColors.lightSurface,
+    colorScheme: const ColorScheme.light(
+      primary: AppColors.primary,
+      secondary: AppColors.secondary,
+      background: AppColors.lightBackground,
+      surface: AppColors.lightSurface,
+      onBackground: AppColors.textBlack,
+      onSurface: AppColors.textBlack,
+      onPrimary: Colors.white,
+      onSecondary: Colors.white,
+    ),
+    textTheme: TextTheme(
+      headlineLarge:
+          AppTextStyles.headlineLarge.copyWith(color: AppColors.primary),
+      headlineMedium:
+          AppTextStyles.headlineMedium.copyWith(color: AppColors.primary),
+      titleMedium:
+          AppTextStyles.titleMedium.copyWith(color: AppColors.textBlack),
+      bodySmall:
+          AppTextStyles.bodySmall.copyWith(color: AppColors.textGraySecondary),
+      bodyMedium: AppTextStyles.bodyMedium.copyWith(color: AppColors.textGray),
+      bodyLarge: AppTextStyles.bodyLarge.copyWith(color: AppColors.textBlack),
+      labelLarge: AppTextStyles.labelLarge.copyWith(color: AppColors.primary),
+    ),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.lightBackground,
       elevation: 0,
       foregroundColor: AppColors.textBlack,
-      centerTitle: true,
-      titleTextStyle: AppTextStyles.headlineMedium,
     ),
-    cardColor: AppColors.lightSurface,
-    textTheme: const TextTheme(
-      displayLarge: AppTextStyles.displayLarge,
-      displayMedium: AppTextStyles.displayMedium,
-      headlineLarge: AppTextStyles.headlineLarge,
-      headlineMedium: AppTextStyles.headlineMedium,
-      headlineSmall: AppTextStyles.headlineSmall,
-      titleLarge: AppTextStyles.titleLarge,
-      titleMedium: AppTextStyles.titleMedium,
-      titleSmall: AppTextStyles.titleSmall,
-      bodyLarge: AppTextStyles.bodyLarge,
-      bodyMedium: AppTextStyles.bodyMedium,
-      bodySmall: AppTextStyles.bodySmall,
-      labelLarge: AppTextStyles.labelLarge,
-      labelMedium: AppTextStyles.labelMedium,
-      labelSmall: AppTextStyles.labelSmall,
+    iconTheme: const IconThemeData(
+      color: AppColors.textGray,
     ),
-    colorScheme: const ColorScheme.light(
-      primary: AppColors.primary,
-      secondary: AppColors.secondary,
-      surface: AppColors.lightBackground,
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: AppColors.lightSurface,
+      selectedItemColor: AppColors.primary,
+      unselectedItemColor: AppColors.gray3,
     ),
   );
 }

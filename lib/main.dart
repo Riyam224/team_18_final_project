@@ -18,6 +18,7 @@ void main() async {
 
 class FintechApp extends StatelessWidget {
   const FintechApp({super.key});
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -29,22 +30,12 @@ class FintechApp extends StatelessWidget {
           title: 'Team 18 Project',
           debugShowCheckedModeBanner: false,
 
-          // Theme configuration
+          // FULL NEW THEMES
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.system,
 
-          // Routing
           routerConfig: RouteGenerator.mainRoutingInOurApp,
-
-          // Builder to handle system UI overlay on theme changes
-          builder: (context, child) {
-            final brightness = MediaQuery.of(context).platformBrightness;
-            final themeMode =
-                brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
-            AppTheme.setSystemUIOverlayStyle(themeMode);
-            return child ?? const SizedBox.shrink();
-          },
         );
       },
     );

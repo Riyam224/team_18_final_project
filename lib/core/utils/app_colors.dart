@@ -39,6 +39,7 @@ class AppColors {
   static const Color textWhite = Color(0xFFFFFFFF);
   static const Color textWhiteSoft = Color(0xFFE2E3E4);
   static const Color textGrayDark = Color(0xFF787A8D);
+  static const Color textGrayLight = Color(0xFF9CA3AF);
 
   // ===== Price Colors =====
   static const Color priceUp = Color(0xFF00CB6A);
