@@ -52,7 +52,7 @@ lib/
 │   │   └── endpoints.dart
 │   ├── routing/                   # Navigation
 │   │   ├── app_router.dart        # GoRouter setup
-│   │   └── routes.dart            # Route constants
+│   │   └── route_names.dart       # Route constants
 │   ├── storage/                   # Local storage
 │   │   └── shared_prefs.dart
 │   └── utils/                     # Utilities
@@ -60,6 +60,39 @@ lib/
 │       ├── app_theme.dart         # Theme configuration
 │       ├── dark_theme.dart        # Dark theme
 │       └── light_theme.dart       # Light theme
+├── features/                      # Feature modules
+│   ├── auth/                      # Authentication feature
+│   │   └── presentation/
+│   │       └── screens/
+│   │           ├── login_screen.dart
+│   │           └── register_screen.dart
+│   ├── home/                      # Home feature
+│   │   └── presentation/
+│   │       └── screens/
+│   │           └── home_screen.dart
+│   ├── market/                    # Market feature
+│   │   └── presentation/
+│   │       └── screens/
+│   │           ├── market_screen.dart
+│   │           ├── coin_details_screen.dart
+│   │           ├── buy_sell_screen.dart
+│   │           └── payment_screen.dart
+│   ├── onboarding/                # Onboarding feature
+│   │   └── presentation/
+│   │       └── screens/
+│   │           └── onboarding_screen.dart
+│   ├── portfolio/                 # Portfolio feature
+│   │   └── presentation/
+│   │       └── screens/
+│   │           └── portfolio_screen.dart
+│   ├── settings/                  # Settings feature
+│   │   └── presentation/
+│   │       └── screens/
+│   │           └── settings_screen.dart
+│   └── splash/                    # Splash feature
+│       └── presentation/
+│           └── screens/
+│               └── splash_screen.dart
 └── main.dart                      # App entry point
 ```
 
@@ -99,13 +132,65 @@ lib/
 - **GoRouter** for declarative navigation
 - **Route constants** for type-safe navigation
 - **Error page** (404 handling)
-- Ready for nested navigation and deep linking
+- **Dynamic routing** with path parameters (e.g., `/coinDetails/:id`, `/buySell/:id`)
+- Complete navigation flow from onboarding to all app screens
+
+**Available Routes:**
+
+| Route | Path | Description |
+|-------|------|-------------|
+| Splash | `splash` | App splash screen |
+| Onboarding | `onboarding` | Initial onboarding flow |
+| Login | `login` | User login screen |
+| Register | `register` | User registration screen |
+| Home | `home` | Main home screen |
+| Market | `market` | Cryptocurrency market listing |
+| Coin Details | `coinDetails/:id` | Individual coin details (dynamic) |
+| Buy/Sell | `buySell/:id` | Trading screen (dynamic) |
+| Payment | `payment` | Payment processing screen |
+| Portfolio | `portfolio` | User portfolio screen |
+| Settings | `settings` | App settings screen |
 
 **Files:**
 - [lib/core/routing/app_router.dart](lib/core/routing/app_router.dart)
-- [lib/core/routing/routes.dart](lib/core/routing/routes.dart)
+- [lib/core/routing/route_names.dart](lib/core/routing/route_names.dart)
 
-### 4. Dependency Injection
+### 4. Base Screens (Feature Modules)
+
+Complete base screens implemented following Clean Architecture structure:
+
+**Onboarding & Authentication:**
+
+- **Splash Screen** - App launch screen
+- **Onboarding Screen** - User onboarding flow
+- **Login Screen** - User authentication
+- **Register Screen** - New user registration
+
+**Main App Screens:**
+
+- **Home Screen** - Main dashboard/home view
+- **Market Screen** - Cryptocurrency market listing
+- **Coin Details Screen** - Individual coin information with dynamic routing
+- **Buy/Sell Screen** - Trading interface with dynamic routing
+- **Payment Screen** - Payment processing
+- **Portfolio Screen** - User portfolio management
+- **Settings Screen** - App settings and preferences
+
+**Files:**
+
+- [lib/features/splash/presentation/screens/splash_screen.dart](lib/features/splash/presentation/screens/splash_screen.dart)
+- [lib/features/onboarding/presentation/screens/onboarding_screen.dart](lib/features/onboarding/presentation/screens/onboarding_screen.dart)
+- [lib/features/auth/presentation/screens/login_screen.dart](lib/features/auth/presentation/screens/login_screen.dart)
+- [lib/features/auth/presentation/screens/register_screen.dart](lib/features/auth/presentation/screens/register_screen.dart)
+- [lib/features/home/presentation/screens/home_screen.dart](lib/features/home/presentation/screens/home_screen.dart)
+- [lib/features/market/presentation/screens/market_screen.dart](lib/features/market/presentation/screens/market_screen.dart)
+- [lib/features/market/presentation/screens/coin_details_screen.dart](lib/features/market/presentation/screens/coin_details_screen.dart)
+- [lib/features/market/presentation/screens/buy_sell_screen.dart](lib/features/market/presentation/screens/buy_sell_screen.dart)
+- [lib/features/market/presentation/screens/payment_screen.dart](lib/features/market/presentation/screens/payment_screen.dart)
+- [lib/features/portfolio/presentation/screens/portfolio_screen.dart](lib/features/portfolio/presentation/screens/portfolio_screen.dart)
+- [lib/features/settings/presentation/screens/settings_screen.dart](lib/features/settings/presentation/screens/settings_screen.dart)
+
+### 5. Dependency Injection
 - **GetIt** service locator configured
 - Ready for feature modules
 - Supports lazy and singleton registrations
@@ -113,8 +198,10 @@ lib/
 **Files:**
 - [lib/core/di/di.dart](lib/core/di/di.dart)
 
-### 5. Reusable Widgets
+### 6. Reusable Widgets
+
 Custom UI components built for the app:
+
 - Bottom action buttons
 - Bottom navigation
 - Custom back button
@@ -330,35 +417,46 @@ test: add unit tests for login bloc
 4. Merge to `develop` after review
 
 ### Recent Commits
+
+- `fdba115` - add base screens and routing setup for onboarding, auth, home, market, coin details, buy/sell, portfolio, and settings
+- `b365820` - update README with project setup and core structure
 - `3201049` - feat: add core structure, theme, text styles, env setup, gitignore
 - `696ed61` - chore: ignore VS Code folder
 - `8520492` - Resolve merge conflicts and add final Flutter project
-- `d42ca26` - Initial Flutter project setup
 
 ## Next Steps
 
 ### TODO for Team Members
 
+#### Completed
+
+- ~~Implement authentication feature (login/signup)~~ - Base screens added
+- ~~Create home screen with main navigation~~ - HomeScreen implemented
+- ~~Add cryptocurrency listing screen~~ - MarketScreen implemented
+- ~~Implement portfolio management~~ - PortfolioScreen implemented
+- ~~Create onboarding flow~~ - OnboardingScreen implemented
+
 #### High Priority
-1. Implement authentication feature (login/signup)
-2. Create home screen with main navigation
-3. Add cryptocurrency listing screen
-4. Implement portfolio management
-5. Setup API service with Retrofit annotations
+
+1. Add BLoC/Cubit state management to screens
+2. Setup API service with Retrofit annotations
+3. Implement actual authentication logic
+4. Connect screens to CoinGecko API
 
 #### Medium Priority
-6. Add local database (Hive/Floor)
-7. Implement user preferences storage
-8. Create transaction history screen
-9. Add chart/graph widgets
-10. Setup push notifications
+
+1. Add local database (Hive/Floor)
+2. Implement user preferences storage
+3. Create transaction history screen
+4. Add chart/graph widgets
+5. Setup push notifications
 
 #### Low Priority
-11. Add biometric authentication
-12. Implement multi-language support
-13. Add analytics tracking
-14. Create onboarding flow
-15. Write comprehensive tests
+
+1. Add biometric authentication
+2. Implement multi-language support
+3. Add analytics tracking
+4. Write comprehensive tests
 
 ## Troubleshooting
 
@@ -403,6 +501,6 @@ See [LICENSE](LICENSE) file for details.
 
 ---
 
-**Last Updated**: November 20, 2024
+**Last Updated**: November 21, 2025
 
 For questions or issues, please contact the team or create an issue in the repository.
