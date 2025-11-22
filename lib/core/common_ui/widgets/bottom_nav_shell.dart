@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class BottomNavShell extends StatelessWidget {
@@ -23,17 +24,19 @@ class BottomNavShell extends StatelessWidget {
         onDestinationSelected: (index) {
           switch (index) {
             case 0:
-              context.go('/home');
+              context.go(AppRoutes.home);
               break;
             case 1:
-              context.go('/market');
+              context.go(AppRoutes.market);
               break;
             case 2:
-              context.go('/portfolio');
+              context.go(AppRoutes.portfolio);
               break;
             case 3:
-              context.go('/settings');
+              context.go(AppRoutes.settings);
               break;
+            default:
+              context.go(AppRoutes.home);
           }
         },
         destinations: [
@@ -84,8 +87,11 @@ class BottomNavShell extends StatelessWidget {
   }) {
     final bool isActive = index == selectedIndex;
     final theme = Theme.of(context);
-    final selectedColor = theme.bottomNavigationBarTheme.selectedItemColor ?? AppColors.primary;
-    final unselectedColor = theme.bottomNavigationBarTheme.unselectedItemColor ?? AppColors.textGrayLight;
+    final selectedColor =
+        theme.bottomNavigationBarTheme.selectedItemColor ?? AppColors.primary;
+    final unselectedColor =
+        theme.bottomNavigationBarTheme.unselectedItemColor ??
+            AppColors.textGrayLight;
 
     return NavigationDestination(
       icon: SvgPicture.asset(
