@@ -5,8 +5,5 @@ class EnvConfig {
 
   // CoinGecko API Configuration
   // Get your API key from: https://www.coingecko.com/en/api/pricing
-  static const String coinGeckoApiKey = String.fromEnvironment(
-    'COINGECKO_API_KEY',
-    defaultValue: '',
-  );
+  static const String coinGeckoApiKey = 'CG-99c1XxRvsn8j5mFzhfKAaCZk';
 }

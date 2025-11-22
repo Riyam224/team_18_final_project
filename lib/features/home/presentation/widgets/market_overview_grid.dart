@@ -2,19 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/features/home/domain/entities/market_overview.dart';
 
 class MarketOverviewGrid extends StatelessWidget {
-  const MarketOverviewGrid({super.key});
+  final MarketOverview marketOverview;
+
+  const MarketOverviewGrid({super.key, required this.marketOverview});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
     final List<Map<String, String>> items = [
-      {"title": "Market Cap", "value": "\$2.1T"},
-      {"title": "24h Volume", "value": "\$85.5B"},
-      {"title": "BTC Dominance", "value": "48.5%"},
-      {"title": "Active Coins", "value": "19,417"},
+      {"title": "Market Cap", "value": marketOverview.marketCap},
+      {"title": "24h Volume", "value": marketOverview.volume24h},
+      {"title": "BTC Dominance", "value": marketOverview.btcDominance},
+      {"title": "Active Coins", "value": marketOverview.activeCoins.toString()},
     ];
 
     return Column(
@@ -119,28 +122,30 @@ class MarketOverviewGrid extends StatelessWidget {
           ),
 
           /// % For top two only
+          SizedBox(height: 6.h),
           if (showPercent) ...[
-            SizedBox(height: 6.h),
             Row(
               children: [
                 Text(
-                  "2.35% ",
+                  "${marketOverview.marketCapChangePercentage.toStringAsFixed(2)}% ",
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.marketValue.withOpacity(0.85),
+                    color: marketOverview.marketCapChangePercentage >= 0
+                        ? AppColors.accentBlue
+                        : Colors.red,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
-                  "▲",
+                  marketOverview.marketCapChangePercentage >= 0 ? "▲" : "▼",
                   style: AppTextStyles.bodySmall.copyWith(
-                    color: AppColors.accentBlue,
+                    color: marketOverview.marketCapChangePercentage >= 0
+                        ? AppColors.accentBlue
+                        : Colors.red,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
               ],
             ),
-          ] else ...[
-            SizedBox(height: 6.h),
           ],
         ],
       ),

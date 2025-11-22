@@ -1,32 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/features/home/domain/entities/top_gainer.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/top_gainer_tile.dart';
 
 class TopGainersList extends StatelessWidget {
-  const TopGainersList({super.key});
+  final List<TopGainerEntity> topGainers;
+
+  const TopGainersList({super.key, required this.topGainers});
+
+  String _formatPrice(double price) {
+    if (price >= 1) {
+      return "\$${price.toStringAsFixed(2)}";
+    } else {
+      return "\$${price.toStringAsFixed(6)}";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (topGainers.isEmpty) {
+      return const Center(
+        child: Text('No top gainers available'),
+      );
+    }
+
     return Column(
-      children: [
-        const TopGainerTile(
-          name: "Ethereum",
-          symbol: "ETH",
-          price: "\$20,788",
-          percentage: "+0.25%",
-          imageUrl:
-              "https://assets.coingecko.com/coins/images/279/large/ethereum.png",
-        ),
-        SizedBox(height: 12.h),
-        const TopGainerTile(
-          name: "Binance Coin",
-          symbol: "BNB",
-          price: "\$20,788",
-          percentage: "+1.15%",
-          imageUrl:
-              "https://assets.coingecko.com/coins/images/825/large/binance-coin-logo.png",
-        ),
-      ],
+      children: topGainers.asMap().entries.map((entry) {
+        final index = entry.key;
+        final gainer = entry.value;
+
+        return Column(
+          children: [
+            if (index > 0) SizedBox(height: 12.h),
+            TopGainerTile(
+              name: gainer.name,
+              symbol: gainer.symbol,
+              price: _formatPrice(gainer.currentPrice),
+              percentage:
+                  "${gainer.priceChangePercentage24h >= 0 ? '+' : ''}${gainer.priceChangePercentage24h.toStringAsFixed(2)}%",
+              imageUrl: gainer.imageUrl,
+            ),
+          ],
+        );
+      }).toList(),
     );
   }
 }

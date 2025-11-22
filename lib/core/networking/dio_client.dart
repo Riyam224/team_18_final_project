@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:team_18_final_project/core/config/env_config.dart';
