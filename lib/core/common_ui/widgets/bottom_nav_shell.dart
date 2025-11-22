@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
+import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
@@ -44,33 +46,33 @@ class BottomNavShell extends StatelessWidget {
             context: context,
             index: 0,
             selectedIndex: selectedIndex,
-            label: 'Home',
-            icon: 'assets/icons/home.svg',
-            selectedIcon: 'assets/icons/home_filled.svg',
+            label: AppStrings.home,
+            icon: AppAssets.home,
+            selectedIcon: AppAssets.homeFilled,
           ),
           _svgItem(
             context: context,
             index: 1,
             selectedIndex: selectedIndex,
-            label: 'Market',
-            icon: 'assets/icons/market.svg',
-            selectedIcon: 'assets/icons/market_filled.svg',
+            label: AppStrings.market,
+            icon: AppAssets.market,
+            selectedIcon: AppAssets.marketFilled,
           ),
           _svgItem(
             context: context,
             index: 2,
             selectedIndex: selectedIndex,
-            label: 'Portfolio',
-            icon: 'assets/icons/portfolio.svg',
-            selectedIcon: 'assets/icons/portfolio_filled.svg',
+            label: AppStrings.portfolio,
+            icon: AppAssets.portfolio,
+            selectedIcon: AppAssets.portfolioFilled,
           ),
           _svgItem(
             context: context,
             index: 3,
             selectedIndex: selectedIndex,
-            label: 'Settings',
-            icon: 'assets/icons/settings.svg',
-            selectedIcon: 'assets/icons/settings_filled.svg',
+            label: AppStrings.settings,
+            icon: AppAssets.settings,
+            selectedIcon: AppAssets.settingsFilled,
           ),
         ],
       ),
@@ -110,10 +112,10 @@ class BottomNavShell extends StatelessWidget {
   int _getIndex(BuildContext context) {
     final uri = GoRouterState.of(context).uri.toString();
 
-    if (uri.startsWith('/home')) return 0;
-    if (uri.startsWith('/market')) return 1;
-    if (uri.startsWith('/portfolio')) return 2;
-    if (uri.startsWith('/settings')) return 3;
+    if (uri.startsWith(AppRoutes.home)) return 0;
+    if (uri.startsWith(AppRoutes.market)) return 1;
+    if (uri.startsWith(AppRoutes.portfolio)) return 2;
+    if (uri.startsWith(AppRoutes.settings)) return 3;
 
     return 0;
   }
