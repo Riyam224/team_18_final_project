@@ -6,7 +6,7 @@ import '../config/app_text_styles.dart';
 ThemeData buildDarkTheme() {
   return ThemeData(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: AppColors.darkBackground,
+    scaffoldBackgroundColor: const Color(0xFF121212), // #121212
     primaryColor: AppColors.primary,
     fontFamily: 'Lato',
     appBarTheme: const AppBarTheme(
@@ -16,7 +16,7 @@ ThemeData buildDarkTheme() {
       centerTitle: true,
       titleTextStyle: AppTextStyles.headlineMedium,
     ),
-    cardColor: AppColors.darkCard,
+    cardColor: const Color(0xFF0D0D0D), // #0D0D0D
     textTheme: TextTheme(
       displayLarge:
           AppTextStyles.displayLarge.copyWith(color: AppColors.textWhite),

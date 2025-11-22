@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import 'package:team_18_final_project/features/home/presentation/widgets/view_all.dart';
 import '../widgets/balance_card.dart';
+
 import '../widgets/home_header.dart';
 import '../widgets/market_overview_grid.dart';
 import '../widgets/section_title.dart';
@@ -18,18 +21,18 @@ class HomeScreen extends StatelessWidget {
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const HomeHeader(),
-              const SizedBox(height: 16),
+              SizedBox(height: 16.h),
               const BalanceCard(),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
               const SectionTitle(title: "Market Overview"),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               const MarketOverviewGrid(),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -41,13 +44,13 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               const TrendingNowList(),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
               const SectionTitle(title: "Top Gainers"),
-              const SizedBox(height: 12),
+              SizedBox(height: 12.h),
               const TopGainersList(),
-              const SizedBox(height: 24),
+              SizedBox(height: 24.h),
             ],
           ),
         ),

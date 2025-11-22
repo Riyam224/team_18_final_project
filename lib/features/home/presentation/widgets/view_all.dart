@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class ViewAll extends StatelessWidget {
@@ -17,7 +18,8 @@ class ViewAll extends StatelessWidget {
       title,
       style: theme.textTheme.labelMedium!.copyWith(
         fontWeight: FontWeight.w600,
-        letterSpacing: 0.24,
+        fontSize: 12.sp,
+        letterSpacing: 0.24.w,
         color: theme.brightness == Brightness.dark
             ? AppColors.viewAll
             : AppColors.primary,

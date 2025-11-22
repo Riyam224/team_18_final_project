@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
@@ -16,69 +17,133 @@ class MarketOverviewGrid extends StatelessWidget {
       {"title": "Active Coins", "value": "19,417"},
     ];
 
-    return GridView.builder(
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      itemCount: 4,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisExtent: 110,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
+    return Column(
+      children: [
+        // Top row (Market Cap & 24h Volume)
+        Row(
+          children: [
+            Expanded(
+              child: _buildCard(
+                context: context,
+                theme: theme,
+                title: items[0]["title"]!,
+                value: items[0]["value"]!,
+                showPercent: true,
+                height: 110.h,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: _buildCard(
+                context: context,
+                theme: theme,
+                title: items[1]["title"]!,
+                value: items[1]["value"]!,
+                showPercent: true,
+                height: 110.h,
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 12.h),
+        // Bottom row (BTC Dominance & Active Coins)
+        Row(
+          children: [
+            Expanded(
+              child: _buildCard(
+                context: context,
+                theme: theme,
+                title: items[2]["title"]!,
+                value: items[2]["value"]!,
+                showPercent: false,
+                height: 85.h,
+              ),
+            ),
+            SizedBox(width: 12.w),
+            Expanded(
+              child: _buildCard(
+                context: context,
+                theme: theme,
+                title: items[3]["title"]!,
+                value: items[3]["value"]!,
+                showPercent: false,
+                height: 85.h,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCard({
+    required BuildContext context,
+    required ThemeData theme,
+    required String title,
+    required String value,
+    required bool showPercent,
+    required double height,
+  }) {
+    return Container(
+      height: height,
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(16.r),
       ),
-      itemBuilder: (_, i) {
-        return Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: theme.cardColor,
-            borderRadius: BorderRadius.circular(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// TITLE
+          Text(
+            title,
+            style: theme.textTheme.titleSmall!.copyWith(
+              color: theme.brightness == Brightness.dark
+                  ? AppColors.lightSurface
+                  : AppColors.marketItem,
+              height: 1.43,
+            ),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                items[i]["title"]!,
-                style: theme.textTheme.titleSmall!.copyWith(
-                  color: theme.brightness == Brightness.dark
-                      ? AppColors.lightSurface
-                      : AppColors.marketItem,
-                  height: 1.43,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                items[i]["value"]!,
-                style: theme.textTheme.headlineMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.brightness == Brightness.dark
-                      ? AppColors.lightSurface
-                      : AppColors.marketItem,
-                  height: 1,
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                children: [
-                  Text("2.35% ",
-                      style: AppTextStyles.bodySmall.copyWith(
-                        color: AppColors.marketValue.withOpacity(0.85),
-                        height: 1.33,
-                        fontWeight: FontWeight.w700,
-                      )),
-                  Text(
-                    "▲",
-                    style: AppTextStyles.bodySmall.copyWith(
-                      color: AppColors.accentBlue,
-                      height: 1.33,
-                      fontWeight: FontWeight.w400,
-                    ),
+
+          const Spacer(),
+
+          /// VALUE
+          Text(
+            value,
+            style: theme.textTheme.headlineMedium!.copyWith(
+              fontWeight: FontWeight.bold,
+              color: theme.brightness == Brightness.dark
+                  ? AppColors.lightSurface
+                  : AppColors.marketItem,
+            ),
+          ),
+
+          /// % For top two only
+          if (showPercent) ...[
+            SizedBox(height: 6.h),
+            Row(
+              children: [
+                Text(
+                  "2.35% ",
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.marketValue.withOpacity(0.85),
+                    fontWeight: FontWeight.w700,
                   ),
-                ],
-              )
-            ],
-          ),
-        );
-      },
+                ),
+                Text(
+                  "▲",
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.accentBlue,
+                    fontWeight: FontWeight.w400,
+                  ),
+                ),
+              ],
+            ),
+          ] else ...[
+            SizedBox(height: 6.h),
+          ],
+        ],
+      ),
     );
   }
 }
