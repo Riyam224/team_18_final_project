@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/home/domain/entities/trending_coin.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/crypto_item_tile.dart';
 
@@ -11,21 +12,21 @@ class TrendingNowList extends StatelessWidget {
   Color _getCoinColor(String symbol) {
     switch (symbol.toUpperCase()) {
       case 'BTC':
-        return const Color(0xFFF7931A);
+        return AppColors.btcOrange;
       case 'ETH':
-        return const Color(0xFF627EEA);
+        return AppColors.ethBlue;
       case 'BNB':
-        return const Color(0xFFF3BA2F);
+        return AppColors.bnbYellow;
       case 'XRP':
-        return const Color(0xFF23292F);
+        return AppColors.xrpBlack;
       case 'ADA':
-        return const Color(0xFF0033AD);
+        return AppColors.adaBlue;
       case 'SOL':
-        return const Color(0xFF14F195);
+        return AppColors.solGreen;
       case 'DOGE':
-        return const Color(0xFFC2A633);
+        return AppColors.dogeYellow;
       default:
-        return const Color(0xFF6366F1);
+        return AppColors.defaultCoin;
     }
   }
 

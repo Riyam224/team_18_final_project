@@ -38,7 +38,7 @@ class TopGainerTile extends StatelessWidget {
           /// Coin Icon
           CircleAvatar(
             radius: 20.r,
-            backgroundColor: Colors.white,
+            backgroundColor: AppColors.white,
             backgroundImage: NetworkImage(imageUrl),
           ),
 

@@ -38,7 +38,7 @@ class BalanceCard extends StatelessWidget {
       padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
       width: double.infinity,
       decoration: BoxDecoration(
-        color: isDark ? AppColors.primary : const Color(0xFF1D3A70),
+        color: isDark ? AppColors.primary : AppColors.balanceCardBg,
         borderRadius: BorderRadius.circular(16.r),
       ),
       child: Column(
@@ -49,7 +49,7 @@ class BalanceCard extends StatelessWidget {
           Text(
             'Current Balance',
             style: AppTextStyles.titleSmall.copyWith(
-              color: const Color(0xFFF5F8FE).withOpacity(0.7),
+              color: AppColors.balanceCardText.withOpacity(0.7),
               fontSize: 14.sp,
               fontWeight: FontWeight.w500,
               letterSpacing: 0.3.w,
@@ -61,7 +61,7 @@ class BalanceCard extends StatelessWidget {
           Text(
             _formatBalance(balance),
             style: theme.textTheme.headlineMedium!.copyWith(
-              color: Colors.white,
+              color: AppColors.white,
               fontWeight: FontWeight.w700,
               fontSize: 48.sp,
               letterSpacing: 0.5.w,
@@ -78,7 +78,7 @@ class BalanceCard extends StatelessWidget {
               Text(
                 "Weekly Profit",
                 style: AppTextStyles.titleSmall.copyWith(
-                  color: const Color(0xFFF5F8FE).withOpacity(0.9),
+                  color: AppColors.balanceCardText.withOpacity(0.9),
                   fontWeight: FontWeight.w600,
                   fontSize: 14.sp,
                   letterSpacing: 0.3.w,
@@ -88,13 +88,13 @@ class BalanceCard extends StatelessWidget {
               Container(
                 padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.15),
+                  color: AppColors.white.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Text(
                   "${isPositive ? '+' : ''}${weeklyChange.toStringAsFixed(2)}% ${isPositive ? '▲' : '▼'}",
                   style: AppTextStyles.labelMedium.copyWith(
-                    color: Colors.white,
+                    color: AppColors.white,
                     fontWeight: FontWeight.w700,
                     fontSize: 12.sp,
                     letterSpacing: 0.2.w,

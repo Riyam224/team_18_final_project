@@ -56,4 +56,20 @@ class AppColors {
   static const Color viewAll = Color(0xFF192B4D);
   static const Color marketItem = Color(0xff1E1F4B);
   static const Color marketValue = Color(0xFF6079FA);
+
+  // ===== Cryptocurrency Colors =====
+  static const Color btcOrange = Color(0xFFF7931A);
+  static const Color ethBlue = Color(0xFF627EEA);
+  static const Color bnbYellow = Color(0xFFF3BA2F);
+  static const Color xrpBlack = Color(0xFF23292F);
+  static const Color adaBlue = Color(0xFF0033AD);
+  static const Color solGreen = Color(0xFF14F195);
+  static const Color dogeYellow = Color(0xFFC2A633);
+  static const Color defaultCoin = Color(0xFF6366F1);
+
+  // ===== Common UI Colors =====
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color red = Color(0xFFFF0000);
+  static const Color balanceCardBg = Color(0xFF1D3A70);
+  static const Color balanceCardText = Color(0xFFF5F8FE);
 }

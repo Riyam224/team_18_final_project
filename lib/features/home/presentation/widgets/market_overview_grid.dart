@@ -131,7 +131,7 @@ class MarketOverviewGrid extends StatelessWidget {
                   style: AppTextStyles.bodySmall.copyWith(
                     color: marketOverview.marketCapChangePercentage >= 0
                         ? AppColors.accentBlue
-                        : Colors.red,
+                        : AppColors.priceDown,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
@@ -140,7 +140,7 @@ class MarketOverviewGrid extends StatelessWidget {
                   style: AppTextStyles.bodySmall.copyWith(
                     color: marketOverview.marketCapChangePercentage >= 0
                         ? AppColors.accentBlue
-                        : Colors.red,
+                        : AppColors.priceDown,
                     fontWeight: FontWeight.w400,
                   ),
                 ),
