@@ -1,4 +1,5 @@
 class AppStrings {
+  // Onboarding
   // ---------- Special split title (Screen 1) ----------
   static const onboardingTitle1Part1 = "Welcome To ";
   static const onboardingTitle1Part2 = "Crypto X";
@@ -12,4 +13,10 @@ class AppStrings {
   static const login = "Login";
   static const register = "Register";
   static const skip = "Skip";
+
+  // Navigation
+  static const home = 'Home';
+  static const market = 'Market';
+  static const portfolio = 'Portfolio';
+  static const settings = 'Settings';
 }
