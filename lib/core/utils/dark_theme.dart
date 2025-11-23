@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:team_18_final_project/core/utils/app_colors.dart';
-
-import '../config/app_text_styles.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'app_colors.dart';
 
 ThemeData buildDarkTheme() {
-  return ThemeData(
+  final base = ThemeData.dark();
+
+  return base.copyWith(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: const Color(0xFF121212), // #121212
     primaryColor: AppColors.primary,
-    fontFamily: 'Lato',
-    appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.darkBackground,
-      elevation: 0,
-      foregroundColor: AppColors.textWhite,
-      centerTitle: true,
-      titleTextStyle: AppTextStyles.headlineMedium,
-    ),
     cardColor: const Color(0xFF0D0D0D), // #0D0D0D
+    colorScheme: const ColorScheme.dark(
+      primary: AppColors.primary,
+      secondary: AppColors.secondary,
+      surface: AppColors.darkSurface,
+      onSurface: AppColors.textWhite,
+      onPrimary: Colors.white,
+      onSecondary: Colors.white,
+    ),
     textTheme: TextTheme(
       displayLarge:
           AppTextStyles.displayLarge.copyWith(color: AppColors.textWhite),
@@ -44,10 +45,22 @@ ThemeData buildDarkTheme() {
       labelSmall:
           AppTextStyles.labelSmall.copyWith(color: AppColors.textGrayDark),
     ),
-    colorScheme: const ColorScheme.dark(
-      primary: AppColors.primary,
-      secondary: AppColors.secondary,
-      surface: AppColors.darkBackground,
+    appBarTheme: AppBarTheme(
+      backgroundColor: AppColors.darkBackground,
+      elevation: 0,
+      foregroundColor: AppColors.textWhite,
+      centerTitle: true,
+      titleTextStyle: AppTextStyles.headlineMedium.copyWith(
+        color: AppColors.textWhite,
+      ),
+    ),
+    iconTheme: const IconThemeData(
+      color: AppColors.textWhiteSoft,
+    ),
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+      backgroundColor: AppColors.darkSurface,
+      selectedItemColor: AppColors.primary,
+      unselectedItemColor: AppColors.textGrayDark,
     ),
   );
 }
