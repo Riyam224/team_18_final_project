@@ -28,7 +28,7 @@ class RouteGenerator {
         const Scaffold(body: Center(child: Text('404 Not Found'))),
 
     // initial route
-    initialLocation: AppRoutes.home,
+    initialLocation: AppRoutes.splash,
 
     routes: [
       // -------------------------------
