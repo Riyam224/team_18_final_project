@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/core/storage/shared_prefs.dart';
 import 'package:team_18_final_project/features/splash/presentation/widgets/splash_icon.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -33,12 +34,21 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller.forward();
 
-    // Navigate to onboarding after animation + short delay
-    Future.delayed(const Duration(milliseconds: 2000), () {
-      if (mounted) {
-        context.go(AppRoutes.onboarding);
-      }
-    });
+    _navigate();
+  }
+
+  Future<void> _navigate() async {
+    await Future.delayed(const Duration(milliseconds: 2000));
+
+    final completed = await AppPrefs.isOnboardingCompleted();
+
+    if (!mounted) return;
+
+    if (completed) {
+      context.go(AppRoutes.home);
+    } else {
+      context.go(AppRoutes.onboarding);
+    }
   }
 
   @override
@@ -66,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen>
             ),
           ),
 
-          /// splash icon (dark/light)
+          // splash icon (dark/light)
           FadeTransition(
             opacity: _fade,
             child: const SplashIcon(),
