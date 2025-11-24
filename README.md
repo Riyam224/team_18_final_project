@@ -115,6 +115,164 @@ lib/
 - [lib/core/utils/dark_theme.dart](lib/core/utils/dark_theme.dart)
 - [lib/core/utils/light_theme.dart](lib/core/utils/light_theme.dart)
 
+#### How to Use the Theme System
+
+The app automatically switches between light and dark themes based on system settings (`ThemeMode.system`). Here's how to properly use the theme in your widgets:
+
+**1. Accessing Theme Colors (Recommended)**
+
+```dart
+// Get the current theme
+final theme = Theme.of(context);
+
+// Access colors from ColorScheme
+final primaryColor = theme.colorScheme.primary;        // Brand blue (#1D3A70)
+final secondaryColor = theme.colorScheme.secondary;    // Orange accent (#F56C2A)
+final backgroundColor = theme.colorScheme.surface;     // Adapts to light/dark
+final textColor = theme.colorScheme.onSurface;         // Adapts to light/dark
+final errorColor = theme.colorScheme.error;            // Error red
+
+// Access scaffold background
+final scaffoldBg = theme.scaffoldBackgroundColor;
+```
+
+**2. Using AppColors Directly (For specific colors)**
+
+```dart
+import 'package:team_18_final_project/core/utils/app_colors.dart';
+
+// Brand colors (same in both themes)
+AppColors.primary       // #1D3A70 - main blue
+AppColors.secondary     // #F56C2A - orange accent
+
+// Price indicators
+AppColors.priceUp       // #00CB6A - green for positive
+AppColors.priceDown     // #F26666 - red for negative
+
+// Status colors
+AppColors.success       // #69D895
+AppColors.warning       // #F7931A
+AppColors.error         // #F47E7E
+
+// Theme-aware colors (check brightness first)
+final isDark = Theme.of(context).brightness == Brightness.dark;
+final bgColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+final surfaceColor = isDark ? AppColors.darkSurface : AppColors.lightSurface;
+final cardColor = isDark ? AppColors.darkCard : AppColors.lightSurface;
+```
+
+**3. Using Theme Text Styles**
+
+```dart
+final textTheme = Theme.of(context).textTheme;
+
+// Headlines
+Text('Title', style: textTheme.headlineLarge);
+Text('Subtitle', style: textTheme.headlineMedium);
+
+// Body text
+Text('Content', style: textTheme.bodyLarge);
+Text('Secondary', style: textTheme.bodyMedium);
+
+// Labels
+Text('Button', style: textTheme.labelLarge);
+```
+
+**4. Using AppTextStyles (Custom typography)**
+
+```dart
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
+
+// Make sure to pass context for theme-aware colors
+Text('Balance', style: AppTextStyles.displayLarge(context));
+Text('Section', style: AppTextStyles.headlineMedium(context));
+Text('Body', style: AppTextStyles.bodyMedium(context));
+```
+
+**5. Theme-Aware Containers**
+
+```dart
+Container(
+  decoration: BoxDecoration(
+    color: Theme.of(context).cardTheme.color,  // Adapts to theme
+    borderRadius: BorderRadius.circular(12),
+  ),
+  child: ...
+)
+```
+
+**6. Checking Current Theme Mode**
+
+```dart
+// Check if dark mode is active
+final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
+// Or using MediaQuery
+final platformBrightness = MediaQuery.of(context).platformBrightness;
+final isDark = platformBrightness == Brightness.dark;
+```
+
+**7. Using Pre-configured Widget Themes**
+
+The theme includes pre-configured styles for common widgets:
+
+```dart
+// Buttons automatically use theme styles
+ElevatedButton(onPressed: () {}, child: Text('Primary Action'));
+OutlinedButton(onPressed: () {}, child: Text('Secondary'));
+TextButton(onPressed: () {}, child: Text('Tertiary'));
+
+// Cards use theme card style
+Card(child: ...);
+
+// TextFields use theme input decoration
+TextField(decoration: InputDecoration(hintText: 'Enter text'));
+
+// SnackBars, Dialogs, Chips all follow theme
+```
+
+**8. Complete Example Widget**
+
+```dart
+class ExampleCard extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.cardColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Text(
+        "Hello Theme!",
+        style: theme.textTheme.headlineSmall,
+      ),
+    );
+  }
+}
+```
+
+**Best Practices:**
+
+- Always use `Theme.of(context)` for colors that should adapt to light/dark mode
+- Use `AppColors` directly only for colors that stay constant (like price up/down)
+- Never hardcode colors like `Colors.black` or `Colors.white` - use theme colors
+- Use `colorScheme` properties for semantic colors (primary, secondary, surface, etc.)
+
+**How to Test Dark/Light Theme on Your Device**
+
+On iPhone:
+1. Go to **Settings → Display & Brightness**
+2. Switch between **Light** and **Dark**
+3. Re-open the app
+
+On Android:
+1. Go to **Settings → Display**
+2. Enable **Dark theme**
+3. Re-open the app
+
 ### 2. Networking Layer
 - **Dio HTTP client** with interceptors
 - **CoinGecko API integration** for cryptocurrency data
@@ -244,20 +402,35 @@ cd team_18_final_project
 flutter pub get
 ```
 
-### 3. Configure Environment Variables
-Create a `.env` file in the project root:
-```bash
-cp .env.example .env
-```
+### 3. Run the App
 
-Edit `.env` and add your CoinGecko API key:
-```env
-COINGECKO_API_KEY=your_actual_api_key_here
-```
-
-### 4. Run the App
+**Without API Key** (limited functionality):
 ```bash
 flutter run
+```
+
+**With CoinGecko API Key** (full functionality):
+```bash
+flutter run --dart-define=COINGECKO_API_KEY=your_api_key_here
+```
+
+> **Note**: Get your free API key from [CoinGecko API](https://www.coingecko.com/en/api/pricing)
+
+### 4. Build the App
+
+**Debug Build:**
+```bash
+flutter build apk --debug --dart-define=COINGECKO_API_KEY=your_api_key_here
+```
+
+**Release Build:**
+```bash
+flutter build apk --release --dart-define=COINGECKO_API_KEY=your_api_key_here
+```
+
+**iOS Build:**
+```bash
+flutter build ios --dart-define=COINGECKO_API_KEY=your_api_key_here
 ```
 
 ### 5. Run Tests
@@ -317,18 +490,38 @@ Core Layer (Shared Resources)
 
 ## Environment Configuration
 
-The app uses `flutter_dotenv` for environment variable management:
+The app uses **compile-time environment variables** via `--dart-define` for secure API key management.
 
 ### Required Variables
+
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `COINGECKO_API_KEY` | CoinGecko API authentication key | Yes |
+| `COINGECKO_API_KEY` | CoinGecko API authentication key | Optional (for full API access) |
+
+### How It Works
+
+1. API keys are passed at **build/run time** using `--dart-define`
+2. Keys are compiled into the app binary (not stored in files)
+3. No `.env` file needed - works out of the box for all team members
+
+### Usage Examples
+
+```bash
+# Run with API key
+flutter run --dart-define=COINGECKO_API_KEY=your_key_here
+
+# Build APK with API key
+flutter build apk --dart-define=COINGECKO_API_KEY=your_key_here
+
+# Run without API key (limited functionality)
+flutter run
+```
 
 ### Security Notes
-- Never commit `.env` file to version control
-- `.env` is listed in `.gitignore`
-- Use `.env.example` as a template
-- API key is automatically injected via Dio interceptor
+
+- API keys are passed at compile time, not stored in source files
+- Each team member uses their own API key
+- Get your free key from [CoinGecko API](https://www.coingecko.com/en/api/pricing)
 
 ## Dependencies
 
@@ -344,7 +537,6 @@ The app uses `flutter_dotenv` for environment variable management:
 | `dartz` | ^0.10.1 | Functional programming |
 | `equatable` | ^2.0.7 | Value equality |
 | `shared_preferences` | ^2.5.3 | Local storage |
-| `flutter_dotenv` | ^5.2.1 | Environment variables |
 | `flutter_svg` | ^2.2.1 | SVG support |
 | `carousel_slider` | ^5.1.1 | Carousel widgets |
 | `json_annotation` | ^4.9.0 | JSON serialization |
@@ -462,18 +654,25 @@ test: add unit tests for login bloc
 
 ### Common Issues
 
-**Issue: `.env` file not loading**
-```dart
-// Check console for warning message:
-⚠️ Warning: Failed to load .env file
-```
-**Solution**: Ensure `.env` exists in project root and contains valid key-value pairs
-
 **Issue: API requests failing with 401**
-```dart
+
+```
 🚫 Unauthorized. API key might be invalid or missing.
 ```
-**Solution**: Verify `COINGECKO_API_KEY` in `.env` is correct
+
+**Solution**: Make sure you're passing your API key when running:
+
+```bash
+flutter run --dart-define=COINGECKO_API_KEY=your_actual_key
+```
+
+**Issue: API key warning in console**
+
+```
+⚠️ [DioClient] Warning: COINGECKO_API_KEY not found
+```
+
+**Solution**: This is expected if you didn't provide an API key. The app will still run but some API features may not work.
 
 **Issue: Font not loading**
 **Solution**: Run `flutter clean && flutter pub get`

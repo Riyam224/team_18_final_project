@@ -1,11 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:team_18_final_project/core/config/env_config.dart';
 import 'api_base_url.dart';
 
 class DioClient {
-  // Load API key from environment variables
-  static String get _apiKey => dotenv.env['COINGECKO_API_KEY'] ?? '';
+  // Load API key from environment configuration
+  static String get _apiKey => EnvConfig.coinGeckoApiKey;
 
   static Dio createDio() {
     final dio = Dio(

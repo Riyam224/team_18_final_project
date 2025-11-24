@@ -6,8 +6,9 @@ import 'package:team_18_final_project/core/utils/light_theme.dart';
 import 'package:team_18_final_project/core/utils/dark_theme.dart';
 
 class AppTheme {
-  static ThemeData get lightTheme => _buildLightTheme();
-  static ThemeData get darkTheme => _buildDarkTheme();
+  /// Getters used inside MaterialApp
+  static ThemeData get lightTheme => buildLightTheme();
+  static ThemeData get darkTheme => buildDarkTheme();
 
   static ThemeData _buildLightTheme() {
     final base = buildLightTheme();
@@ -362,13 +363,13 @@ class AppTheme {
   /// Sets the system UI overlay style based on theme brightness
   static void setSystemUIOverlayStyle(ThemeMode mode) {
     final isDark = mode == ThemeMode.dark;
+
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
         statusBarIconBrightness: isDark ? Brightness.light : Brightness.dark,
         statusBarBrightness: isDark ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor:
-            isDark ? AppColors.darkBackground : AppColors.lightBackground,
+        systemNavigationBarColor: isDark ? Colors.black : Colors.white,
         systemNavigationBarIconBrightness:
             isDark ? Brightness.light : Brightness.dark,
       ),
