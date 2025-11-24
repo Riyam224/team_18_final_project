@@ -104,4 +104,49 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
     color: Color(0xFFF26666), // RED - Always same
   );
+
+  // ========= AUTH SCREENS =========
+  static const TextStyle authTitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 28,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const TextStyle authSubtitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle authButton = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const TextStyle authFooter = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+
+  static const TextStyle authFooterLink = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 14,
+    fontWeight: FontWeight.w600,
+  );
+
+  static const TextStyle authFooterQuestion = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    height: 1.47,
+  );
+
+  static const TextStyle authFooterAction = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    height: 1.47,
+  );
 }
