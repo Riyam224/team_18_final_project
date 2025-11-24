@@ -6,17 +6,18 @@ import '../config/app_text_styles.dart';
 ThemeData buildDarkTheme() {
   return ThemeData(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: AppColors.darkBackground,
+    scaffoldBackgroundColor: AppColors.darkBackground2,
     primaryColor: AppColors.primary,
     fontFamily: 'Lato',
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.darkBackground2,
       elevation: 0,
       foregroundColor: AppColors.textWhite,
       centerTitle: true,
       titleTextStyle: AppTextStyles.headlineMedium,
     ),
-    cardColor: AppColors.darkCard,
+    cardColor: AppColors.darkBackground,
+    //  AppColors.darkCard,
     textTheme: TextTheme(
       displayLarge:
           AppTextStyles.displayLarge.copyWith(color: AppColors.textWhite),
@@ -48,6 +49,8 @@ ThemeData buildDarkTheme() {
       primary: AppColors.primary,
       secondary: AppColors.secondary,
       surface: AppColors.darkBackground,
+
+      // surfaceContainerHighest:
     ),
   );
 }
