@@ -8,8 +8,8 @@ import 'package:team_18_final_project/core/routing/route_names.dart';
 // Splash + Auth + Onboarding
 import 'package:team_18_final_project/features/splash/presentation/screens/splash_screen.dart';
 import 'package:team_18_final_project/features/onboarding/presentation/screens/onboarding_screen.dart';
-import 'package:team_18_final_project/features/auth/presentation/screens/login_screen.dart';
-import 'package:team_18_final_project/features/auth/presentation/screens/register_screen.dart';
+import 'package:team_18_final_project/features/auth/presentation/screens/login/login_screen.dart';
+import 'package:team_18_final_project/features/auth/presentation/screens/register/register_screen.dart';
 
 // Main Tabs
 import 'package:team_18_final_project/features/home/presentation/screens/home_screen.dart';
