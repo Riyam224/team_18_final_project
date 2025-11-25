@@ -15,12 +15,17 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: theme.scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.3)
+                : Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 10,
           ),
@@ -45,6 +50,9 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
 
   Widget _buildNavItem(IconData icon, int index, String label) {
     final isSelected = _selectedIndex == index;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return GestureDetector(
       onTap: () => setState(() => _selectedIndex = index),
       child: Column(
@@ -52,7 +60,9 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
         children: [
           Icon(
             icon,
-            color: isSelected ? AppColors.primary : Colors.grey,
+            color: isSelected
+                ? AppColors.accentBlue
+                : (isDark ? AppColors.textGrayDark : AppColors.gray3),
             size: 28,
           ),
           if (label.isNotEmpty) ...[
@@ -60,7 +70,9 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
             Text(
               label,
               style: TextStyle(
-                color: isSelected ? AppColors.primary : Colors.grey,
+                color: isSelected
+                    ? AppColors.accentBlue
+                    : (isDark ? AppColors.textGrayDark : AppColors.gray3),
                 fontSize: 12,
                 fontWeight: FontWeight.w500,
               ),
