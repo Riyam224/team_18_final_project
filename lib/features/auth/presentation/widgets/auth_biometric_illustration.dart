@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthBiometricIllustration extends StatelessWidget {
@@ -16,24 +18,30 @@ class AuthBiometricIllustration extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Column(
-      children: [
-        Image.asset(
-          iconPath,
-          height: 100.h,
-          width: 100.w,
-          color: isDark ? AppColors.textWhite : AppColors.primary,
-        ),
-        SizedBox(height: 24.h),
-        Text(
-          description,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16.sp,
-            color: isDark ? AppColors.textWhiteSoft : AppColors.textGray,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Column(
+        children: [
+          SvgPicture.asset(
+            iconPath,
+            width: 140.w,
+            height: 140.h,
+            colorFilter: ColorFilter.mode(
+              isDark ? AppColors.textWhiteSoft : AppColors.gray2,
+              BlendMode.srcIn,
+            ),
           ),
-        ),
-      ],
+          SizedBox(height: 117.h),
+          Text(
+            description,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.authBiometricIllustrationDescription.copyWith(
+              fontSize: 16.sp,
+              color: isDark ? AppColors.textWhiteSoft : AppColors.darkSurface,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

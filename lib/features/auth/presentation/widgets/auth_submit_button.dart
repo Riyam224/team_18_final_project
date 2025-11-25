@@ -6,12 +6,13 @@ import 'package:team_18_final_project/core/utils/app_colors.dart';
 class AuthSubmitButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
+  final Color? btnBackgroundColor;
 
-  const AuthSubmitButton({
-    super.key,
-    required this.text,
-    required this.onPressed,
-  });
+  const AuthSubmitButton(
+      {super.key,
+      required this.text,
+      required this.onPressed,
+      this.btnBackgroundColor});
 
   @override
   Widget build(BuildContext context) {
@@ -22,10 +23,8 @@ class AuthSubmitButton extends StatelessWidget {
       height: 56.h,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor:
-              isDark ? AppColors.textWhite : AppColors.primary,
-          foregroundColor:
-              isDark ? AppColors.textDark : AppColors.textWhite,
+          backgroundColor: isDark ? AppColors.textWhite : AppColors.primary,
+          foregroundColor: isDark ? AppColors.textDark : AppColors.textWhite,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(32.r),
           ),

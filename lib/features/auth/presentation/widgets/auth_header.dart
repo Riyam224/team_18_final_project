@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthHeader extends StatelessWidget {
@@ -15,42 +16,41 @@ class AuthHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final screenWidth = MediaQuery.of(context).size.width;
 
-    return Column(
-      children: [
-        SizedBox(
-          width: 316.w,
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 26.sp,
-              fontFamily: 'Lato',
-              fontWeight: FontWeight.w700,
-            ).copyWith(
-              color: isDark ? AppColors.textWhite : AppColors.primary,
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      child: Column(
+        children: [
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: screenWidth > 400 ? 350.w : screenWidth - 32.w,
+            ),
+            child: Text(
+              title,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.authHeaderTitle.copyWith(
+                fontSize: 26.sp,
+                color: isDark ? AppColors.textWhite : AppColors.primary,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 12.h),
-        SizedBox(
-          width: 316.w,
-          child: Text(
-            subtitle,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 18.sp,
-              fontFamily: 'Lato',
-              fontWeight: FontWeight.w600,
-              height: 1.33,
-            ).copyWith(
-              color: isDark
-                  ? AppColors.textWhiteSoft2
-                  : AppColors.textGray,
+          SizedBox(height: 12.h),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: screenWidth > 400 ? 350.w : screenWidth - 32.w,
+            ),
+            child: Text(
+              subtitle,
+              textAlign: TextAlign.center,
+              style: AppTextStyles.authHeaderSubtitle.copyWith(
+                fontSize: 18.sp,
+                color: isDark ? AppColors.textWhiteSoft2 : AppColors.textGray,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

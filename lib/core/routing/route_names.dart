@@ -1,3 +1,5 @@
+import 'package:team_18_final_project/features/auth/presentation/screens/login/fingerprint_verify_login_screen.dart';
+
 class AppRoutes {
   // Splash + Onboarding + Auth
   static const splash = '/splash';
@@ -19,4 +21,17 @@ class AppRoutes {
   // Security
   static const lock = '/lock';
   static const biometric = '/biometric';
+  // register
+  static const setFingerprintRegister = '/setFingerprintRegister';
+  static const fingerprintSuccessRegister = '/fingerprintSuccessRegister';
+  static const setFaceIDRegister = '/setFaceIDRegister';
+  static const faceIdScanningRegister = '/faceIdScanningRegister';
+
+  static const faceIdSuccessRegister = '/faceIdSuccessRegister';
+
+  static const verifyFingerprintLogin = '/verifyFingerprintLogin';
+  static const verifyFingerprintLoginSuccess = '/verifyFingerprintLoginSuccess';
+  // static const verifyFaceIDLogin = '/verifyFaceIDLogin';
+  static const faceIdScanningLogin = '/faceIdScanningLogin';
+  static const faceIdVerifiedSuccessLogin = '/faceIdVerifiedSuccessLogin';
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthTextField extends StatelessWidget {
@@ -58,18 +59,18 @@ class AuthTextField extends StatelessWidget {
               controller: controller,
               obscureText: obscure,
               keyboardType: keyboardType,
-              style: TextStyle(
-                color: isDark ? AppColors.textWhite : AppColors.textDark,
+              style: AppTextStyles.authTextFieldInput.copyWith(
                 fontSize: 14.sp,
+                color: isDark ? AppColors.textWhite : AppColors.textDark,
               ),
               decoration: InputDecoration(
                 border: InputBorder.none,
                 hintText: hint,
-                hintStyle: TextStyle(
+                hintStyle: AppTextStyles.authTextFieldHint.copyWith(
+                  fontSize: 14.sp,
                   color: isDark
                       ? AppColors.textGrayDark
                       : AppColors.gray3,
-                  fontSize: 14.sp,
                 ),
               ),
             ),

@@ -26,4 +26,56 @@ class AppStrings {
   static const orLoginWith = 'Or login with';
   static const dontHaveAccount = "Don't have an account? ";
   static const signUp = 'Sign Up';
+
+  // Auth - Fingerprint Setup Screen
+  static const setYourFingerPrint = 'Set Your Finger Print';
+  static const addFingerprintSecure =
+      'Add a fingerprint to make your account\nmore secure.';
+  static const placeFingerprintInstruction =
+      'Place your finger in fingerprint\nsensor until the icon completely';
+  static const skip = 'Skip';
+
+  // Auth - Fingerprint Success Screen
+  static const yourScanningIsComplete = 'Your scanning is complete';
+  static const youWillBeAbleToSignIn =
+      'you will be able to sign in by using fingerprint';
+  static const continueButton = 'Continue';
+
+  // Auth - FaceID Setup Screen
+  static const setYourFaceID = 'Set Your Face ID';
+  static const addFaceIDSecure =
+      'Add your face ID to make your account more secure.';
+  static const faceID = 'Face ID';
+
+  // Auth - FaceID Scanning Screen
+  static const placeFaceIDInstruction =
+      'Place your face ID in face\nscanner until the icon completely';
+  static const faceIDScanComplete =
+      'Once your scanning is complete, you will be able to sign in by using face ID';
+
+  // Auth - FaceID Success Screen
+  static const youreReady = "You're Ready!";
+
+  // login face id verification
+  static const touchIdVerifyTitle = "Touch ID sensor to verify yourself";
+
+  static const touchIdFooter =
+      "Please verify your identity using touch ID and it will proceed automatically.";
+
+  // Login Success Screen
+  static const youreVerified = "You're verified";
+  static const verificationComplete =
+      "You have been verified your \ninformation completely. Let's make \n transactions!";
+  static const continueToHome = "Continue To Home";
+
+  static const faceIDPleaseWaitLogin =
+      "Please wait until your scanning is complete";
+
+  // Login FaceID Verify Screen
+  static const verificationCompleteTransactions =
+      "You have been verified your information completely. Let's make transactions!";
+
+  // Login FaceID Scanning Screen
+  static const faceIDPleaseWaitScanning =
+      "Please wait until your scanning is\ncomplete";
 }

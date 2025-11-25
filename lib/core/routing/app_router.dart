@@ -4,6 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_nav_shell.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/features/auth/presentation/screens/login/fingerprint_verify_login_screen.dart';
+import 'package:team_18_final_project/features/auth/presentation/screens/register/faceid_scanning_register_screen.dart';
+import 'package:team_18_final_project/features/auth/presentation/screens/register/faceid_setup_register_screen.dart';
+import 'package:team_18_final_project/features/auth/presentation/screens/register/faceid_success_register_screen.dart';
+import 'package:team_18_final_project/features/auth/presentation/screens/register/fingerprint_setup_register_screen.dart';
+import 'package:team_18_final_project/features/auth/presentation/screens/register/fingerprint_success_register_screen.dart';
 
 // Splash + Auth + Onboarding
 import 'package:team_18_final_project/features/splash/presentation/screens/splash_screen.dart';
@@ -22,13 +28,17 @@ import 'package:team_18_final_project/features/market/presentation/screens/coin_
 import 'package:team_18_final_project/features/market/presentation/screens/buy_sell_screen.dart';
 import 'package:team_18_final_project/features/market/presentation/screens/payment_screen.dart';
 
+import '../../features/auth/presentation/screens/login/faceid_scanning_login_screen.dart';
+import '../../features/auth/presentation/screens/login/faceid_verify_login_screen.dart';
+import '../../features/auth/presentation/screens/login/fingerprint_verify_success_login_screen.dart';
+
 class RouteGenerator {
   static GoRouter mainRoutingInOurApp = GoRouter(
     errorBuilder: (context, state) =>
         const Scaffold(body: Center(child: Text('404 Not Found'))),
 
     // initial route
-    initialLocation: AppRoutes.login,
+    initialLocation: AppRoutes.faceIdVerifiedSuccessLogin,
 
     routes: [
       // -------------------------------
@@ -54,6 +64,58 @@ class RouteGenerator {
         name: AppRoutes.register,
         builder: (context, state) => RegisterScreen(),
       ),
+
+      GoRoute(
+        path: AppRoutes.setFingerprintRegister,
+        name: AppRoutes.setFingerprintRegister,
+        builder: (context, state) => const SetFingerprintRegisterScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.setFaceIDRegister,
+        name: AppRoutes.setFaceIDRegister,
+        builder: (context, state) => const FaceIDSetupRegisterScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.fingerprintSuccessRegister,
+        name: AppRoutes.fingerprintSuccessRegister,
+        builder: (context, state) => const FingerprintSuccessRegisterScreen(),
+      ),
+
+      // todo register face id scanning
+      GoRoute(
+          path: AppRoutes.faceIdScanningRegister,
+          name: AppRoutes.faceIdScanningRegister,
+          builder: (context, state) => const FaceIDScanningRegisterScreen()),
+
+      GoRoute(
+        path: AppRoutes.faceIdSuccessRegister,
+        name: AppRoutes.faceIdSuccessRegister,
+        builder: (context, state) => const FaceidSuccessRegisterScreen(),
+      ),
+
+      // login biometric verification routes can be added here
+
+      GoRoute(
+          path: AppRoutes.verifyFingerprintLogin,
+          name: AppRoutes.verifyFingerprintLogin,
+          builder: (context, state) => const VerifyFingerprintLoginScreen()),
+
+      GoRoute(
+          path: AppRoutes.verifyFingerprintLoginSuccess,
+          name: AppRoutes.verifyFingerprintLoginSuccess,
+          builder: (context, state) =>
+              const VerifyFingerprintSuccessLoginScreen()),
+
+      GoRoute(
+          path: AppRoutes.faceIdScanningLogin,
+          builder: (context, state) => const FaceIDScanningLoginScreen()),
+
+      GoRoute(
+          path: AppRoutes.faceIdVerifiedSuccessLogin,
+          name: AppRoutes.faceIdVerifiedSuccessLogin,
+          builder: (context, state) => const FaceIDVerifySuccessLoginScreen()),
 
       // ==================================================
       // MAIN APP WITH BOTTOM NAVIGATION

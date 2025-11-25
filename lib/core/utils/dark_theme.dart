@@ -7,13 +7,13 @@ ThemeData buildDarkTheme() {
 
   return base.copyWith(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: AppColors.darkBackground,
+    scaffoldBackgroundColor: AppColors.darkBackground2,
     primaryColor: AppColors.primary,
     cardColor: AppColors.darkCard,
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primary,
       secondary: AppColors.secondary,
-      background: AppColors.darkBackground,
+      background: AppColors.darkBackground2,
       surface: AppColors.darkSurface,
       onBackground: AppColors.textWhite,
       onSurface: AppColors.textWhite,
@@ -34,7 +34,7 @@ ThemeData buildDarkTheme() {
       labelLarge: AppTextStyles.labelLarge.copyWith(color: AppColors.primary),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.darkBackground2,
       elevation: 0,
       foregroundColor: Colors.white,
     ),

@@ -188,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Stack(
                           children: [
                             SvgPicture.asset(
-                              AppAssets.fingerPrintIcon,
+                              AppAssets.fingerPrintSmall,
                               width: 45,
                               height: 45,
                               colorFilter: ColorFilter.mode(
@@ -214,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: Stack(
                           children: [
                             SvgPicture.asset(
-                              AppAssets.faceIDicon,
+                              AppAssets.faceIdSmall,
                               width: 45,
                               height: 45,
                               colorFilter: ColorFilter.mode(

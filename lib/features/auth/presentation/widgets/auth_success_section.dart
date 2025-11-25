@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthSuccessSection extends StatelessWidget {
@@ -31,9 +32,8 @@ class AuthSuccessSection extends StatelessWidget {
         SizedBox(height: 24.h),
         Text(
           title,
-          style: TextStyle(
+          style: AppTextStyles.authSuccessSectionTitle.copyWith(
             fontSize: 22.sp,
-            fontWeight: FontWeight.w600,
             color: isDark ? AppColors.textWhite : AppColors.textDark,
           ),
         ),
@@ -41,7 +41,7 @@ class AuthSuccessSection extends StatelessWidget {
         Text(
           subtitle,
           textAlign: TextAlign.center,
-          style: TextStyle(
+          style: AppTextStyles.authSuccessSectionSubtitle.copyWith(
             fontSize: 16.sp,
             color: isDark ? AppColors.textWhiteSoft : AppColors.textGray,
           ),

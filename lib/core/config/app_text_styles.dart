@@ -149,4 +149,109 @@ class AppTextStyles {
     fontWeight: FontWeight.w500,
     height: 1.47,
   );
+
+  static const TextStyle authSuccessTitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 22,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const TextStyle authSuccessSubtitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    height: 1.5,
+  );
+
+  // Auth - Biometric Setup Screens (Face ID / Fingerprint)
+  static const TextStyle authBiometricTitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 26,
+    fontWeight: FontWeight.w700,
+  );
+
+  static const TextStyle authBiometricDescription = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    height: 1.33,
+  );
+
+  static const TextStyle authBiometricLabel = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+  );
+
+  // Auth - Biometric Scanning Screens (Face ID / Fingerprint scanning)
+  static const TextStyle authBiometricScanInstruction = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: FontWeight.w500,
+    height: 1.40,
+  );
+
+  static const TextStyle authBiometricIconLabel = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 20,
+    fontWeight: FontWeight.w600,
+  );
+
+  // Auth - Biometric Success Screen Title
+  static const TextStyle authBiometricSuccessTitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 26,
+    fontWeight: FontWeight.w700,
+  );
+
+  // Auth - Biometric Illustration Description
+  static const TextStyle authBiometricIllustrationDescription = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    height: 1.5,
+  );
+
+  // Auth - Success Section Title (for success widgets)
+  static const TextStyle authSuccessSectionTitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 22,
+    fontWeight: FontWeight.w600,
+  );
+
+  // Auth - Success Section Subtitle (for success widgets)
+  static const TextStyle authSuccessSectionSubtitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+  );
+
+  // Auth - Header Title (26sp)
+  static const TextStyle authHeaderTitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 26,
+    fontWeight: FontWeight.w700,
+  );
+
+  // Auth - Header Subtitle (18sp)
+  static const TextStyle authHeaderSubtitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: FontWeight.w600,
+    height: 1.33,
+  );
+
+  // Auth - Text Field Input Style
+  static const TextStyle authTextFieldInput = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
+
+  // Auth - Text Field Hint Style
+  static const TextStyle authTextFieldHint = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+  );
 }
