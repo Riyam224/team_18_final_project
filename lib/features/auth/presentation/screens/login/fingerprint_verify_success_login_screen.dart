@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/buttons/primary_button.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
@@ -20,7 +23,7 @@ class VerifyFingerprintSuccessLoginScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: 190.93.h),
+              AppSpacing.vertical(190),
 
               /// ---------------- SUCCESS ICON ----------------
               Stack(
@@ -29,20 +32,20 @@ class VerifyFingerprintSuccessLoginScreen extends StatelessWidget {
                   /// Circle
                   SvgPicture.asset(
                     isDark ? AppAssets.whiteCircle : AppAssets.darkCircle,
-                    width: 110.w,
-                    height: 110.w,
+                    width: AppSizing.successCircleSize,
+                    height: AppSizing.successCircleSize,
                   ),
 
                   /// Checkmark
                   SvgPicture.asset(
                     isDark ? AppAssets.darkCheck : AppAssets.whiteCheck,
-                    width: 86.21.w,
-                    height: 86.21.w,
+                    width: AppSizing.w86,
+                    height: AppSizing.w86,
                   ),
                 ],
               ),
 
-              SizedBox(height: 106.h),
+              AppSpacing.vertical(106),
 
               /// ---------------- TITLE ----------------
               Text(
@@ -53,11 +56,11 @@ class VerifyFingerprintSuccessLoginScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 30.h),
+              AppSpacing.vSpace30,
 
               /// ---------------- SUBTITLE ----------------
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 40.w),
+                padding: AppSpacing.paddingH40,
                 child: Text(
                   AppStrings.verificationComplete,
                   textAlign: TextAlign.center,
@@ -72,18 +75,18 @@ class VerifyFingerprintSuccessLoginScreen extends StatelessWidget {
 
               /// ---------------- CONTINUE BUTTON ----------------
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: AppSpacing.paddingH20,
                 child: PrimaryButton(
                   text: AppStrings.continueToHome,
                   color: isDark ? Colors.white : AppColors.primary,
                   textColor: isDark ? AppColors.primary : Colors.white,
                   onPressed: () {
-                    // TODO: navigate to Home screen
+                    context.go(AppRoutes.home);
                   },
                 ),
               ),
 
-              SizedBox(height: 50.h),
+              AppSpacing.vSpace50,
             ],
           ),
         ),

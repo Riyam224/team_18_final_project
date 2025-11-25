@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthHeader extends StatelessWidget {
@@ -19,12 +21,12 @@ class AuthHeader extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: AppSpacing.paddingH16,
       child: Column(
         children: [
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: screenWidth > 400 ? 350.w : screenWidth - 32.w,
+              maxWidth: screenWidth > 400 ? AppSizing.w350 : screenWidth - 32.w,
             ),
             child: Text(
               title,
@@ -35,10 +37,10 @@ class AuthHeader extends StatelessWidget {
               ),
             ),
           ),
-          SizedBox(height: 12.h),
+          AppSpacing.vSpace12,
           ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: screenWidth > 400 ? 350.w : screenWidth - 32.w,
+              maxWidth: screenWidth > 400 ? AppSizing.w350 : screenWidth - 32.w,
             ),
             child: Text(
               subtitle,

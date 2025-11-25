@@ -4,6 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
@@ -39,11 +41,11 @@ class _LoginScreenState extends State<LoginScreen> {
       body: AuthBackground(
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+            padding: AppSpacing.symmetricPadding(horizontal: 20, vertical: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 103.h),
+                AppSpacing.vertical(103),
 
                 /// ------------ HEADER ------------
                 const AuthHeader(
@@ -51,7 +53,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   subtitle: AppStrings.welcomeBack,
                 ),
 
-                SizedBox(height: 100.h),
+                AppSpacing.vertical(100),
 
                 /// ------------ INPUT FIELDS ------------
                 AuthTextField(
@@ -60,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   icon: Icons.email_outlined,
                   keyboardType: TextInputType.emailAddress,
                 ),
-                SizedBox(height: 16.h),
+                AppSpacing.vSpace16,
 
                 AuthTextField(
                   controller: password,
@@ -69,7 +71,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   obscure: true,
                 ),
 
-                SizedBox(height: 16.h),
+                AppSpacing.vSpace16,
 
                 /// ------------ REMEMBER ME & FORGET PASSWORD ------------
                 Row(
@@ -78,25 +80,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     Row(
                       children: [
                         SizedBox(
-                          width: 20.w,
-                          height: 20.h,
+                          width: AppSizing.w20,
+                          height: AppSizing.h20,
                           child: Checkbox(
                             value: false,
                             onChanged: (value) {
                               // TODO: implement remember me
                             },
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(4.r),
+                              borderRadius: BorderRadius.circular(AppSizing.radiusXSmall),
                             ),
                             side: BorderSide(
                               color: isDark
                                   ? AppColors.textWhite.withValues(alpha: 0.3)
                                   : AppColors.primary.withValues(alpha: 0.5),
-                              width: 1.5.w,
+                              width: AppSizing.borderMedium,
                             ),
                           ),
                         ),
-                        SizedBox(width: 8.w),
+                        AppSpacing.hSpaceXSmall,
                         Text(
                           AppStrings.rememberMe,
                           style: AppTextStyles.bodyMedium.copyWith(
@@ -125,17 +127,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
 
-                SizedBox(height: 30.h),
+                AppSpacing.vSpace30,
 
                 /// ------------ LOGIN BUTTON ------------
                 AuthSubmitButton(
                   text: AppStrings.loginButton,
                   onPressed: () {
                     // TODO: add login logic later
+                    context.go(AppRoutes.home);
                   },
                 ),
 
-                SizedBox(height: 40.h),
+                AppSpacing.vSpace40,
 
                 /// ------------ OR LOGIN WITH ------------
                 Row(
@@ -145,11 +148,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: isDark
                             ? AppColors.textWhite.withValues(alpha: 0.2)
                             : AppColors.gray4,
-                        thickness: 1.h,
+                        thickness: AppSizing.dividerThickness,
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      padding: AppSpacing.paddingH16,
                       child: Text(
                         AppStrings.orLoginWith,
                         style: AppTextStyles.bodyMedium.copyWith(
@@ -165,13 +168,13 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: isDark
                             ? AppColors.textWhite.withValues(alpha: 0.2)
                             : AppColors.gray4,
-                        thickness: 1.h,
+                        thickness: AppSizing.dividerThickness,
                       ),
                     ),
                   ],
                 ),
 
-                SizedBox(height: 23.h),
+                AppSpacing.vertical(23),
 
                 /// ------------ BIOMETRIC OPTIONS ------------
                 Row(
@@ -180,17 +183,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     // Fingerprint Icon
                     GestureDetector(
                       onTap: () {
-                        // TODO: implement fingerprint authentication
+                        context.push(AppRoutes.verifyFingerprintLogin);
                       },
-                      child: Container(
-                        width: 45,
-                        height: 45,
+                      child: SizedBox(
+                        width: AppSizing.biometricIconSmall,
+                        height: AppSizing.biometricIconSmall,
                         child: Stack(
                           children: [
                             SvgPicture.asset(
                               AppAssets.fingerPrintSmall,
-                              width: 45,
-                              height: 45,
+                              width: AppSizing.biometricIconSmall,
+                              height: AppSizing.biometricIconSmall,
                               colorFilter: ColorFilter.mode(
                                 isDark
                                     ? AppColors.textWhiteSoft
@@ -202,21 +205,21 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(width: 48.w),
+                    AppSpacing.hSpace48,
                     // Face ID Icon
                     GestureDetector(
                       onTap: () {
-                        // TODO: implement face ID authentication
+                        context.push(AppRoutes.faceIdScanningLogin);
                       },
                       child: SizedBox(
-                        width: 45,
-                        height: 45,
+                        width: AppSizing.biometricIconSmall,
+                        height: AppSizing.biometricIconSmall,
                         child: Stack(
                           children: [
                             SvgPicture.asset(
                               AppAssets.faceIdSmall,
-                              width: 45,
-                              height: 45,
+                              width: AppSizing.biometricIconSmall,
+                              height: AppSizing.biometricIconSmall,
                               colorFilter: ColorFilter.mode(
                                 isDark
                                     ? AppColors.textWhiteSoft
@@ -231,7 +234,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
 
-                SizedBox(height: 15.h),
+                AppSpacing.vertical(15),
 
                 /// ------------ FOOTER ------------
                 AuthFooter(
@@ -244,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   },
                 ),
 
-                SizedBox(height: 20.h),
+                AppSpacing.vSpace20,
               ],
             ),
           ),

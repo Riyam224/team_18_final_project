@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 
 class FaceIDScanningRegisterScreen extends StatelessWidget {
@@ -14,8 +16,8 @@ class FaceIDScanningRegisterScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        width: 375.w,
-        height: 812.h,
+        width: AppSizing.screenWidth,
+        height: AppSizing.screenHeight,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -27,11 +29,11 @@ class FaceIDScanningRegisterScreen extends StatelessWidget {
           children: [
             /// ---------------- TOP TEXT ----------------
             Positioned(
-              left: 55.w,
-              top: 119.h,
+              left: AppSizing.scanTextLeft,
+              top: AppSizing.scanTextTop,
               child: SizedBox(
-                width: 283.w,
-                height: 44.h,
+                width: AppSizing.w283,
+                height: AppSizing.h44,
                 child: Text(
                   AppStrings.placeFaceIDInstruction,
                   textAlign: TextAlign.center,
@@ -45,14 +47,14 @@ class FaceIDScanningRegisterScreen extends StatelessWidget {
 
             /// ---------------- FACE ID BOX WITH TEXT INSIDE ----------------
             Positioned(
-              left: 110.w,
-              top: 327.h,
+              left: AppSizing.faceIDBoxLeft,
+              top: AppSizing.faceIDBoxTop,
               child: Container(
-                width: 155.w,
-                height: 180.h,
+                width: AppSizing.faceIDContainerWidth,
+                height: AppSizing.faceIDContainerHeight,
                 decoration: BoxDecoration(
                   color: isDark ? Colors.black : Colors.white,
-                  borderRadius: BorderRadius.circular(28.r),
+                  borderRadius: BorderRadius.circular(AppSizing.radiusMedium),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -61,10 +63,10 @@ class FaceIDScanningRegisterScreen extends StatelessWidget {
                       isDark
                           ? AppAssets.faceIDwhitebig
                           : AppAssets.faceIDdarkbig,
-                      width: 80.w,
-                      height: 80.h,
+                      width: AppSizing.biometricIconLarge,
+                      height: AppSizing.biometricIconLarge,
                     ),
-                    SizedBox(height: 20.h),
+                    AppSpacing.vSpace20,
 
                     /// TEXT INSIDE THE BOX
                     Text(
@@ -81,11 +83,11 @@ class FaceIDScanningRegisterScreen extends StatelessWidget {
 
             /// ---------------- FOOTER TEXT ----------------
             Positioned(
-              left: 21.w,
-              top: 671.h,
+              left: AppSizing.w20,
+              top: AppSizing.footerTextTop,
               child: SizedBox(
-                width: 333.65.w,
-                height: 46.31.h,
+                width: AppSizing.w333,
+                height: AppSizing.h46,
                 child: Text(
                   AppStrings.faceIDScanComplete,
                   textAlign: TextAlign.center,

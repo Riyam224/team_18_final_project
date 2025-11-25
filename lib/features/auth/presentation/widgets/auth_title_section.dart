@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'auth_header.dart';
 
 class AuthTitleSection extends StatelessWidget {
@@ -17,7 +17,7 @@ class AuthTitleSection extends StatelessWidget {
     return Column(
       children: [
         AuthHeader(title: title, subtitle: subtitle),
-        SizedBox(height: 40.h), // required for biometric screens
+        AppSpacing.vSpace40, // required for biometric screens
       ],
     );
   }

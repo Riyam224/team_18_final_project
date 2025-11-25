@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_submit_button.dart';
@@ -20,15 +24,15 @@ class FaceIDVerifySuccessLoginScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: 160.h),
+              AppSpacing.vertical(160),
 
               /// ---------------- FACE ID BOX ----------------
               Container(
-                width: 155.w,
-                height: 180.h,
+                width: AppSizing.faceIDContainerWidth,
+                height: AppSizing.faceIDContainerHeight,
                 decoration: BoxDecoration(
                   color: isDark ? Colors.black : Colors.white,
-                  borderRadius: BorderRadius.circular(28.r),
+                  borderRadius: BorderRadius.circular(AppSizing.radiusMedium),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -41,19 +45,19 @@ class FaceIDVerifySuccessLoginScreen extends StatelessWidget {
                           isDark
                               ? AppAssets.outlinedCircleWhite
                               : AppAssets.outlinedCircleDark,
-                          width: 72.w,
-                          height: 72.h,
+                          width: AppSizing.iconXLarge,
+                          height: AppSizing.iconXLarge,
                         ),
                         SvgPicture.asset(
                           isDark
                               ? AppAssets.faceIDDONElight
                               : AppAssets.faceIDDonedark,
-                          width: 26.w,
-                          height: 26.h,
+                          width: AppSizing.iconMedium,
+                          height: AppSizing.iconMedium,
                         ),
                       ],
                     ),
-                    SizedBox(height: 20.h),
+                    AppSpacing.vSpace20,
 
                     Text(
                       AppStrings.faceID,
@@ -66,7 +70,7 @@ class FaceIDVerifySuccessLoginScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 60.h),
+              AppSpacing.vertical(60),
 
               /// ---------------- TITLE ----------------
               Text(
@@ -79,11 +83,11 @@ class FaceIDVerifySuccessLoginScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 20.h),
+              AppSpacing.vSpace20,
 
               /// ---------------- SUBTITLE ----------------
               SizedBox(
-                width: 310.w,
+                width: AppSizing.w310,
                 child: Text(
                   AppStrings.verificationCompleteTransactions,
                   textAlign: TextAlign.center,
@@ -100,13 +104,13 @@ class FaceIDVerifySuccessLoginScreen extends StatelessWidget {
 
               /// ---------------- CONTINUE BUTTON ----------------
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: AppSpacing.paddingH20,
                 child: SizedBox(
                   width: double.infinity,
                   child: AuthSubmitButton(
                     text: AppStrings.continueToHome,
                     onPressed: () {
-                      // TODO: Navigate to home
+                      context.go(AppRoutes.home);
                     },
 
                     /// OVERRIDE only on this screen:
@@ -115,7 +119,7 @@ class FaceIDVerifySuccessLoginScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 50.h),
+              AppSpacing.vSpace50,
             ],
           ),
         ),

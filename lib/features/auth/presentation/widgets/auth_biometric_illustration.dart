@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthBiometricIllustration extends StatelessWidget {
@@ -19,19 +21,19 @@ class AuthBiometricIllustration extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      padding: AppSpacing.paddingH16,
       child: Column(
         children: [
           SvgPicture.asset(
             iconPath,
-            width: 140.w,
-            height: 140.h,
+            width: AppSizing.biometricIconXLarge,
+            height: AppSizing.h140,
             colorFilter: ColorFilter.mode(
               isDark ? AppColors.textWhiteSoft : AppColors.gray2,
               BlendMode.srcIn,
             ),
           ),
-          SizedBox(height: 117.h),
+          AppSpacing.vertical(117),
           Text(
             description,
             textAlign: TextAlign.center,

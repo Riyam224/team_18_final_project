@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
@@ -42,11 +42,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
         // ⬅️ THIS MAKES THE ECLIPSE REUSABLE
         child: SafeArea(
           child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h),
+            padding: AppSpacing.symmetricPadding(horizontal: 20, vertical: 16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(height: 84.h),
+                AppSpacing.vertical(84),
 
                 /// ------------ HEADER ------------
                 const AuthHeader(
@@ -54,7 +54,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   subtitle: AppStrings.signUpToEnjoy,
                 ),
 
-                SizedBox(height: 56.h),
+                AppSpacing.vertical(56),
 
                 /// ------------ INPUT FIELDS ------------
                 AuthTextField(
@@ -62,14 +62,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   hint: AppStrings.firstName,
                   icon: Icons.person_outline,
                 ),
-                SizedBox(height: 16.h),
+                AppSpacing.vSpace16,
 
                 AuthTextField(
                   controller: lastName,
                   hint: AppStrings.lastName,
                   icon: Icons.person_outline,
                 ),
-                SizedBox(height: 16.h),
+                AppSpacing.vSpace16,
 
                 AuthTextField(
                   controller: email,
@@ -77,7 +77,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   icon: Icons.email_outlined,
                   keyboardType: TextInputType.emailAddress,
                 ),
-                SizedBox(height: 16.h),
+                AppSpacing.vSpace16,
 
                 AuthTextField(
                   controller: password,
@@ -85,7 +85,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   icon: Icons.lock_outline,
                   obscure: true,
                 ),
-                SizedBox(height: 16.h),
+                AppSpacing.vSpace16,
 
                 AuthTextField(
                   controller: confirmPassword,
@@ -93,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   icon: Icons.lock_outline,
                   obscure: true,
                 ),
-                SizedBox(height: 16.h),
+                AppSpacing.vSpace16,
 
                 AuthTextField(
                   controller: phone,
@@ -102,7 +102,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   keyboardType: TextInputType.phone,
                 ),
 
-                SizedBox(height: 30.h),
+                AppSpacing.vSpace30,
 
                 /// ------------ BUTTON ------------
                 AuthSubmitButton(
@@ -112,7 +112,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
 
-                SizedBox(height: 26.h),
+                AppSpacing.vertical(26),
 
                 /// ------------ FOOTER ------------
                 AuthFooter(
@@ -125,7 +125,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
 
-                SizedBox(height: 20.h),
+                AppSpacing.vSpace20,
               ],
             ),
           ),

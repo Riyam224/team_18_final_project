@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthFooter extends StatelessWidget {
@@ -22,8 +23,8 @@ class AuthFooter extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: SizedBox(
-        width: 255.w,
-        height: 52.h,
+        width: AppSizing.w255,
+        height: AppSizing.h52,
         child: Text.rich(
           TextSpan(
             children: [

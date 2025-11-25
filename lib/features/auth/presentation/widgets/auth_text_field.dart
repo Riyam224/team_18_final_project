@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthTextField extends StatelessWidget {
@@ -24,22 +26,22 @@ class AuthTextField extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      height: 56.h,
-      padding: EdgeInsets.symmetric(horizontal: 20.w),
+      height: AppSizing.textFieldHeight,
+      padding: AppSpacing.textFieldPadding,
       decoration: ShapeDecoration(
         color: isDark ? AppColors.darkSurface : AppColors.lightInputBackground,
         shape: RoundedRectangleBorder(
           side: BorderSide(
-            width: 1.w,
+            width: AppSizing.borderThin,
             color: isDark ? AppColors.textWhite : AppColors.primary,
           ),
-          borderRadius: BorderRadius.circular(10.r),
+          borderRadius: BorderRadius.circular(AppSizing.radiusSmall),
         ),
         shadows: [
           BoxShadow(
             color: AppColors.shadowLight,
-            blurRadius: 2.r,
-            offset: Offset(0, 1.h),
+            blurRadius: AppSizing.shadowBlurRadius,
+            offset: Offset(0, AppSizing.shadowOffsetY),
             spreadRadius: 0,
           ),
         ],
@@ -48,12 +50,12 @@ class AuthTextField extends StatelessWidget {
         children: [
           Icon(
             icon,
-            size: 22.sp,
+            size: AppSizing.iconSmall,
             color: isDark
                 ? AppColors.textWhiteSoft
                 : AppColors.gray2,
           ),
-          SizedBox(width: 16.w),
+          AppSpacing.hSpace16,
           Expanded(
             child: TextField(
               controller: controller,

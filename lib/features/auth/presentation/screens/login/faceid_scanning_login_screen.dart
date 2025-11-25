@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
 
-class FaceIDScanningLoginScreen extends StatelessWidget {
+class FaceIDScanningLoginScreen extends StatefulWidget {
   const FaceIDScanningLoginScreen({super.key});
+
+  @override
+  State<FaceIDScanningLoginScreen> createState() => _FaceIDScanningLoginScreenState();
+}
+
+class _FaceIDScanningLoginScreenState extends State<FaceIDScanningLoginScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Simulate Face ID scanning with a delay
+    Future.delayed(const Duration(seconds: 3), () {
+      if (mounted) {
+        context.pushReplacement(AppRoutes.faceIdVerifiedSuccessLogin);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,8 +34,8 @@ class FaceIDScanningLoginScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        width: 375.w,
-        height: 812.h,
+        width: AppSizing.screenWidth,
+        height: AppSizing.screenHeight,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -27,14 +47,14 @@ class FaceIDScanningLoginScreen extends StatelessWidget {
           children: [
             /// ---------------- FACE ID BOX ----------------
             Positioned(
-              left: 110.w,
-              top: 330.h,
+              left: AppSizing.faceIDBoxLeft,
+              top: AppSizing.faceIDBoxTopAlt,
               child: Container(
-                width: 155.w,
-                height: 180.h,
+                width: AppSizing.faceIDContainerWidth,
+                height: AppSizing.faceIDContainerHeight,
                 decoration: BoxDecoration(
                   color: isDark ? Colors.black : Colors.white,
-                  borderRadius: BorderRadius.circular(28.r),
+                  borderRadius: BorderRadius.circular(AppSizing.radiusMedium),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -44,11 +64,11 @@ class FaceIDScanningLoginScreen extends StatelessWidget {
                       isDark
                           ? AppAssets.faceIDwhitebig
                           : AppAssets.faceIDdarkbig,
-                      width: 80.w,
-                      height: 80.h,
+                      width: AppSizing.biometricIconLarge,
+                      height: AppSizing.biometricIconLarge,
                     ),
 
-                    SizedBox(height: 20.h),
+                    AppSpacing.vSpace20,
 
                     /// LABEL
                     Text(
@@ -68,9 +88,9 @@ class FaceIDScanningLoginScreen extends StatelessWidget {
             Positioned(
               left: 0,
               right: 0,
-              bottom: 120.h,
+              bottom: AppSizing.footerTextBottom,
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w),
+                padding: AppSpacing.paddingH24,
                 child: Text(
                   AppStrings.faceIDPleaseWaitScanning,
                   textAlign: TextAlign.center,

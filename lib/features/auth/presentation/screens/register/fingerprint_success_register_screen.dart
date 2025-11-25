@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
@@ -20,7 +22,7 @@ class FingerprintSuccessRegisterScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: 190.93.h),
+              AppSpacing.vertical(190),
 
               /// ---------------- SUCCESS ICON ----------------
               Stack(
@@ -29,20 +31,20 @@ class FingerprintSuccessRegisterScreen extends StatelessWidget {
                   /// Circle
                   SvgPicture.asset(
                     isDark ? AppAssets.whiteCircle : AppAssets.darkCircle,
-                    width: 110.w,
-                    height: 110.w,
+                    width: AppSizing.successCircleSize,
+                    height: AppSizing.successCircleSize,
                   ),
 
                   /// Checkmark
                   SvgPicture.asset(
                     isDark ? AppAssets.darkCheck : AppAssets.whiteCheck,
-                    width: 86.21.w,
-                    height: 86.21.w,
+                    width: AppSizing.w86,
+                    height: AppSizing.w86,
                   ),
                 ],
               ),
 
-              SizedBox(height: 106.h),
+              AppSpacing.vertical(106),
 
               /// ---------------- TITLE ----------------
               Text(
@@ -54,11 +56,11 @@ class FingerprintSuccessRegisterScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 30.h),
+              AppSpacing.vSpace30,
 
               /// ---------------- SUBTITLE ----------------
               SizedBox(
-                width: 300.w,
+                width: AppSizing.w300,
                 child: Text(
                   AppStrings.youWillBeAbleToSignIn,
                   textAlign: TextAlign.center,
@@ -75,7 +77,7 @@ class FingerprintSuccessRegisterScreen extends StatelessWidget {
 
               /// ---------------- CONTINUE BUTTON ----------------
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20.w),
+                padding: AppSpacing.paddingH20,
                 child: AuthSubmitButton(
                   text: AppStrings.continueButton,
                   onPressed: () {
@@ -84,7 +86,7 @@ class FingerprintSuccessRegisterScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 50.h),
+              AppSpacing.vSpace50,
             ],
           ),
         ),

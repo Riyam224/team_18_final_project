@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/buttons/secondary_button.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
@@ -22,7 +24,7 @@ class FaceIDSetupRegisterScreen extends StatelessWidget {
         child: SafeArea(
           child: Column(
             children: [
-              SizedBox(height: 88.h),
+              AppSpacing.vertical(88),
 
               /// ---------- HEADER ----------
               Text(
@@ -33,10 +35,10 @@ class FaceIDSetupRegisterScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 33.h),
+              AppSpacing.vertical(33),
 
               SizedBox(
-                width: 300.w,
+                width: AppSizing.w300,
                 child: Text(
                   AppStrings.addFaceIDSecure,
                   textAlign: TextAlign.center,
@@ -48,24 +50,24 @@ class FaceIDSetupRegisterScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 50.h),
+              AppSpacing.vSpace50,
 
               /// ---------- FACE ID ICON BOX ----------
               Container(
-                width: 180.w,
-                height: 180.w,
+                width: AppSizing.faceIDIconContainerSize,
+                height: AppSizing.faceIDIconContainerSize,
                 decoration: BoxDecoration(
                   color: isDark ? AppColors.textDark : AppColors.lightSurface,
-                  borderRadius: BorderRadius.circular(30.r),
+                  borderRadius: BorderRadius.circular(AppSizing.radiusLarge),
                 ),
                 alignment: Alignment.center,
                 child: SvgPicture.asset(
                   isDark ? AppAssets.faceIDwhitebig : AppAssets.faceIDdarkbig,
-                  width: 75.w,
+                  width: AppSizing.biometricIconMedium,
                 ),
               ),
 
-              SizedBox(height: 20.h),
+              AppSpacing.vSpace20,
 
               Text(
                 AppStrings.faceID,
@@ -75,11 +77,11 @@ class FaceIDSetupRegisterScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 145.h),
+              AppSpacing.vertical(145),
 
               /// ---------- BUTTONS ----------
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.w),
+                padding: AppSpacing.paddingH16,
                 child: Row(
                   children: [
                     Expanded(
@@ -90,7 +92,7 @@ class FaceIDSetupRegisterScreen extends StatelessWidget {
                         textColor: isDark ? Colors.white : AppColors.primary,
                       ),
                     ),
-                    SizedBox(width: 20.w),
+                    AppSpacing.hSpace20,
                     Expanded(
                       child: AuthSubmitButton(
                         text: AppStrings.continueButton,
@@ -101,7 +103,7 @@ class FaceIDSetupRegisterScreen extends StatelessWidget {
                 ),
               ),
 
-              SizedBox(height: 40.h),
+              AppSpacing.vSpace40,
             ],
           ),
         ),

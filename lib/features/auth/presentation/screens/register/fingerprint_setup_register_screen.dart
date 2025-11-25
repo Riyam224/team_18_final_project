@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/buttons/secondary_button.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_title_section.dart';
@@ -18,7 +19,7 @@ class SetFingerprintRegisterScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 70.h),
+                AppSpacing.vertical(70),
 
                 /// Title + Subtitle (reusable)
                 const AuthTitleSection(
@@ -26,22 +27,22 @@ class SetFingerprintRegisterScreen extends StatelessWidget {
                   subtitle: AppStrings.addFingerprintSecure,
                 ),
 
-                SizedBox(height: 70.h),
+                AppSpacing.vSpace70,
 
                 /// Icon + description
                 const AuthBiometricIllustration(
                   iconPath: AppAssets.fingerPrintBig,
                   description: AppStrings.placeFingerprintInstruction,
                 ),
-                SizedBox(height: 59.1.h),
+                AppSpacing.vertical(59),
 
                 /// Skip Button (secondary)
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                  padding: AppSpacing.paddingH16,
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: SizedBox(
-                      width: 160.w,
+                      width: AppSizing.w160,
                       child: SecondaryButton(
                         text: AppStrings.skip,
                         onPressed: () {
@@ -52,7 +53,7 @@ class SetFingerprintRegisterScreen extends StatelessWidget {
                   ),
                 ),
 
-                SizedBox(height: 40.h),
+                AppSpacing.vSpace40,
               ],
             ),
           ),

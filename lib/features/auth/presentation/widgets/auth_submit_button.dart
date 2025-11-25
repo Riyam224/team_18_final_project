@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthSubmitButton extends StatelessWidget {
@@ -20,13 +21,13 @@ class AuthSubmitButton extends StatelessWidget {
 
     return SizedBox(
       width: double.infinity,
-      height: 56.h,
+      height: AppSizing.buttonHeight,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           backgroundColor: isDark ? AppColors.textWhite : AppColors.primary,
           foregroundColor: isDark ? AppColors.textDark : AppColors.textWhite,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(32.r),
+            borderRadius: BorderRadius.circular(AppSizing.radiusButton),
           ),
           elevation: 0,
         ),

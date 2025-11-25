@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:team_18_final_project/core/common_ui/buttons/primary_button.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
@@ -16,8 +17,8 @@ class FaceidSuccessRegisterScreen extends StatelessWidget {
 
     return Scaffold(
       body: Container(
-        width: 375.w,
-        height: 812.h,
+        width: AppSizing.screenWidth,
+        height: AppSizing.screenHeight,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           image: DecorationImage(
@@ -29,7 +30,7 @@ class FaceidSuccessRegisterScreen extends StatelessWidget {
           children: [
             /// ---------------- TOP TITLE ----------------
             Positioned(
-              top: 120.h,
+              top: AppSizing.h120,
               left: 0,
               right: 0,
               child: Text(
@@ -44,14 +45,14 @@ class FaceidSuccessRegisterScreen extends StatelessWidget {
             /// ---------------- SUCCESS BOX ----------------
 
             Positioned(
-              left: 110.w,
-              top: 327.h,
+              left: AppSizing.faceIDBoxLeft,
+              top: AppSizing.faceIDBoxTop,
               child: Container(
-                width: 155.w,
-                height: 180.h,
+                width: AppSizing.faceIDContainerWidth,
+                height: AppSizing.faceIDContainerHeight,
                 decoration: BoxDecoration(
                   color: isDark ? Colors.black : Colors.white,
-                  borderRadius: BorderRadius.circular(28.r),
+                  borderRadius: BorderRadius.circular(AppSizing.radiusMedium),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -66,8 +67,8 @@ class FaceidSuccessRegisterScreen extends StatelessWidget {
                                   .outlinedCircleWhite // white outline in dark
                               : AppAssets
                                   .outlinedCircleDark, // dark outline in light
-                          width: 72.w,
-                          height: 72.h,
+                          width: AppSizing.iconXLarge,
+                          height: AppSizing.iconXLarge,
                         ),
 
                         /// --- CHECKMARK ---
@@ -77,13 +78,13 @@ class FaceidSuccessRegisterScreen extends StatelessWidget {
                                   .faceIDDONElight // light checkmark in dark
                               : AppAssets
                                   .faceIDDonedark, // dark checkmark in light
-                          width: 26.w,
-                          height: 19.h,
+                          width: AppSizing.iconMedium,
+                          height: AppSizing.h20,
                         ),
                       ],
                     ),
 
-                    SizedBox(height: 20.h),
+                    AppSpacing.vSpace20,
 
                     /// --- FACE ID LABEL ---
                     Text(
@@ -99,9 +100,9 @@ class FaceidSuccessRegisterScreen extends StatelessWidget {
 
             /// ---------------- CONTINUE BUTTON ----------------
             Positioned(
-              bottom: 70.h,
-              left: 20.w,
-              right: 20.w,
+              bottom: AppSizing.continueButtonBottom,
+              left: AppSizing.w20,
+              right: AppSizing.w20,
               child: PrimaryButton(
                 text: AppStrings.continueButton,
                 color: Colors.white,

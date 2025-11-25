@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AuthBackground extends StatelessWidget {
@@ -20,12 +20,12 @@ class AuthBackground extends StatelessWidget {
         children: [
           /// === TOP RIGHT ECLIPSE IMAGE ===
           Positioned(
-            right: -66.w, // ⬅️ matches Figma bubble offset
-            top: -90.h,
+            right: AppSizing.eclipseRight,
+            top: AppSizing.eclipseTop,
             child: Image.asset(
               isDark ? AppAssets.authEclipsDark : AppAssets.authEclipsLight,
-              width: 342.w,
-              height: 342.h,
+              width: AppSizing.w342,
+              height: AppSizing.w342,
               fit: BoxFit.cover,
             ),
           ),
