@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/constants/theme_mode_color.dart';
 import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
@@ -14,11 +16,9 @@ class DetermineColorForButtonState extends StatefulWidget {
 
 class _DetermineColorForButtonStateState
     extends State<DetermineColorForButtonState> {
-  late List<String> items;
   late int buttonId;
   @override
   void initState() {
-    items = ['1h', '1d', '1w', '1m', '1y'];
     buttonId = 0;
     super.initState();
   }
@@ -33,17 +33,21 @@ class _DetermineColorForButtonStateState
   }
 
   Color getTextColor({required int index}) {
-    return ThemeModeColor.checkColorDarkOrLight(context,
-        colorDark: index == buttonId ? AppColors.textDark : AppColors.textGray,
-        colorLight:
-            index == buttonId ? AppColors.textWhite : AppColors.textGray);
+    return index == buttonId
+        ? (context.isDark() ? AppColors.textDark : AppColors.textWhite)
+        : AppColors.textGray;
+
+    // ThemeModeColor.checkColorDarkOrLight(context,
+    //     colorDark: index == buttonId ? AppColors.textDark : AppColors.textGray,
+    //     colorLight:
+    //         index == buttonId ? AppColors.textWhite : AppColors.textGray);
   }
 
   @override
   Widget build(BuildContext context) {
     return Row(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: List.generate(items.length, (int index) {
+        children: List.generate(AppStrings.items.length, (int index) {
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: 3.w),
             child: TextButton(
@@ -51,16 +55,26 @@ class _DetermineColorForButtonStateState
                   buttonId = index;
                   setState(() {});
                 },
-                style: context.appTheme.textButtonTheme.style!.copyWith(
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                      getButtonColor(index: index),
-                    ),
-                    minimumSize: WidgetStateProperty.all(Size(50.w, 25.h))),
-                child: Text(
-                  items[index],
-                  style: context.appTheme.textTheme.labelMedium!
-                      .copyWith(color: getTextColor(index: index)),
-                )),
+                style: ButtonStyle(
+                  shape: WidgetStateProperty.all(RoundedRectangleBorder(
+                      borderRadius: BorderRadiusGeometry.circular(8))),
+                  minimumSize: WidgetStateProperty.all(Size(50.w, 32.h)),
+                  backgroundColor:
+                      WidgetStateProperty.all<Color>(context.isDark()
+                          ? index == buttonId
+                              ? AppColors.lightSurface
+                              : AppColors.darkBackground
+                          : index == buttonId
+                              ? AppColors.primary
+                              : AppColors.lightSurface),
+                ),
+                child: Text(AppStrings.items[index],
+                    style: context.appTheme.textTheme.labelMedium!.copyWith(
+                        color: index == buttonId
+                            ? (context.isDark()
+                                ? AppColors.textDark
+                                : AppColors.textWhite)
+                            : AppColors.textGray))),
           );
         }));
   }

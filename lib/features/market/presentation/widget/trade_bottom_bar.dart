@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_action_button.dart';
-import 'package:team_18_final_project/core/constants/theme_mode_color.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class TradeBottomBar extends StatelessWidget {
@@ -14,35 +15,31 @@ class TradeBottomBar extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 62.h,
-      color: ThemeModeColor.checkColorDarkOrLight(context,
-          colorDark: AppColors.darkBackground,
-          colorLight: AppColors.lightSurface),
+      color:
+          context.isDark() ? AppColors.darkBackground : AppColors.lightSurface,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           BottomActionButton(
-            textColor: ThemeModeColor.checkColorDarkOrLight(context,
-                colorDark: AppColors.error, colorLight: AppColors.alertRed),
-            width: 125.w,
-            height: 40.h,
-            backgroundColor: ThemeModeColor.checkColorDarkOrLight(context,
-                colorDark: AppColors.darkBrown,
-                colorLight: AppColors.lightPink),
+            textColor: AppColors.alertRed,
+            width: 145.w,
+            height: 45.h,
+            backgroundColor:
+                context.isDark() ? AppColors.darkBrown : AppColors.lightPink,
             borderRadiusGeometry: BorderRadius.circular(31),
-            text: 'Sell',
+            text: AppStrings.sell,
             onPressed: () {},
           ),
           BottomActionButton(
-            textColor: ThemeModeColor.checkColorDarkOrLight(context,
-                colorDark: AppColors.darkBackground,
-                colorLight: AppColors.textWhite),
-            width: 125.w,
-            height: 40.h,
-            backgroundColor: ThemeModeColor.checkColorDarkOrLight(context,
-                colorDark: AppColors.lightSurface,
-                colorLight: AppColors.primary),
+            textColor: context.isDark()
+                ? AppColors.darkBackground
+                : AppColors.textWhite,
+            width: 145.w,
+            height: 45.h,
+            backgroundColor:
+                context.isDark() ? AppColors.lightSurface : AppColors.primary,
             borderRadiusGeometry: BorderRadius.circular(31),
-            text: 'Buy',
+            text: AppStrings.buy,
             onPressed: () {},
           )
         ],

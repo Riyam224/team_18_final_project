@@ -34,7 +34,7 @@ ThemeData buildDarkTheme() {
       labelLarge: AppTextStyles.labelLarge.copyWith(color: AppColors.primary),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.darkBackground,
+      backgroundColor: AppColors.darkBackground2,
       elevation: 0,
       foregroundColor: Colors.white,
     ),

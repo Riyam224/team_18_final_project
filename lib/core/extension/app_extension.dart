@@ -12,5 +12,5 @@ extension DarkOrLight on BuildContext {
 }
 
 extension StringExtension on String? {
-  bool isNullOrEmp() => this == null || this == "";
+  bool isNullOrEmpty() => this == null || this == "";
 }

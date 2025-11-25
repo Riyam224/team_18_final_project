@@ -3,7 +3,9 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/theme_mode_color.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/crypto_price_display.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/determine_color_for_button_state.dart';
@@ -38,8 +40,10 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(16),
+        color: context.isDark()
+            ? AppColors.darkBackground
+            : AppColors.lightSurface,
+        borderRadius: BorderRadius.circular(16).r,
       ),
       padding:
           const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16).r,
@@ -48,9 +52,9 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CryptoPriceDisplay(),
-          SizedBox(height: 12.h),
-          SizedBox(
-            height: 180.h,
+          AppSpacing.vertical(12),
+          AppSpacing.vertical(
+            180,
             child: GestureDetector(
               onHorizontalDragUpdate: (_) {
                 setState(() {
@@ -91,7 +95,7 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
               ),
             ),
           ),
-          SizedBox(height: 16.h),
+          AppSpacing.vertical(16),
           DetermineColorForButtonState()
         ],
       ),

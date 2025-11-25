@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:team_18_final_project/core/constants/theme_mode_color.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
@@ -13,30 +14,23 @@ class BitcoinTitleDescription extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
         child: Padding(
-      padding: const EdgeInsets.only(left: 0).r,
+      padding: const EdgeInsets.only(left: 2).r,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("About Bitcoin",
-              style: context.appTheme.textTheme.headlineSmall!.copyWith(
-                  fontWeight: FontWeight.w600,
+          Text(AppStrings.aboutBitcoin,
+              style: context.appTheme.textTheme.titleSmall!.copyWith(
                   fontSize: 18.sp,
-                  color: ThemeModeColor.checkColorDarkOrLight(context,
-                      colorDark: AppColors.textWhite,
-                      colorLight: AppColors.primary))),
-          SizedBox(
-            height: 22.h,
-          ),
-          Container(
-            constraints: BoxConstraints(maxWidth: 337.w),
-            child: Text(
-              textAlign: TextAlign.left,
-              "Bitcoin is a decentralized cryptocurrency originally described in a 2008 whitepaper by a person, or group of people, using the alias Satoshi Nakamoto. It was launched soon after, in\nJanuary 2009.",
-              style: context.appTheme.textTheme.bodyLarge!.copyWith(
-                  color: ThemeModeColor.checkColorDarkOrLight(context,
-                      colorDark: AppColors.textWhite,
-                      colorLight: AppColors.gray2),
-                  fontWeight: FontWeight.w600),
+                  color: context.isDark()
+                      ? AppColors.textWhite
+                      : AppColors.primary)),
+          AppSpacing.vertical(22),
+          Text(
+            textAlign: TextAlign.left,
+            AppStrings.bitcoinDescription,
+            style: context.appTheme.textTheme.bodyLarge!.copyWith(
+              fontSize: 13.sp,
+              color: context.isDark() ? AppColors.textWhite : AppColors.gray2,
             ),
           ),
         ],

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/primary_appBar.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/constants/theme_mode_color.dart';
 import 'package:team_18_final_project/core/extension/app_extension.dart';
 
@@ -21,24 +23,22 @@ class CoinDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color isDarkOrLight = ThemeModeColor.checkColorDarkOrLight(
-      context,
-      colorDark: AppColors.textWhite,
-      colorLight: AppColors.primary,
-    );
     return Scaffold(
       appBar: PrimaryAppBar(
+        centerTitle: true,
         surfaceTintColor: Colors.transparent,
         leading: Icon(
           Icons.arrow_back_rounded,
-          color: isDarkOrLight,
+          color: context.isDark() ? AppColors.textWhite : AppColors.primary,
           size: 28,
         ),
-        title: Text('Coin Details',
-            style: Theme.of(context)
-                .textTheme
-                .headlineLarge
-                ?.copyWith(fontSize: 23.sp, color: isDarkOrLight)),
+        title: Text(AppStrings.coinDetails,
+            style: Theme.of(context).textTheme.headlineLarge?.copyWith(
+                  fontSize: 22.sp,
+                  color: context.isDark()
+                      ? AppColors.textWhite
+                      : AppColors.primary,
+                )),
       ),
       body: Padding(
         padding: const EdgeInsets.only(
@@ -49,38 +49,34 @@ class CoinDetailsScreen extends StatelessWidget {
           SliverToBoxAdapter(
             child: Column(
               children: [
-                SizedBox(
-                  height: 29.h,
-                ),
+                AppSpacing.vertical(29),
                 const BitcoinNameWithImage(),
-                SizedBox(
-                  height: 14.91.h,
-                ),
+                AppSpacing.vertical(14.91),
                 const CryptoPriceChart(),
-                SizedBox(
-                  height: 20.h,
-                ),
+                AppSpacing.vertical(20),
                 Padding(
                   padding: const EdgeInsets.only(left: 13).r,
                   child: Align(
                     alignment: AlignmentDirectional.bottomStart,
-                    child: Text("Statics",
+                    child: Text(AppStrings.statics,
                         style:
                             context.appTheme.textTheme.headlineSmall!.copyWith(
                           fontWeight: FontWeight.w600,
                           fontSize: 18.sp,
-                          color: isDarkOrLight,
+                          color: context.isDark()
+                              ? AppColors.textWhite
+                              : AppColors.primary,
                         )),
                   ),
                 ),
               ],
             ),
           ),
-          MarketStatsList(),
-          BitcoinTitleDescription()
+          const MarketStatsList(),
+          const BitcoinTitleDescription()
         ]),
       ),
-      bottomNavigationBar: TradeBottomBar(),
+      bottomNavigationBar: const TradeBottomBar(),
     );
   }
 }

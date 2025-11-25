@@ -16,6 +16,7 @@ class AppColors {
   static const Color lightSurface2 = Color(0xFFF8F8F8);
 
   // Grays (Text & Borders)
+  static const Color gray0 = Color(0xFF27292A);
   static const Color gray1 = Color(0xFF979797);
   static const Color gray2 = Color(0xFF5D5C5D);
   static const Color gray3 = Color(0xFF949494);
@@ -42,6 +43,7 @@ class AppColors {
   static const Color textGrayDark = Color(0xFF787A8D);
   static const Color textLightGreen = Color(0xFFE1F8D3);
   static const Color darkBrown = Color(0xFF3D1C1B);
+  static const Color textGrayLight = Color(0xFF9CA3AF);
 
   // ===== Price Colors =====
   static const Color priceUp = Color(0xFF00CB6A);
