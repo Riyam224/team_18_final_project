@@ -10,13 +10,6 @@ import '../../../../core/common_ui/buttons/circle_button.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/constants/app_strings.dart';
 
-/// The onboarding screen that introduces new users to the app.
-///
-/// Displays a series of 4 informational pages with:
-/// - A skip button to bypass onboarding
-/// - Page indicators showing current position
-/// - A next button to navigate between pages (except on the last page)
-/// - Login/Register buttons on the final page
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
@@ -25,25 +18,15 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  /// Controller for managing the PageView navigation
   final PageController _controller = PageController();
-
-  /// Tracks the current page index (0-3)
   int _currentPage = 0;
 
-  /// Navigates to the next onboarding page.
-  ///
-  /// Does nothing if already on the last page.
   void _next() {
     if (_currentPage == onboardingItems.length - 1) return;
     _controller.nextPage(
         duration: const Duration(milliseconds: 300), curve: Curves.ease);
   }
 
-  /// Skips the onboarding flow and navigates to login.
-  ///
-  /// Marks onboarding as completed in SharedPreferences so it won't
-  /// be shown again on future app launches.
   void _skip() async {
     await AppPrefs.setOnboardingCompleted();
     if (mounted) context.go(AppRoutes.login);
@@ -54,7 +37,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     final primary = Theme.of(context).colorScheme.primary;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
 
-    // Theme-aware button colors
     final circleButtonColor =
         isDarkMode ? AppColors.textWhiteSoft : AppColors.primary;
     final circleButtonIconColor =
@@ -64,7 +46,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
-            // Skip button (top-right)
             Align(
               alignment: Alignment.centerRight,
               child: Padding(
@@ -81,8 +62,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
             ),
-
-            // Swipeable PageView containing all onboarding pages
             Expanded(
               child: PageView.builder(
                 controller: _controller,
@@ -101,9 +80,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 },
               ),
             ),
-
-            // Bottom navigation (indicators + next button)
-            // Hidden on the last page since it has its own buttons
             if (_currentPage != onboardingItems.length - 1)
               Padding(
                 padding: EdgeInsets.only(
