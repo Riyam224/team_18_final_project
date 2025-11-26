@@ -185,6 +185,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_nav_shell.dart';
+import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/login/faceid_scanning_login_screen.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/login/faceid_verify_login_screen.dart';
@@ -214,6 +215,7 @@ final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 class RouteGenerator {
   static final GoRouter mainRoutingInOurApp = GoRouter(
     navigatorKey: appNavigatorKey,
+    observers: [appRouteObserver],
     errorBuilder: (context, state) =>
         const Scaffold(body: Center(child: Text('404 Not Found'))),
     initialLocation: AppRoutes.register,
