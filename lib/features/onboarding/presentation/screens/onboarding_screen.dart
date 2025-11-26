@@ -33,6 +33,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
