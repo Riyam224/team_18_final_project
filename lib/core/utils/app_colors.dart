@@ -16,6 +16,7 @@ class AppColors {
   static const Color lightSurface2 = Color(0xFFF8F8F8);
 
   // Grays (Text & Borders)
+  static const Color gray0 = Color(0xFF27292A);
   static const Color gray1 = Color(0xFF979797);
   static const Color gray2 = Color(0xFF5D5C5D);
   static const Color gray3 = Color(0xFF949494);
@@ -28,6 +29,7 @@ class AppColors {
   static const Color textDark = Color(0xFF000000);
   static const Color textGray = Color(0xFF494D58);
   static const Color textGraySecondary = Color(0xFF8C8C8C);
+  static const Color lightPink = Color(0xFFF4CCCC);
 
   // ===== Dark Mode =====
   static const Color darkBackground = Color(0xFF0D0D0D);
@@ -39,6 +41,8 @@ class AppColors {
   static const Color textWhite = Color(0xFFFFFFFF);
   static const Color textWhiteSoft = Color(0xFFE2E3E4);
   static const Color textGrayDark = Color(0xFF787A8D);
+  static const Color textLightGreen = Color(0xFFE1F8D3);
+  static const Color darkBrown = Color(0xFF3D1C1B);
   static const Color textGrayLight = Color(0xFF9CA3AF);
 
   // ===== Price Colors =====
@@ -49,4 +53,5 @@ class AppColors {
   static const Color success = Color(0xFF69D895);
   static const Color warning = Color(0xFFF7931A);
   static const Color error = Color(0xFFF47E7E);
+  static const Color alertRed = Color(0xFFFF403B);
 }
