@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/constants/theme_mode_color.dart';
 import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
@@ -21,26 +20,6 @@ class _DetermineColorForButtonStateState
   void initState() {
     buttonId = 0;
     super.initState();
-  }
-
-  Color getButtonColor({required int index}) {
-    return ThemeModeColor.checkColorDarkOrLight(context,
-        colorDark: index == buttonId
-            ? AppColors.lightSurface
-            : AppColors.darkBackground,
-        colorLight:
-            index == buttonId ? AppColors.primary : AppColors.lightSurface);
-  }
-
-  Color getTextColor({required int index}) {
-    return index == buttonId
-        ? (context.isDark() ? AppColors.textDark : AppColors.textWhite)
-        : AppColors.textGray;
-
-    // ThemeModeColor.checkColorDarkOrLight(context,
-    //     colorDark: index == buttonId ? AppColors.textDark : AppColors.textGray,
-    //     colorLight:
-    //         index == buttonId ? AppColors.textWhite : AppColors.textGray);
   }
 
   @override
