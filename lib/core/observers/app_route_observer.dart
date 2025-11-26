@@ -7,14 +7,16 @@ final AppRouteObserver appRouteObserver = AppRouteObserver();
 class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   SecureApplicationController? _controller;
 
-  /// Add sensitive screens here
+  /// Sensitive screens that require blur and screenshot blocking
   final List<String> sensitiveRoutes = [
     '/portfolio',
-    // todo add this
+    '/transactions',
     '/buy-sell',
     '/payment',
-    // todo add this
-    // '/coin-details',
+    '/wallet',
+    '/settings',
+    '/profile',
+    '/account',
   ];
 
   void attachController(SecureApplicationController controller) {

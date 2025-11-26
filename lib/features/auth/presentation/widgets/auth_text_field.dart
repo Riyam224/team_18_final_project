@@ -11,6 +11,8 @@ class AuthTextField extends StatelessWidget {
   final IconData icon;
   final bool obscure;
   final TextInputType keyboardType;
+  final bool enabled;
+  final String? Function(String?)? validator;
 
   const AuthTextField({
     super.key,
@@ -19,6 +21,8 @@ class AuthTextField extends StatelessWidget {
     required this.icon,
     this.obscure = false,
     this.keyboardType = TextInputType.text,
+    this.enabled = true,
+    this.validator,
   });
 
   @override
@@ -26,10 +30,12 @@ class AuthTextField extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
-      height: AppSizing.textFieldHeight,
+      constraints: BoxConstraints(minHeight: AppSizing.textFieldHeight),
       padding: AppSpacing.textFieldPadding,
       decoration: ShapeDecoration(
-        color: isDark ? AppColors.darkSurface : AppColors.lightInputBackground,
+        color: enabled
+            ? (isDark ? AppColors.darkSurface : AppColors.lightInputBackground)
+            : (isDark ? AppColors.darkSurface.withValues(alpha: 0.5) : AppColors.lightInputBackground.withValues(alpha: 0.5)),
         shape: RoundedRectangleBorder(
           side: BorderSide(
             width: AppSizing.borderThin,
@@ -51,16 +57,18 @@ class AuthTextField extends StatelessWidget {
           Icon(
             icon,
             size: AppSizing.iconSmall,
-            color: isDark
-                ? AppColors.textWhiteSoft
-                : AppColors.gray2,
+            color: enabled
+                ? (isDark ? AppColors.textWhiteSoft : AppColors.gray2)
+                : (isDark ? AppColors.textWhiteSoft.withValues(alpha: 0.5) : AppColors.gray2.withValues(alpha: 0.5)),
           ),
           AppSpacing.hSpace16,
           Expanded(
-            child: TextField(
+            child: TextFormField(
               controller: controller,
               obscureText: obscure,
               keyboardType: keyboardType,
+              enabled: enabled,
+              validator: validator,
               style: AppTextStyles.authTextFieldInput.copyWith(
                 fontSize: 14.sp,
                 color: isDark ? AppColors.textWhite : AppColors.textDark,
@@ -70,10 +78,11 @@ class AuthTextField extends StatelessWidget {
                 hintText: hint,
                 hintStyle: AppTextStyles.authTextFieldHint.copyWith(
                   fontSize: 14.sp,
-                  color: isDark
-                      ? AppColors.textGrayDark
-                      : AppColors.gray3,
+                  color: isDark ? AppColors.textGrayDark : AppColors.gray3,
                 ),
+                errorStyle: const TextStyle(height: 0, fontSize: 0),
+                errorBorder: InputBorder.none,
+                focusedErrorBorder: InputBorder.none,
               ),
             ),
           ),

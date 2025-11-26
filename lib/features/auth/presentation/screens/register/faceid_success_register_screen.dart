@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/buttons/primary_button.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/core/security/app_lock_service.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 
@@ -107,8 +110,12 @@ class FaceidSuccessRegisterScreen extends StatelessWidget {
                 text: AppStrings.continueButton,
                 color: Colors.white,
                 textColor: AppColors.primary,
-                onPressed: () {
-                  // TODO: next screen navigation
+                onPressed: () async {
+                  // Update activity timestamp to prevent app lock
+                  await AppLockService.updateActivity();
+                  if (context.mounted) {
+                    context.go(AppRoutes.home);
+                  }
                 },
               ),
             )

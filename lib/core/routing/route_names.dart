@@ -1,5 +1,3 @@
-import 'package:team_18_final_project/features/auth/presentation/screens/login/fingerprint_verify_login_screen.dart';
-
 class AppRoutes {
   // Splash + Onboarding + Auth
   static const splash = '/splash';

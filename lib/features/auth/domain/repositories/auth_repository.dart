@@ -1,40 +1,29 @@
-import 'dart:convert';
-import 'package:team_18_final_project/core/security/secure_storage_service.dart';
-import 'package:team_18_final_project/features/auth/data/models/user_model.dart';
+import '../../data/models/user_model.dart';
 
-class AuthRepository {
-  static const _userKey = 'USER_DATA';
-  static const _tokenKey = 'AUTH_TOKEN';
+abstract class AuthRepository {
+  Future<String> login(String email, String password);
+  Future<String> register(UserModel user);
 
-  Future<bool> register(UserModel user) async {
-    final jsonString = jsonEncode(user.toJson());
-    await SecureStorageService.write(_userKey, jsonString);
-    return true;
-  }
+  Future<void> storeUserCredentials({
+    required String userId,
+    required String token,
+  });
 
-  Future<UserModel?> getUser() async {
-    final jsonString = await SecureStorageService.read(_userKey);
-    if (jsonString == null) return null;
-    return UserModel.fromJson(jsonDecode(jsonString));
-  }
+  Future<void> storeBiometricSettings({
+    required bool enabled,
+    required String type,
+  });
 
-  Future<bool> login(String email, String password) async {
-    final user = await getUser();
-    if (user == null) return false;
+  Future<bool> isBiometricEnabled();
+  Future<String?> getBiometricType();
 
-    if (user.email == email && user.password == password) {
-      await SecureStorageService.write(_tokenKey, "dummy_token_${DateTime.now().millisecondsSinceEpoch}");
-      return true;
-    }
-    return false;
-  }
+  // Store credentials for biometric login
+  Future<void> storeCredentialsForBiometric({
+    required String email,
+    required String password,
+  });
 
-  Future<bool> isLoggedIn() async {
-    final token = await SecureStorageService.read(_tokenKey);
-    return token != null;
-  }
-
-  Future<void> logout() async {
-    await SecureStorageService.delete(_tokenKey);
-  }
+  // Get stored credentials for biometric login
+  Future<String?> getStoredEmail();
+  Future<String?> getStoredPassword();
 }

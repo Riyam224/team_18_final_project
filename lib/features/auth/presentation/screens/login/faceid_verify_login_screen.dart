@@ -8,6 +8,7 @@ import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/core/security/app_lock_service.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_submit_button.dart';
@@ -109,8 +110,12 @@ class FaceIDVerifySuccessLoginScreen extends StatelessWidget {
                   width: double.infinity,
                   child: AuthSubmitButton(
                     text: AppStrings.continueToHome,
-                    onPressed: () {
-                      context.go(AppRoutes.home);
+                    onPressed: () async {
+                      // Update activity timestamp to prevent app lock
+                      await AppLockService.updateActivity();
+                      if (context.mounted) {
+                        context.go(AppRoutes.home);
+                      }
                     },
 
                     /// OVERRIDE only on this screen:

@@ -187,6 +187,7 @@ import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_nav_shell.dart';
 import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/features/auth/presentation/debug/biometric_debug_screen.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/login/faceid_scanning_login_screen.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/login/faceid_verify_login_screen.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/login/fingerprint_verify_login_screen.dart';
@@ -209,6 +210,8 @@ import 'package:team_18_final_project/features/portfolio/presentation/screens/po
 import 'package:team_18_final_project/features/settings/presentation/screens/settings_screen.dart';
 import 'package:team_18_final_project/features/splash/presentation/screens/splash_screen.dart';
 
+import '../../features/auth/presentation/debug/biometric_test_screen.dart';
+
 // 📌 Add this for App-Lock navigation from main.dart
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -218,7 +221,11 @@ class RouteGenerator {
     observers: [appRouteObserver],
     errorBuilder: (context, state) =>
         const Scaffold(body: Center(child: Text('404 Not Found'))),
-    initialLocation: AppRoutes.register,
+    // todo testing screen route
+    // initialLocation: '/biometric-test',
+    initialLocation: AppRoutes.login,
+
+    // initialLocation: AppRoutes.register,
     routes: [
       // ==========================
       // AUTH, SPLASH, ONBOARDING
@@ -292,8 +299,19 @@ class RouteGenerator {
         builder: (_, __) => const AppLockScreen(),
       ),
 
+      //  todo testing  ==========================
+      // debug route to test app lock
       // ==========================
-      // MAIN APP w/ BOTTOM NAV
+
+      GoRoute(
+        path: '/biometric-test',
+        builder: (_, __) => const BiometricTestScreen(),
+      ),
+      GoRoute(
+        path: '/debug-biometrics',
+        builder: (_, __) => BiometricDebugScreen(),
+      ),
+      // ==========================      // MAIN APP w/ BOTTOM NAV
       // ==========================
       ShellRoute(
         builder: (context, state, child) => BottomNavShell(child: child),

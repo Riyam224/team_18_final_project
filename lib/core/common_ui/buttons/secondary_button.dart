@@ -5,7 +5,7 @@ import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class SecondaryButton extends StatelessWidget {
   final String text;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double? height;
   final double? radius;
   final Color? borderColor;

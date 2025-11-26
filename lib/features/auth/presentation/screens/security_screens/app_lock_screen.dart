@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:team_18_final_project/core/security/app_lock_service.dart';
 import 'package:team_18_final_project/core/security/biometric_service.dart';
 
 class AppLockScreen extends StatelessWidget {
@@ -17,10 +17,15 @@ class AppLockScreen extends StatelessWidget {
             foregroundColor: Colors.black,
           ),
           onPressed: () async {
+            // Update activity timestamp BEFORE authentication
+            await AppLockService.updateActivity();
+
             final bio = BiometricService();
             final ok = await bio.authenticate();
 
-            if (ok) {
+            if (ok && context.mounted) {
+              // Update activity again after successful authentication
+              await AppLockService.updateActivity();
               if (context.canPop()) {
                 context.pop();
               } else {
