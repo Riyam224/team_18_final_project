@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/primary_appBar.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/constants/theme_mode_color.dart';
 import 'package:team_18_final_project/core/extension/app_extension.dart';
 
 import 'package:team_18_final_project/core/utils/app_colors.dart';
