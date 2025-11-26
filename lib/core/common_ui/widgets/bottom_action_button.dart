@@ -9,6 +9,7 @@ class BottomActionButton extends StatelessWidget {
   final Color? textColor;
   final double? height;
   final double? width;
+  final Widget? child;
   final BorderRadiusGeometry? borderRadiusGeometry;
   final EdgeInsetsGeometry? padding;
 
@@ -22,6 +23,7 @@ class BottomActionButton extends StatelessWidget {
     this.width,
     this.borderRadiusGeometry,
     this.padding,
+    this.child,
   });
 
   @override
@@ -43,14 +45,15 @@ class BottomActionButton extends StatelessWidget {
           elevation: 0,
         ),
         onPressed: onPressed,
-        child: Text(
-          text,
-          style: TextStyle(
-            color: textColor ?? Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+        child: child ??
+            Text(
+              text,
+              style: TextStyle(
+                color: textColor ?? Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
       ),
     );
   }

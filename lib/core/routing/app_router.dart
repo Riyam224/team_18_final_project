@@ -29,7 +29,7 @@ class RouteGenerator {
         const Scaffold(body: Center(child: Text('404 Not Found'))),
 
     // initial route
-    initialLocation: '${AppRoutes.coinDetails}/1',
+    initialLocation: '${AppRoutes.buySell}/1',
     // AppRoutes.home,
 
     routes: [
