@@ -4,7 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/theme_mode_color.dart';
 import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/crypto_price_display.dart';
@@ -163,8 +162,7 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
       spots: spots,
       isCurved: true,
       barWidth: 2.0,
-      color: ThemeModeColor.checkColorDarkOrLight(context,
-          colorDark: AppColors.lightSurface, colorLight: AppColors.primary),
+      color: context.isDark() ? AppColors.lightSurface : AppColors.primary,
       dotData: FlDotData(show: false),
       belowBarData: BarAreaData(
         show: true,
