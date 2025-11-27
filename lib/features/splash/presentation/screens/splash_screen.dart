@@ -3,10 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/local_auth_service.dart';
-import 'package:team_18_final_project/core/security/secure_storage_service.dart';
-import 'package:team_18_final_project/core/security/session_manager.dart';
-import 'package:team_18_final_project/core/storage/shared_prefs.dart';
 import 'package:team_18_final_project/features/splash/presentation/widgets/splash_icon.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -41,38 +37,8 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _navigate() async {
     await Future.delayed(const Duration(milliseconds: 2000));
-    final onboardingCompleted = await AppPrefs.isOnboardingCompleted();
-    final hasSession = await SessionManager.hasValidSession();
-
     if (!mounted) return;
-
-    // If a valid session exists, head straight to the app
-    if (hasSession) {
-      context.go(AppRoutes.home);
-      return;
-    }
-
-    // If onboarding not done, continue to onboarding
-    if (!onboardingCompleted) {
-      context.go(AppRoutes.onboarding);
-      return;
-    }
-
-    // Onboarding done but no active session: prefer biometric login when available
-    final biometricsEnabled = await SecureStorageService.isBiometricEnabled();
-    if (biometricsEnabled) {
-      final biometricsAvailable = await LocalAuthService.isBiometricAvailable();
-      if (biometricsAvailable) {
-        final type = await SecureStorageService.getBiometricType();
-        final targetRoute = type == 'face'
-            ? AppRoutes.faceIdScanningLogin
-            : AppRoutes.verifyFingerprintLogin;
-        context.go(targetRoute);
-        return;
-      }
-    }
-
-    // Default to credentials login
+    // Always send the user to the login screen; downstream flows enforce biometrics
     context.go(AppRoutes.login);
   }
 

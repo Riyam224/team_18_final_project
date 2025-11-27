@@ -112,8 +112,7 @@ class FaceIDVerifySuccessLoginScreen extends StatelessWidget {
                   child: AuthSubmitButton(
                     text: AppStrings.continueToHome,
                     onPressed: () async {
-                      // Update activity timestamp to prevent app lock
-                      await AppLockService.updateActivity();
+                      await AppLockService.resetLock();
                       await SessionManager.startSession();
                       if (context.mounted) {
                         context.go(AppRoutes.home);

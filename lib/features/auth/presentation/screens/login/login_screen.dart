@@ -91,18 +91,15 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) async {
             if (state is AuthLoginSuccess) {
-              // Update activity timestamp to prevent app lock
-              await AppLockService.updateActivity();
+              // Prevent immediate app-lock, start session, then route to biometric verification
+              await AppLockService.resetLock();
               await SessionManager.startSession();
               if (context.mounted) {
-                // Check if biometric is enabled
-                if (state.biometricEnabled && state.biometricType != null) {
-                  // User has biometric enabled, navigate to home
-                  context.go(AppRoutes.home);
-                } else {
-                  // Navigate to home
-                  context.go(AppRoutes.home);
-                }
+                final type = (state.biometricType ?? '').toLowerCase();
+                final targetRoute = type == 'face'
+                    ? AppRoutes.faceIdScanningLogin
+                    : AppRoutes.verifyFingerprintLogin;
+                context.go(targetRoute);
               }
             } else if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(

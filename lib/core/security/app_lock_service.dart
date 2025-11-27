@@ -5,6 +5,11 @@ class AppLockService {
   /// Default auto-lock timeout: 2 minutes
   static const int defaultAutoLockMinutes = 2;
 
+  /// Reset lock timer by stamping a fresh activity time
+  static Future<void> resetLock() async {
+    await SecureStorageService.saveLastActivity();
+  }
+
   /// Update last activity timestamp
   static Future<void> updateActivity() async {
     await SecureStorageService.saveLastActivity();

@@ -77,7 +77,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
       // Check if session is still valid
       await SessionManager.checkSessionValidity();
 
-      // Check if app should lock due to inactivity
+      // Respect inactivity timeout only (no immediate app-lock after login)
       final shouldLock = await AppLockService.shouldLock();
       if (shouldLock && mounted) {
         appNavigatorKey.currentContext?.go('/app-lock');
