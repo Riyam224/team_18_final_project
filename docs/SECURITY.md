@@ -2,6 +2,14 @@
 
 This document summarizes how security, authentication, and privacy protections are wired in the app, and where to extend them.
 
+## Detailed Documentation
+
+For in-depth information about specific security features, please refer to:
+
+- **[Authentication Flow](AUTH_FLOW.md)** - Complete guide to login, registration, and biometric authentication flows
+- **[Security Architecture](SECURITY_ARCHITECTURE.md)** - Comprehensive documentation of all security services and layers
+- **[Splash & Onboarding](SPLASH_ONBOARDING.md)** - Initial app experience and user onboarding flows
+
 ## Launch & Auth Flow
 ```mermaid
 flowchart TD

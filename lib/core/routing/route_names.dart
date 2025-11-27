@@ -18,6 +18,7 @@ class AppRoutes {
 
   // Security
   static const lock = '/lock';
+  static const appLock = '/app-lock';
   static const biometric = '/biometric';
   // register
   static const setFingerprintRegister = '/setFingerprintRegister';

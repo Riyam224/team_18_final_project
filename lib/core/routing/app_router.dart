@@ -108,7 +108,7 @@ class RouteGenerator {
       // 🔒 APP LOCK SCREEN
       // ==========================
       GoRoute(
-        path: '/app-lock',
+        path: AppRoutes.appLock,
         builder: (_, __) => const AppLockScreen(),
       ),
 
