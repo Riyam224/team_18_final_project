@@ -9,6 +9,9 @@ class SecureStorageService {
     iOptions: IOSOptions(
       accessibility: KeychainAccessibility.first_unlock,
     ),
+    mOptions: MacOsOptions(
+      accessibility: KeychainAccessibility.first_unlock,
+    ),
   );
 
   // Keys for sensitive data
@@ -25,7 +28,19 @@ class SecureStorageService {
 
   /// Write a value to secure storage
   static Future<void> write(String key, String value) async {
-    await _storage.write(key: key, value: value);
+    try {
+      await _storage.write(key: key, value: value);
+    } on Exception catch (e) {
+      // Handle macOS/iOS keychain duplicate item error (-25299)
+      if (e.toString().contains('-25299') ||
+          e.toString().contains('already exists')) {
+        // Delete existing item and retry
+        await _storage.delete(key: key);
+        await _storage.write(key: key, value: value);
+      } else {
+        rethrow;
+      }
+    }
   }
 
   /// Read a value from secure storage

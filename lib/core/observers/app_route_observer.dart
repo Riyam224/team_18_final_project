@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secure_application/secure_application.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/app_lock_service.dart';
 
 final AppRouteObserver appRouteObserver = AppRouteObserver();
@@ -9,11 +10,12 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
 
   /// Sensitive screens that require blur and screenshot blocking
   final List<String> sensitiveRoutes = [
-    '/portfolio',
-    '/transactions',
-    '/buy-sell',
-    '/payment',
-    '/wallet',
+    AppRoutes.home,
+    AppRoutes.portfolio,
+    // AppRoutes.transactions,
+    AppRoutes.buySell,
+    AppRoutes.payment,
+    // AppRoutes.wallet,
     '/settings',
     '/profile',
     '/account',

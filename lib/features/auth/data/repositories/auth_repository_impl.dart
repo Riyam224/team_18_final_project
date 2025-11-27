@@ -20,8 +20,8 @@ class AuthRepositoryImpl implements AuthRepository {
     required String userId,
     required String token,
   }) async {
-    await SecureStorageService.write("user_id", userId);
-    await SecureStorageService.write("token", token);
+    await SecureStorageService.saveUserId(userId);
+    await SecureStorageService.saveAuthToken(token);
   }
 
   @override
@@ -29,19 +29,18 @@ class AuthRepositoryImpl implements AuthRepository {
     required bool enabled,
     required String type,
   }) async {
-    await SecureStorageService.write("biometric_enabled", enabled.toString());
-    await SecureStorageService.write("biometric_type", type);
+    await SecureStorageService.setBiometricEnabled(enabled);
+    await SecureStorageService.setBiometricType(type);
   }
 
   @override
   Future<bool> isBiometricEnabled() async {
-    final enabled = await SecureStorageService.read("biometric_enabled");
-    return enabled == "true";
+    return SecureStorageService.isBiometricEnabled();
   }
 
   @override
   Future<String?> getBiometricType() {
-    return SecureStorageService.read("biometric_type");
+    return SecureStorageService.getBiometricType();
   }
 
   @override
@@ -49,17 +48,19 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
   }) async {
-    await SecureStorageService.write("biometric_email", email);
-    await SecureStorageService.write("biometric_password", password);
+    await SecureStorageService.saveBiometricCredentials(
+      email: email,
+      password: password,
+    );
   }
 
   @override
   Future<String?> getStoredEmail() {
-    return SecureStorageService.read("biometric_email");
+    return SecureStorageService.getBiometricEmail();
   }
 
   @override
   Future<String?> getStoredPassword() {
-    return SecureStorageService.read("biometric_password");
+    return SecureStorageService.getBiometricPassword();
   }
 }
