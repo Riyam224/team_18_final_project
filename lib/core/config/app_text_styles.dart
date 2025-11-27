@@ -24,7 +24,7 @@ class AppTextStyles {
   static const TextStyle headlineMedium = TextStyle(
     fontFamily: 'Lato',
     fontSize: 20,
-    fontWeight: FontWeight.w600, // SemiBold
+    fontWeight: FontWeight.w600,
   );
 
   static const TextStyle headlineSmall = TextStyle(
@@ -33,7 +33,7 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
-  // ========= TITLES (section titles) =========
+  // ========= TITLES =========
   static const TextStyle titleLarge = TextStyle(
     fontFamily: 'Lato',
     fontSize: 16,
@@ -43,13 +43,13 @@ class AppTextStyles {
   static const TextStyle titleMedium = TextStyle(
     fontFamily: 'Lato',
     fontSize: 16,
-    fontWeight: FontWeight.w500, // Medium
+    fontWeight: FontWeight.w500,
   );
 
   static const TextStyle titleSmall = TextStyle(
     fontFamily: 'Lato',
     fontSize: 14,
-    fontWeight: FontWeight.w600, // SemiBold
+    fontWeight: FontWeight.w600,
   );
 
   // ========= BODY =========
@@ -68,10 +68,10 @@ class AppTextStyles {
   static const TextStyle bodySmall = TextStyle(
     fontFamily: 'Lato',
     fontSize: 12,
-    fontWeight: FontWeight.w300, // Light
+    fontWeight: FontWeight.w300,
   );
 
-  // ========= LABELS (buttons, chips, tabs) =========
+  // ========= BUTTON LABELS =========
   static const TextStyle labelLarge = TextStyle(
     fontFamily: 'Lato',
     fontSize: 14,
@@ -81,28 +81,44 @@ class AppTextStyles {
   static const TextStyle labelMedium = TextStyle(
     fontFamily: 'Lato',
     fontSize: 12,
-    fontWeight: FontWeight.w600, // SemiBold
+    fontWeight: FontWeight.w600,
   );
 
   static const TextStyle labelSmall = TextStyle(
     fontFamily: 'Lato',
     fontSize: 10,
-    fontWeight: FontWeight.w300, // Light
+    fontWeight: FontWeight.w300,
   );
 
-  // ========= SPECIAL (price up/down) =========
+  // ========= PRICE COLORS =========
   static const TextStyle priceUp = TextStyle(
     fontFamily: 'Lato',
     fontSize: 14,
     fontWeight: FontWeight.w700,
-    color: Color(0xFF00CB6A), // GREEN - Always same
+    color: Color(0xFF00CB6A),
   );
 
   static const TextStyle priceDown = TextStyle(
     fontFamily: 'Lato',
     fontSize: 14,
     fontWeight: FontWeight.w700,
-    color: Color(0xFFF26666), // RED - Always same
+    color: Color(0xFFF26666),
+  );
+
+  // ------------------------------------------------------
+//               ONBOARDING
+// ------------------------------------------------------
+  static const TextStyle onboardingTitle = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 30,
+    fontWeight: FontWeight.w700,
+    height: 1.2,
+  );
+
+  static const TextStyle onboardingBody = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
   );
 
   // ========= AUTH SCREENS =========

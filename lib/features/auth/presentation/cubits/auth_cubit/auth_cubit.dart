@@ -6,6 +6,7 @@ import '../../../domain/usecases/biometric_login_usecase.dart';
 import '../../../domain/repositories/auth_repository.dart';
 import '../../../data/models/user_model.dart';
 import 'auth_state.dart';
+import 'package:team_18_final_project/core/security/session_manager.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final LoginUserUseCase loginUseCase;
@@ -32,6 +33,7 @@ class AuthCubit extends Cubit<AuthState> {
         userId: "mock-user-id",
         token: token,
       );
+      await SessionManager.startSession();
 
       // Store credentials for biometric login
       await repository.storeCredentialsForBiometric(
@@ -61,6 +63,7 @@ class AuthCubit extends Cubit<AuthState> {
         userId: userId,
         token: "register_token_123",
       );
+      await SessionManager.startSession();
 
       emit(AuthRegisterSuccess(userId));
     } catch (e) {
@@ -78,6 +81,7 @@ class AuthCubit extends Cubit<AuthState> {
         userId: "biometric-user-id",
         token: token,
       );
+      await SessionManager.startSession();
 
       final enabled = await repository.isBiometricEnabled();
       final type = await repository.getBiometricType();

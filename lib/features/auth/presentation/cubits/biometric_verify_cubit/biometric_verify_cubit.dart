@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/core/security/app_lock_service.dart';
 import 'package:team_18_final_project/core/security/local_auth_service.dart';
+import 'package:team_18_final_project/core/security/session_manager.dart';
 import '../../../domain/usecases/biometric_login_usecase.dart';
 import '../../../domain/usecases/store_user_credentials_usecase.dart';
 import '../../../domain/repositories/auth_repository.dart';
@@ -56,6 +57,7 @@ class BiometricVerifyCubit extends Cubit<BiometricVerifyState> {
         userId: "biometric-user-id",
         token: token,
       );
+      await SessionManager.startSession();
     } catch (e) {
       // Do not block the success state; just log for debugging
       debugPrint('Biometric login persistence failed: $e');

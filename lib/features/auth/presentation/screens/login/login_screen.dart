@@ -11,6 +11,7 @@ import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/app_lock_service.dart';
+import 'package:team_18_final_project/core/security/session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_cubit.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_state.dart';
@@ -92,6 +93,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
             if (state is AuthLoginSuccess) {
               // Update activity timestamp to prevent app lock
               await AppLockService.updateActivity();
+              await SessionManager.startSession();
               if (context.mounted) {
                 // Check if biometric is enabled
                 if (state.biometricEnabled && state.biometricType != null) {

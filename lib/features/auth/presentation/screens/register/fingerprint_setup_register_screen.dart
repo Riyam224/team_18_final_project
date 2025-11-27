@@ -133,7 +133,7 @@ class _SetFingerprintRegisterContentState extends State<_SetFingerprintRegisterC
                         child: SizedBox(
                           width: AppSizing.w160,
                           child: SecondaryButton(
-                            text: AppStrings.skip,
+                            text: AppStrings.skipFingerprint,
                             onPressed: isLoading
                                 ? () {}
                                 : () async {

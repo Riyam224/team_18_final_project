@@ -154,7 +154,7 @@ class _FaceIDSetupContentState extends State<_FaceIDSetupContent> {
                       children: [
                         Expanded(
                           child: SecondaryButton(
-                            text: AppStrings.skip,
+                            text: AppStrings.skipFingerprint,
                             onPressed: isLoading
                                 ? null
                                 : () async {

@@ -8,6 +8,7 @@ import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/app_lock_service.dart';
+import 'package:team_18_final_project/core/security/session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
@@ -84,6 +85,7 @@ class VerifyFingerprintSuccessLoginScreen extends StatelessWidget {
                   onPressed: () async {
                     // Update activity timestamp to prevent app lock
                     await AppLockService.updateActivity();
+                    await SessionManager.startSession();
                     if (context.mounted) {
                       context.go(AppRoutes.home);
                     }

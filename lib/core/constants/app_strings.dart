@@ -1,4 +1,20 @@
 class AppStrings {
+  // Onboarding
+  // ---------- Special split title (Screen 1) ----------
+  static const onboardingTitle1Part1 = "Welcome To ";
+  static const onboardingTitle1Part2 = "Crypto X";
+
+  // ---------- Normal onboarding titles ----------
+  static const onboardingTitleSecurity = "Transaction Security";
+  static const onboardingTitleMarket = "Fast And Reliable Market Updated";
+  static const onboardingTitleGetStarted = "Get Started Now!";
+
+  // Onboarding Buttons (used on onboarding screens)
+  static const onboardingLogin = "Login";
+  static const onboardingRegister = "Register";
+  static const onboardingSkip = "Skip";
+
+  // Navigation
   static const home = 'Home';
   static const market = 'Market';
   static const portfolio = 'Portfolio';
@@ -33,7 +49,7 @@ class AppStrings {
       'Add a fingerprint to make your account\nmore secure.';
   static const placeFingerprintInstruction =
       'Place your finger in fingerprint\nsensor until the icon completely';
-  static const skip = 'Skip';
+  static const skipFingerprint = 'Skip';
 
   // Auth - Fingerprint Success Screen
   static const yourScanningIsComplete = 'Your scanning is complete';

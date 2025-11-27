@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
@@ -6,6 +7,9 @@ import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/core/security/app_lock_service.dart';
+import 'package:team_18_final_project/core/security/session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_submit_button.dart';
@@ -80,8 +84,12 @@ class FingerprintSuccessRegisterScreen extends StatelessWidget {
                 padding: AppSpacing.paddingH20,
                 child: AuthSubmitButton(
                   text: AppStrings.continueButton,
-                  onPressed: () {
-                    // TODO: Next screen navigation
+                  onPressed: () async {
+                    await AppLockService.updateActivity();
+                    await SessionManager.startSession();
+                    if (context.mounted) {
+                      context.go(AppRoutes.home);
+                    }
                   },
                 ),
               ),

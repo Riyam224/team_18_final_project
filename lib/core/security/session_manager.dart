@@ -14,7 +14,7 @@ class SessionManager {
   /// Initialize session manager
   static Future<void> initialize({VoidCallback? onSessionExpired}) async {
     _onSessionExpired = onSessionExpired;
-    await _loadLastActivity();
+    await _restoreSessionState();
     await checkSessionValidity();
   }
 
@@ -115,9 +115,23 @@ class SessionManager {
     });
   }
 
-  /// Private: Load last activity from storage
-  static Future<void> _loadLastActivity() async {
+  /// Private: Load session state from storage
+  static Future<void> _restoreSessionState() async {
     _lastActivity = await SecureStorageService.getLastActivity();
+
+    // If we have a token, treat the session as active so we can validate it
+    final token = await SecureStorageService.getAuthToken();
+    _isSessionActive = token != null;
+
+    // If a token exists but no activity was stored, treat that as expired/invalid
+    if (_isSessionActive && _lastActivity == null) {
+      _isSessionActive = false;
+      return;
+    }
+
+    if (_isSessionActive) {
+      await _startSessionTimer();
+    }
   }
 
   /// Dispose session manager
@@ -130,6 +144,26 @@ class SessionManager {
   static Future<bool> isAuthenticated() async {
     final token = await SecureStorageService.getAuthToken();
     return token != null && _isSessionActive;
+  }
+
+  /// Check if a stored session is still valid (used on cold start)
+  static Future<bool> hasValidSession() async {
+    final token = await SecureStorageService.getAuthToken();
+    if (token == null) return false;
+
+    final lastActivity = await SecureStorageService.getLastActivity();
+    if (lastActivity == null) return false;
+
+    final timeoutMinutes = await SecureStorageService.getSessionTimeout();
+    final timeout = Duration(minutes: timeoutMinutes);
+    final isValid = DateTime.now().difference(lastActivity) <= timeout;
+
+    _isSessionActive = isValid;
+    if (isValid && _sessionTimer == null) {
+      await _startSessionTimer();
+    }
+
+    return isValid;
   }
 
   /// Get session status

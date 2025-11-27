@@ -16,6 +16,9 @@ class AppLockService {
     if (lastActivity == null) return true;
 
     final timeoutMinutes = await getAutoLockTimeout();
+    // Auto-lock disabled when timeout is 0 or negative
+    if (timeoutMinutes <= 0) return false;
+
     final timeout = Duration(minutes: timeoutMinutes);
     final now = DateTime.now();
 
