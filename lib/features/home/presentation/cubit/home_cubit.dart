@@ -39,52 +39,72 @@ class HomeCubit extends Cubit<HomeState> {
     // Emit loading state to show progress indicators
     emit(HomeLoading());
 
-    // Execute API calls in parallel for better performance
-    // marketOverview and portfolioBalance share cached global data
-    // trendingCoins and topGainers are independent calls
-    final results = await Future.wait([
-      getMarketOverviewUseCase(),
-      getTrendingCoinsUseCase(),
-      getTopGainersUseCase(),
-      getPortfolioBalanceUseCase(),
-    ]);
+    try {
+      // Execute API calls in parallel for better performance
+      // marketOverview and portfolioBalance share cached global data
+      // trendingCoins and topGainers are independent calls
+      final results = await Future.wait([
+        getMarketOverviewUseCase(),
+        getTrendingCoinsUseCase(),
+        getTopGainersUseCase(),
+        getPortfolioBalanceUseCase(),
+      ]);
 
-    // Extract and properly type the results from Future.wait
-    final marketOverviewResult = results[0] as dynamic;
-    final trendingCoinsResult = results[1] as dynamic;
-    final topGainersResult = results[2] as dynamic;
-    final portfolioBalanceResult = results[3] as dynamic;
+      // Check if cubit is still active before emitting states
+      if (isClosed) return;
 
-    // Check results using fold pattern for Either<Failure, Data>
-    // If any request fails, emit error state immediately
-    // If all succeed, emit loaded state with all data
-    marketOverviewResult.fold(
-      (failure) => emit(HomeError(message: failure.message)), // Handle market overview failure
-      (marketOverview) {
-        trendingCoinsResult.fold(
-          (failure) => emit(HomeError(message: failure.message)), // Handle trending coins failure
-          (trendingCoins) {
-            topGainersResult.fold(
-              (failure) => emit(HomeError(message: failure.message)), // Handle top gainers failure
-              (topGainers) {
-                portfolioBalanceResult.fold(
-                  (failure) => emit(HomeError(message: failure.message)), // Handle portfolio failure
-                  (portfolioBalance) {
-                    // All requests succeeded - emit loaded state with all data
-                    emit(HomeLoaded(
-                      marketOverview: marketOverview,
-                      trendingCoins: trendingCoins,
-                      topGainers: topGainers,
-                      portfolioBalance: portfolioBalance,
-                    ));
-                  },
-                );
-              },
-            );
-          },
-        );
-      },
-    );
+      // Extract and properly type the results from Future.wait
+      final marketOverviewResult = results[0] as dynamic;
+      final trendingCoinsResult = results[1] as dynamic;
+      final topGainersResult = results[2] as dynamic;
+      final portfolioBalanceResult = results[3] as dynamic;
+
+      // Check results using fold pattern for Either<Failure, Data>
+      // If any request fails, emit error state immediately
+      // If all succeed, emit loaded state with all data
+      marketOverviewResult.fold(
+        (failure) {
+          if (!isClosed) emit(HomeError(message: failure.message));
+        },
+        (marketOverview) {
+          trendingCoinsResult.fold(
+            (failure) {
+              if (!isClosed) emit(HomeError(message: failure.message));
+            },
+            (trendingCoins) {
+              topGainersResult.fold(
+                (failure) {
+                  if (!isClosed) emit(HomeError(message: failure.message));
+                },
+                (topGainers) {
+                  portfolioBalanceResult.fold(
+                    (failure) {
+                      if (!isClosed) emit(HomeError(message: failure.message));
+                    },
+                    (portfolioBalance) {
+                      // All requests succeeded - emit loaded state with all data
+                      if (!isClosed) {
+                        emit(HomeLoaded(
+                          marketOverview: marketOverview,
+                          trendingCoins: trendingCoins,
+                          topGainers: topGainers,
+                          portfolioBalance: portfolioBalance,
+                        ));
+                      }
+                    },
+                  );
+                },
+              );
+            },
+          );
+        },
+      );
+    } catch (e) {
+      // Handle any unexpected errors during data loading
+      if (!isClosed) {
+        emit(HomeError(message: 'An unexpected error occurred: $e'));
+      }
+    }
   }
 
   /// Refreshes home screen data (typically triggered by pull-to-refresh)

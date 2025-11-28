@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/home/domain/entities/trending_coin.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/crypto_item_tile.dart';
@@ -34,20 +37,20 @@ class TrendingNowList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (trendingCoins.isEmpty) {
       return SizedBox(
-        height: 110.h,
+        height: AppSizing.h110,
         child: const Center(
-          child: Text('No trending coins available'),
+          child: Text(AppStrings.noTrendingCoinsAvailable),
         ),
       );
     }
 
     return SizedBox(
-      height: 110.h,
+      height: AppSizing.h110,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.only(right: 16.w),
+        padding: AppSpacing.paddingOnly(right: 16),
         itemCount: trendingCoins.length,
-        separatorBuilder: (context, index) => SizedBox(width: 12.w),
+        separatorBuilder: (context, index) => AppSpacing.gapW12,
         itemBuilder: (context, index) {
           final coin = trendingCoins[index];
           return TrendingCryptoCard(

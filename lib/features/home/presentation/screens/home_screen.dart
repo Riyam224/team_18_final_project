@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/security/secure_storage_service.dart';
 import 'package:team_18_final_project/features/home/presentation/cubit/home_cubit.dart';
 import 'package:team_18_final_project/features/home/presentation/cubit/home_state.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/view_all.dart';
@@ -24,8 +27,36 @@ class HomeScreen extends StatelessWidget {
   }
 }
 
-class HomeScreenContent extends StatelessWidget {
+class HomeScreenContent extends StatefulWidget {
   const HomeScreenContent({super.key});
+
+  @override
+  State<HomeScreenContent> createState() => _HomeScreenContentState();
+}
+
+class _HomeScreenContentState extends State<HomeScreenContent> {
+  String _userName = 'User';
+  String? _avatarPath;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadUserProfile();
+  }
+
+  Future<void> _loadUserProfile() async {
+    final firstName = await SecureStorageService.getUserFirstName();
+    final avatarPath = await SecureStorageService.getAvatarPath();
+
+    if (!mounted) return;
+
+    setState(() {
+      if (firstName != null && firstName.isNotEmpty) {
+        _userName = firstName;
+      }
+      _avatarPath = avatarPath;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,12 +83,12 @@ class HomeScreenContent extends StatelessWidget {
                       style: theme.textTheme.bodyMedium,
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: 16.h),
+                    AppSpacing.gapH16,
                     ElevatedButton(
                       onPressed: () {
                         context.read<HomeCubit>().refreshHomeData();
                       },
-                      child: const Text('Retry'),
+                      child: const Text(AppStrings.retry),
                     ),
                   ],
                 ),
@@ -68,22 +99,25 @@ class HomeScreenContent extends StatelessWidget {
               return RefreshIndicator(
                 onRefresh: () => context.read<HomeCubit>().refreshHomeData(),
                 child: SingleChildScrollView(
-                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                  padding: AppSpacing.paddingH16V8,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const HomeHeader(),
-                      SizedBox(height: 16.h),
+                      HomeHeader(
+                        userName: _userName,
+                        avatarPath: _avatarPath,
+                      ),
+                      AppSpacing.gapH16,
                       BalanceCard(
                         totalBalance: state.portfolioBalance.totalBalance,
                         weeklyChangePercentage:
                             state.portfolioBalance.weeklyChangePercentage,
                       ),
-                      SizedBox(height: 24.h),
+                      AppSpacing.gapH24,
                       const SectionTitle(title: "Market Overview"),
-                      SizedBox(height: 12.h),
+                      AppSpacing.gapH12,
                       MarketOverviewGrid(marketOverview: state.marketOverview),
-                      SizedBox(height: 24.h),
+                      AppSpacing.gapH24,
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -95,13 +129,13 @@ class HomeScreenContent extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 12.h),
+                      AppSpacing.gapH12,
                       TrendingNowList(trendingCoins: state.trendingCoins),
-                      SizedBox(height: 24.h),
+                      AppSpacing.gapH24,
                       const SectionTitle(title: "Top Gainers"),
-                      SizedBox(height: 12.h),
+                      AppSpacing.gapH12,
                       TopGainersList(topGainers: state.topGainers),
-                      SizedBox(height: 24.h),
+                      AppSpacing.gapH24,
                     ],
                   ),
                 ),

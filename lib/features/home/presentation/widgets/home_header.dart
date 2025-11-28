@@ -1,10 +1,33 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class HomeHeader extends StatelessWidget {
-  const HomeHeader({super.key});
+  final String userName;
+  final String? avatarPath;
+
+  const HomeHeader({
+    super.key,
+    required this.userName,
+    this.avatarPath,
+  });
+
+  ImageProvider _buildAvatarProvider() {
+    if (avatarPath != null && avatarPath!.isNotEmpty) {
+      if (avatarPath!.startsWith('http')) {
+        return NetworkImage(avatarPath!);
+      }
+      return FileImage(File(avatarPath!));
+    }
+    return AssetImage(AppAssets.profile);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,12 +40,12 @@ class HomeHeader extends StatelessWidget {
         Row(
           children: [
             CircleAvatar(
-              radius: 22.r,
-              backgroundImage: const AssetImage("assets/images/profile.png"),
+              radius: AppSizing.radius22,
+              backgroundImage: _buildAvatarProvider(),
               backgroundColor: isDark ? AppColors.darkCard : AppColors.gray5,
             ),
-            SizedBox(width: 12.w),
-            Text("Hi, riyam 👋",
+            AppSpacing.gapW12,
+            Text(AppStrings.greetingTemplate(userName),
                 style: AppTextStyles.headlineMedium.copyWith(
                   color: isDark ? AppColors.textWhite : AppColors.textBlack,
                 ))
@@ -30,7 +53,7 @@ class HomeHeader extends StatelessWidget {
         ),
         Icon(
           Icons.notifications_none,
-          size: 26.sp,
+          size: AppSizing.iconMedium,
           color: isDark ? AppColors.textWhite : AppColors.textGray,
         ),
       ],

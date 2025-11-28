@@ -1,8 +1,11 @@
 // ignore_for_file: deprecated_member_use
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class TopGainerTile extends StatelessWidget {
@@ -27,22 +30,43 @@ class TopGainerTile extends StatelessWidget {
     final isNegative = percentage.contains('-');
 
     return Container(
-      height: 72.h,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      height: AppSizing.h72,
+      padding: AppSpacing.paddingH16V14,
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(AppSizing.radius16),
       ),
       child: Row(
         children: [
           /// Coin Icon
-          CircleAvatar(
-            radius: 20.r,
-            backgroundColor: AppColors.white,
-            backgroundImage: NetworkImage(imageUrl),
+          CachedNetworkImage(
+            imageUrl: imageUrl,
+            imageBuilder: (context, imageProvider) => CircleAvatar(
+              radius: AppSizing.radius20,
+              backgroundColor: AppColors.white,
+              backgroundImage: imageProvider,
+            ),
+            placeholder: (context, url) => CircleAvatar(
+              radius: AppSizing.radius20,
+              backgroundColor: AppColors.white,
+              child: Icon(
+                Icons.currency_bitcoin,
+                size: AppSizing.radius20,
+                color: AppColors.primary,
+              ),
+            ),
+            errorWidget: (context, url, error) => CircleAvatar(
+              radius: AppSizing.radius20,
+              backgroundColor: AppColors.white,
+              child: Icon(
+                Icons.currency_bitcoin,
+                size: AppSizing.radius20,
+                color: AppColors.primary,
+              ),
+            ),
           ),
 
-          SizedBox(width: 12.w),
+          AppSpacing.gapW12,
 
           /// Name + Symbol
           Column(
@@ -57,7 +81,7 @@ class TopGainerTile extends StatelessWidget {
                   height: 1.2,
                 ),
               ),
-              SizedBox(height: 4.h),
+              AppSpacing.gapH4,
               Text(
                 symbol.toUpperCase(),
                 style: theme.textTheme.labelMedium!.copyWith(
@@ -84,7 +108,7 @@ class TopGainerTile extends StatelessWidget {
                   height: 1.2,
                 ),
               ),
-              SizedBox(height: 4.h),
+              AppSpacing.gapH4,
               Text(
                 percentage,
                 style: AppTextStyles.bodySmall.copyWith(

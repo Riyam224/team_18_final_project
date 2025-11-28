@@ -3,6 +3,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class TrendingCryptoCard extends StatelessWidget {
@@ -28,12 +30,12 @@ class TrendingCryptoCard extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Container(
-      width: 192.w,
-      height: 110.h,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      width: AppSizing.w192,
+      height: AppSizing.h110,
+      padding: AppSpacing.paddingH16V14,
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(AppSizing.radius16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,8 +56,8 @@ class TrendingCryptoCard extends StatelessWidget {
               ),
               /// Icon
               Container(
-                height: 32.h,
-                width: 32.w,
+                height: AppSizing.h32,
+                width: AppSizing.w32,
                 decoration: BoxDecoration(
                   color: iconColor.withOpacity(0.12),
                   shape: BoxShape.circle,
@@ -66,7 +68,7 @@ class TrendingCryptoCard extends StatelessWidget {
           ),
 
           /// Symbol
-          SizedBox(height: 2.h),
+          AppSpacing.gapH2,
           Text(
             symbol,
             style: theme.textTheme.labelMedium!.copyWith(

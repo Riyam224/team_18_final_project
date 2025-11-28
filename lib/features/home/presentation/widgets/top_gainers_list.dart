@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/features/home/domain/entities/top_gainer.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/top_gainer_tile.dart';
 
@@ -20,7 +22,7 @@ class TopGainersList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (topGainers.isEmpty) {
       return const Center(
-        child: Text('No top gainers available'),
+        child: Text(AppStrings.noTopGainersAvailable),
       );
     }
 
@@ -31,7 +33,7 @@ class TopGainersList extends StatelessWidget {
 
         return Column(
           children: [
-            if (index > 0) SizedBox(height: 12.h),
+            if (index > 0) AppSpacing.gapH12,
             TopGainerTile(
               name: gainer.name,
               symbol: gainer.symbol,

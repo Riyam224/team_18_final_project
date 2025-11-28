@@ -14,6 +14,7 @@ class AppColors {
   static const Color lightBackground = Color(0xFFF5F8FE);
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color lightSurface2 = Color(0xFFF8F8F8);
+  static const Color lightInputBackground = Color(0xFFF5F8FE);
 
   // Grays (Text & Borders)
   static const Color gray1 = Color(0xFF979797);
@@ -28,6 +29,7 @@ class AppColors {
   static const Color textDark = Color(0xFF000000);
   static const Color textGray = Color(0xFF494D58);
   static const Color textGraySecondary = Color(0xFF8C8C8C);
+  static const Color textGrayFooter = Color(0xFF8E949A);
 
   // ===== Dark Mode =====
   static const Color darkBackground = Color(0xFF0D0D0D);
@@ -38,6 +40,7 @@ class AppColors {
   // Dark Text
   static const Color textWhite = Color(0xFFFFFFFF);
   static const Color textWhiteSoft = Color(0xFFE2E3E4);
+  static const Color textWhiteSoft2 = Color(0xFFE0E1E7);
   static const Color textGrayDark = Color(0xFF787A8D);
   static const Color textGrayLight = Color(0xFF9CA3AF);
 
@@ -72,4 +75,7 @@ class AppColors {
   static const Color red = Color(0xFFFF0000);
   static const Color balanceCardBg = Color(0xFF1D3A70);
   static const Color balanceCardText = Color(0xFFF5F8FE);
+
+  // ===== Shadows =====
+  static const Color shadowLight = Color(0x0C000000); // 5% black
 }

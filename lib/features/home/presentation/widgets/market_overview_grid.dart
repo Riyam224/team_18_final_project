@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/home/domain/entities/market_overview.dart';
 
@@ -32,10 +34,10 @@ class MarketOverviewGrid extends StatelessWidget {
                 title: items[0]["title"]!,
                 value: items[0]["value"]!,
                 showPercent: true,
-                height: 110.h,
+                height: AppSizing.h110,
               ),
             ),
-            SizedBox(width: 12.w),
+            AppSpacing.gapW12,
             Expanded(
               child: _buildCard(
                 context: context,
@@ -43,12 +45,12 @@ class MarketOverviewGrid extends StatelessWidget {
                 title: items[1]["title"]!,
                 value: items[1]["value"]!,
                 showPercent: true,
-                height: 110.h,
+                height: AppSizing.h110,
               ),
             ),
           ],
         ),
-        SizedBox(height: 12.h),
+        AppSpacing.gapH12,
         // Bottom row (BTC Dominance & Active Coins)
         Row(
           children: [
@@ -59,10 +61,10 @@ class MarketOverviewGrid extends StatelessWidget {
                 title: items[2]["title"]!,
                 value: items[2]["value"]!,
                 showPercent: false,
-                height: 85.h,
+                height: AppSizing.h85,
               ),
             ),
-            SizedBox(width: 12.w),
+            AppSpacing.gapW12,
             Expanded(
               child: _buildCard(
                 context: context,
@@ -70,7 +72,7 @@ class MarketOverviewGrid extends StatelessWidget {
                 title: items[3]["title"]!,
                 value: items[3]["value"]!,
                 showPercent: false,
-                height: 85.h,
+                height: AppSizing.h85,
               ),
             ),
           ],
@@ -89,10 +91,10 @@ class MarketOverviewGrid extends StatelessWidget {
   }) {
     return Container(
       height: height,
-      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
+      padding: AppSpacing.paddingH16V14,
       decoration: BoxDecoration(
         color: theme.cardColor,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(AppSizing.radius16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,7 +124,7 @@ class MarketOverviewGrid extends StatelessWidget {
           ),
 
           /// % For top two only
-          SizedBox(height: 6.h),
+          AppSpacing.gapH8,
           if (showPercent) ...[
             Row(
               children: [

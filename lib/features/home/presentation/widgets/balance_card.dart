@@ -3,6 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class BalanceCard extends StatelessWidget {
@@ -35,11 +38,11 @@ class BalanceCard extends StatelessWidget {
     final isPositive = weeklyChange >= 0;
 
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 24.h),
+      padding: AppSpacing.paddingH24V24,
       width: double.infinity,
       decoration: BoxDecoration(
         color: isDark ? AppColors.primary : AppColors.balanceCardBg,
-        borderRadius: BorderRadius.circular(16.r),
+        borderRadius: BorderRadius.circular(AppSizing.radius16),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -47,7 +50,7 @@ class BalanceCard extends StatelessWidget {
         children: [
           /// ---- CURRENT BALANCE ----
           Text(
-            'Current Balance',
+            AppStrings.currentBalance,
             style: AppTextStyles.titleSmall.copyWith(
               color: AppColors.balanceCardText.withOpacity(0.7),
               fontSize: 14.sp,
@@ -56,7 +59,7 @@ class BalanceCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 8.h),
+          AppSpacing.gapH8,
 
           Text(
             _formatBalance(balance),
@@ -68,7 +71,7 @@ class BalanceCard extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 12.h),
+          AppSpacing.gapH12,
 
           /// ---- WEEKLY PROFIT ROW ----
           Row(
@@ -76,7 +79,7 @@ class BalanceCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                "Weekly Profit",
+                AppStrings.weeklyProfit,
                 style: AppTextStyles.titleSmall.copyWith(
                   color: AppColors.balanceCardText.withOpacity(0.9),
                   fontWeight: FontWeight.w600,
@@ -84,12 +87,12 @@ class BalanceCard extends StatelessWidget {
                   letterSpacing: 0.3.w,
                 ),
               ),
-              SizedBox(width: 12.w),
+              AppSpacing.gapW12,
               Container(
-                padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                padding: AppSpacing.paddingH12V6,
                 decoration: BoxDecoration(
                   color: AppColors.white.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(12.r),
+                  borderRadius: BorderRadius.circular(AppSizing.radius12),
                 ),
                 child: Text(
                   "${isPositive ? '+' : ''}${weeklyChange.toStringAsFixed(2)}% ${isPositive ? '▲' : '▼'}",
