@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';

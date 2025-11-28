@@ -48,6 +48,8 @@ class _BiometricTestScreenState extends State<BiometricTestScreen> {
   Future<void> testBiometric() async {
     final success = await LocalAuthService.authenticate();
 
+    if (!mounted) return;
+
     setState(() {
       debugText = success
           ? "✅ Authentication Success!"

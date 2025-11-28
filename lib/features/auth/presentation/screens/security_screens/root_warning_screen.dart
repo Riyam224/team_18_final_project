@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
@@ -43,7 +44,7 @@ class RootWarningScreen extends StatelessWidget {
             const SizedBox(height: 12),
             OutlinedButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                SystemNavigator.pop();
               },
               child: const Text('Exit'),
             ),

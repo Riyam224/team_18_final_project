@@ -13,7 +13,6 @@ ThemeData buildDarkTheme() {
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primary,
       secondary: AppColors.secondary,
-      background: AppColors.darkBackground2,
       surface: AppColors.darkSurface,
       onSurface: AppColors.textWhite,
       onPrimary: Colors.white,

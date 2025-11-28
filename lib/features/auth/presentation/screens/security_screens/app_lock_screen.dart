@@ -24,11 +24,19 @@ class AppLockScreen extends StatelessWidget {
             final bio = BiometricService();
             final ok = await bio.authenticate();
 
-            if (ok && context.mounted) {
+            if (!context.mounted) return;
+
+            if (ok) {
+              // Capture context info before async gap
+              final canPop = context.canPop();
+
               // Update activity again after successful authentication
               await AppLockService.updateActivity();
               await SessionManager.startSession();
-              if (context.canPop()) {
+
+              if (!context.mounted) return;
+
+              if (canPop) {
                 context.pop();
               } else {
                 context.go('/home'); // fallback

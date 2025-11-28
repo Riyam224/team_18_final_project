@@ -168,10 +168,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 AppSpacing.gapH24,
                 ElevatedButton(
                   onPressed: () async {
+                    final messenger = ScaffoldMessenger.of(context);
                     await SessionManager.logout();
                     await AuditLogService.log(type: 'auth', message: 'User logged out from settings');
                     if (!mounted) return;
-                    ScaffoldMessenger.of(context).showSnackBar(
+                    messenger.showSnackBar(
                       const SnackBar(content: Text('Session ended')),
                     );
                   },

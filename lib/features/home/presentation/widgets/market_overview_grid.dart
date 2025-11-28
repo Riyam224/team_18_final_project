@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';

@@ -60,9 +60,10 @@ class _FaceIDScanningLoginContentState extends State<_FaceIDScanningLoginContent
             ),
           );
           // Navigate back to login after failure
+          final navigator = Navigator.of(context);
           Future.delayed(const Duration(seconds: 2), () {
             if (mounted) {
-              context.pop();
+              navigator.pop();
             }
           });
         }

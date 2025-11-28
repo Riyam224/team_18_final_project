@@ -7,31 +7,31 @@ class BiometricDebugScreen extends StatelessWidget {
   final LocalAuthentication auth = LocalAuthentication();
 
   Future<void> testBiometrics() async {
-    print("---- BIOMETRIC DEBUG START ----");
+    debugPrint("---- BIOMETRIC DEBUG START ----");
 
     // Check if biometrics can be checked
     bool canCheck = await auth.canCheckBiometrics;
-    print("canCheckBiometrics: $canCheck");
+    debugPrint("canCheckBiometrics: $canCheck");
 
     // Check if device supports biometrics
     bool supported = await auth.isDeviceSupported();
-    print("isDeviceSupported: $supported");
+    debugPrint("isDeviceSupported: $supported");
 
     // List available biometric types
     List<BiometricType> types = await auth.getAvailableBiometrics();
-    print("Available biometrics: $types");
+    debugPrint("Available biometrics: $types");
 
     // Try authenticating
     try {
       bool success = await auth.authenticate(
         localizedReason: "Test biometric authentication",
       );
-      print("Authentication success: $success");
+      debugPrint("Authentication success: $success");
     } catch (e) {
-      print("ERROR during authentication: $e");
+      debugPrint("ERROR during authentication: $e");
     }
 
-    print("---- BIOMETRIC DEBUG END ----");
+    debugPrint("---- BIOMETRIC DEBUG END ----");
   }
 
   @override

@@ -59,9 +59,10 @@ class _VerifyFingerprintLoginContentState extends State<_VerifyFingerprintLoginC
                 ),
               );
               // Navigate back to login after failure
+              final navigator = Navigator.of(context);
               Future.delayed(const Duration(seconds: 2), () {
                 if (mounted) {
-                  context.pop();
+                  navigator.pop();
                 }
               });
             }
