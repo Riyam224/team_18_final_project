@@ -55,7 +55,6 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
               width: 31.w,
               height: 31.h,
               onPressed: () {},
-              text: '',
               child: Center(
                 child: widget.paymentIcon ??
                     Icon(
