@@ -23,10 +23,13 @@ class BuySellScreen extends StatelessWidget {
         appBar: PrimaryAppBar(
           centerTitle: true,
           surfaceTintColor: Colors.transparent,
-          leading: Icon(
-            Icons.arrow_back_rounded,
-            color: context.isDark() ? AppColors.textWhite : AppColors.primary,
-            size: 23,
+          leading: GestureDetector(
+            onTap: () {},
+            child: Icon(
+              Icons.arrow_back_rounded,
+              color: context.isDark() ? AppColors.textWhite : AppColors.primary,
+              size: 23,
+            ),
           ),
           title: Text(AppStrings.buyCrypto,
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
