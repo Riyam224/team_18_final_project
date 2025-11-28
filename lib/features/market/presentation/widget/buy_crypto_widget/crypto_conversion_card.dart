@@ -9,15 +9,9 @@ import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/buy_crypto_widget/currency_selector_with_price.dart';
 
-class CryptoConversionCard extends StatefulWidget {
+class CryptoConversionCard extends StatelessWidget {
   const CryptoConversionCard({super.key});
 
-  @override
-  State<CryptoConversionCard> createState() => _CryptoConversionCardState();
-}
-
-class _CryptoConversionCardState extends State<CryptoConversionCard> {
-  String sss = "USD";
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -70,8 +64,8 @@ class _CryptoConversionCardState extends State<CryptoConversionCard> {
           Center(
               child: AppRichText(
                   horizontal: 5,
-                  fristText: AppStrings.cryptoExchangeRate,
-                  fristStyle: context.appTheme.textTheme.titleMedium
+                  firstText: AppStrings.cryptoExchangeRate,
+                  firstStyle: context.appTheme.textTheme.titleMedium
                       ?.copyWith(fontSize: 14.sp, color: AppColors.gray3),
                   lastStyle: context.appTheme.textTheme.titleMedium
                       ?.copyWith(fontSize: 14.sp, color: AppColors.secondary),
