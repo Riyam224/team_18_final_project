@@ -12,7 +12,8 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   final List<String> sensitiveRoutes = [
     AppRoutes.home,
     AppRoutes.portfolio,
-    // AppRoutes.transactions,
+    AppRoutes.coinDetails,
+    '/transactions',
     AppRoutes.buySell,
     AppRoutes.payment,
     // AppRoutes.wallet,

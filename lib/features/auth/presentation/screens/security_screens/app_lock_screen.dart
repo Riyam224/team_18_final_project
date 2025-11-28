@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/security/app_lock_service.dart';
 import 'package:team_18_final_project/core/security/biometric_service.dart';
+import 'package:team_18_final_project/core/security/session_manager.dart';
 
 class AppLockScreen extends StatelessWidget {
   const AppLockScreen({super.key});
@@ -26,6 +27,7 @@ class AppLockScreen extends StatelessWidget {
             if (ok && context.mounted) {
               // Update activity again after successful authentication
               await AppLockService.updateActivity();
+              await SessionManager.startSession();
               if (context.canPop()) {
                 context.pop();
               } else {

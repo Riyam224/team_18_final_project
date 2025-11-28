@@ -30,6 +30,7 @@ class SecureStorageService {
   static const String _keyUserLastName = 'user_last_name';
   static const String _keyUserEmail = 'user_email';
   static const String _keyUserPhone = 'user_phone';
+  static const String _keyAuditLogs = 'audit_logs';
 
   /// Write a value to secure storage
   static Future<void> write(String key, String value) async {
@@ -269,12 +270,22 @@ class SecureStorageService {
     await delete(_keyUserLastName);
     await delete(_keyUserEmail);
     await delete(_keyUserPhone);
+    await delete(_keyAvatarPath);
+    await clearBiometricData();
     await clearTransactionHistory();
   }
 
   /// Complete logout - removes everything including biometric settings
   static Future<void> completeLogout() async {
     await deleteAll();
+  }
+
+  /// Clear biometric configuration and stored biometric credentials
+  static Future<void> clearBiometricData() async {
+    await delete(_keyBiometricEnabled);
+    await delete(_keyBiometricType);
+    await delete(_keyBiometricEmail);
+    await delete(_keyBiometricPassword);
   }
 
   // === USER AVATAR ===

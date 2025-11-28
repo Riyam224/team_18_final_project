@@ -11,6 +11,7 @@ import 'package:team_18_final_project/core/security/app_lock_service.dart';
 import 'package:team_18_final_project/core/security/session_manager.dart';
 import 'package:team_18_final_project/core/security/root_detection_service.dart';
 import 'package:team_18_final_project/core/security/audit_log_service.dart';
+import 'package:team_18_final_project/core/security/secure_storage_service.dart';
 import 'package:team_18_final_project/core/utils/app_theme.dart';
 
 void main() async {
@@ -76,9 +77,16 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       // App returns to foreground
-
+      final token = await SecureStorageService.getAuthToken();
       // Check if session is still valid
       await SessionManager.checkSessionValidity();
+
+      // If session expired but a token existed, enforce app-lock
+      final isValid = await SessionManager.isSessionValid();
+      if (token != null && !isValid && mounted) {
+        appNavigatorKey.currentContext?.go('/app-lock');
+        return;
+      }
 
       // Respect inactivity timeout only (no immediate app-lock after login)
       final shouldLock = await AppLockService.shouldLock();
@@ -112,13 +120,10 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   void _handleSessionExpired() {
     debugPrint('Session expired - logging out user');
     if (mounted) {
-      // Navigate to login screen
-      appNavigatorKey.currentContext?.go('/login');
-
-      // Show session expired message
+      appNavigatorKey.currentContext?.go('/app-lock');
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Your session has expired. Please login again.'),
+          content: Text('Session expired. Unlock to continue.'),
           duration: Duration(seconds: 3),
         ),
       );

@@ -27,8 +27,10 @@ class ScreenshotPreventionService {
   /// List of routes that should have screenshot prevention
   /// These screens contain sensitive financial data
   static const List<String> sensitiveRoutes = [
+    '/home',
     '/portfolio',
     '/transactions',
+    '/coinDetails',
     '/payment',
     '/buy-sell',
     '/wallet',

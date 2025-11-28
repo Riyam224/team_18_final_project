@@ -3,6 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/core/security/app_lock_service.dart';
+import 'package:team_18_final_project/core/security/session_manager.dart';
 import 'package:team_18_final_project/features/splash/presentation/widgets/splash_icon.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -37,6 +39,20 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _navigate() async {
     await Future.delayed(const Duration(milliseconds: 2000));
+
+    final hasValidSession = await SessionManager.hasValidSession();
+    if (hasValidSession) {
+      await AppLockService.updateActivity();
+      final shouldLock = await AppLockService.shouldLock();
+      if (!mounted) return;
+      if (shouldLock) {
+        context.go(AppRoutes.appLock);
+      } else {
+        context.go(AppRoutes.home);
+      }
+      return;
+    }
+
     if (!mounted) return;
     // Always send the user to the login screen; downstream flows enforce biometrics
     context.go(AppRoutes.login);

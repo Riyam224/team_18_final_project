@@ -15,6 +15,7 @@ class SessionManager {
   /// Initialize session manager
   static Future<void> initialize({VoidCallback? onSessionExpired}) async {
     _onSessionExpired = onSessionExpired;
+    await _ensureDefaultSessionTimeout();
     await _restoreSessionState();
     await checkSessionValidity();
   }
@@ -70,6 +71,8 @@ class SessionManager {
   static Future<void> logout() async {
     await endSession();
     await SecureStorageService.clearUserData();
+    await SecureStorageService.clearBiometricData();
+    await SecureStorageService.setBiometricEnabled(false);
     await AuditLogService.log(type: 'auth', message: 'User logged out');
   }
 
@@ -145,6 +148,15 @@ class SessionManager {
   static void dispose() {
     _sessionTimer?.cancel();
     _sessionTimer = null;
+  }
+
+  /// Ensure a default session timeout is stored for new installs
+  static Future<void> _ensureDefaultSessionTimeout() async {
+    const key = 'session_timeout';
+    final hasTimeout = await SecureStorageService.containsKey(key);
+    if (!hasTimeout) {
+      await SecureStorageService.saveSessionTimeout(defaultSessionTimeoutMinutes);
+    }
   }
 
   /// Check if user is authenticated
