@@ -3,7 +3,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_nav_shell.dart';
-import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 
 // Splash + Auth + Onboarding
