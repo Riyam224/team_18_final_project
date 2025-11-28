@@ -3,18 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 
 class AppRichText extends StatelessWidget {
-  final String fristText;
+  final String firstText;
   final String lastText;
   final void Function()? onTap;
-  final TextStyle? fristStyle;
+  final TextStyle? firstStyle;
   final TextStyle? lastStyle;
   final double? horizontal;
   const AppRichText({
     super.key,
-    required this.fristText,
+    required this.firstText,
     required this.lastText,
     this.onTap,
-    this.fristStyle,
+    this.firstStyle,
     this.lastStyle,
     this.horizontal,
   });
@@ -32,8 +32,8 @@ class AppRichText extends StatelessWidget {
           WidgetSpan(child: AppSpacing.horizontal(horizontal ?? 0)),
           TextSpan(
             recognizer: TapGestureRecognizer()..onTap = onTap,
-            style: fristStyle,
-            text: fristText,
+            style: firstStyle,
+            text: firstText,
           ),
         ],
       ),
