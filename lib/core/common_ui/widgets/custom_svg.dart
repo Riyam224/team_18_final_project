@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/extension/app_extension.dart';
 
 class AppSvgWidget extends StatelessWidget {
@@ -10,6 +9,7 @@ class AppSvgWidget extends StatelessWidget {
   final BoxFit boxFit;
   final double? height;
   final double? width;
+  final Color? color;
   final AlignmentGeometry alignment;
 
   const AppSvgWidget({
@@ -20,18 +20,20 @@ class AppSvgWidget extends StatelessWidget {
     this.height,
     this.width,
     this.alignment = Alignment.center,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
+    final svgColor =
+        color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null;
     if (!networkName.isNullOrEmpty()) {
-      return SvgPicture.network(
-        networkName!,
-        alignment: alignment,
-        fit: boxFit,
-        height: height,
-        width: width,
-      );
+      return SvgPicture.network(networkName!,
+          alignment: alignment,
+          fit: boxFit,
+          height: height,
+          width: width,
+          colorFilter: svgColor);
     }
 
     return (assetsName.isNullOrEmpty())
@@ -41,6 +43,7 @@ class AppSvgWidget extends StatelessWidget {
             fit: boxFit,
             height: height,
             width: width,
+            colorFilter: svgColor,
           )
         : SvgPicture.asset(
             assetsName!,
@@ -48,6 +51,7 @@ class AppSvgWidget extends StatelessWidget {
             fit: boxFit,
             height: height,
             width: width,
+            colorFilter: svgColor,
           );
   }
 }

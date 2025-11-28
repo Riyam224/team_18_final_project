@@ -14,4 +14,10 @@ class AppAssets {
   //Svg
   static const String infoOutline = "assets/icons/info_outline.svg";
   static const String bitcoinIcon = 'assets/icons/bitcoin.svg';
+  static const String ethLight = 'assets/icons/eth_light.svg';
+  static const String ethDark = 'assets/icons/eth_dark.svg';
+  static const String money = 'assets/icons/money.svg';
+  static const String swap = 'assets/icons/swap.svg';
+  static const String keyboardArrowDown =
+      'assets/icons/keyboard_arrow_down.svg';
 }

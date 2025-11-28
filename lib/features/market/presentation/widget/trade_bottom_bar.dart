@@ -20,7 +20,7 @@ class TradeBottomBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          BottomActionButton(
+          BottomActionButton.text(
             textColor: AppColors.alertRed,
             width: 145.w,
             height: 45.h,
@@ -30,7 +30,7 @@ class TradeBottomBar extends StatelessWidget {
             text: AppStrings.sell,
             onPressed: () {},
           ),
-          BottomActionButton(
+          BottomActionButton.text(
             textColor: context.isDark()
                 ? AppColors.darkBackground
                 : AppColors.textWhite,
