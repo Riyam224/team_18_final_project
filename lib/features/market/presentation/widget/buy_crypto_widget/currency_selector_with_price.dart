@@ -60,7 +60,7 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
                     Icon(
                       color: widget.iconDataColor,
                       widget.iconData,
-                      fontWeight: FontWeight.w900,
+                      size: 18.sp,
                     ),
               ),
             ),
