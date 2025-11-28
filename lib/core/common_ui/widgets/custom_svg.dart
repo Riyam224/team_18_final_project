@@ -25,15 +25,15 @@ class AppSvgWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final svgColor =
+        color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null;
     if (!networkName.isNullOrEmpty()) {
-      return SvgPicture.network(
-        networkName!,
-        alignment: alignment,
-        fit: boxFit,
-        height: height,
-        width: width,
-        color: color,
-      );
+      return SvgPicture.network(networkName!,
+          alignment: alignment,
+          fit: boxFit,
+          height: height,
+          width: width,
+          colorFilter: svgColor);
     }
 
     return (assetsName.isNullOrEmpty())
@@ -43,7 +43,7 @@ class AppSvgWidget extends StatelessWidget {
             fit: boxFit,
             height: height,
             width: width,
-            color: color,
+            colorFilter: svgColor,
           )
         : SvgPicture.asset(
             assetsName!,
@@ -51,7 +51,7 @@ class AppSvgWidget extends StatelessWidget {
             fit: boxFit,
             height: height,
             width: width,
-            color: color,
+            colorFilter: svgColor,
           );
   }
 }
