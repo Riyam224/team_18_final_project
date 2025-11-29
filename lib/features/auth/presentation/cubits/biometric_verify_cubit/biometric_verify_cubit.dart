@@ -1,8 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
-import 'package:team_18_final_project/core/security/local_auth_service.dart';
-import 'package:team_18_final_project/core/security/session_manager.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import '../../../domain/usecases/biometric_login_usecase.dart';
 import '../../../domain/usecases/store_user_credentials_usecase.dart';
 import '../../../domain/repositories/auth_repository.dart';
@@ -12,55 +11,58 @@ class BiometricVerifyCubit extends Cubit<BiometricVerifyState> {
   final BiometricLoginUseCase biometricLoginUseCase;
   final StoreUserCredentialsUseCase storeCredentials;
   final AuthRepository repository;
+  final IAppLockService _appLockService;
+  final ISessionManager _sessionManager;
 
   BiometricVerifyCubit({
     required this.biometricLoginUseCase,
     required this.storeCredentials,
     required this.repository,
-  }) : super(BiometricVerifyInitial());
+    required IAppLockService appLockService,
+    required ISessionManager sessionManager,
+  })  : _appLockService = appLockService,
+        _sessionManager = sessionManager,
+        super(BiometricVerifyInitial());
 
   Future<void> verify() async {
     emit(BiometricVerifyLoading());
 
-    try {
-      // Update activity timestamp BEFORE authentication to prevent app lock during biometric
-      await AppLockService.updateActivity();
+    // Update activity timestamp BEFORE authentication to prevent app lock during biometric
+    await _appLockService.updateActivity();
 
-      final authenticated = await LocalAuthService.authenticate();
+    // Perform actual biometric login
+    final result = await biometricLoginUseCase();
 
-      if (!authenticated) {
-        emit(BiometricVerifyFailed("Biometric authentication failed"));
-        return;
-      }
+    result.fold(
+      (failure) {
+        emit(BiometricVerifyFailed(failure.message));
+      },
+      (session) async {
+        // Store credentials and start session
+        await storeCredentials(
+          userId: session.userId,
+          token: session.token,
+        );
 
-      String biometricType = 'unknown';
-      try {
-        biometricType = await repository.getBiometricType() ?? 'unknown';
-      } catch (e) {
-        debugPrint('Unable to read biometric type: $e');
-      }
+        // Start session using injected session manager
+        await _sessionManager.startSession(
+          userId: session.userId,
+          token: session.token,
+        );
 
-      // Emit success immediately so the UI can react even if persistence fails later
-      emit(BiometricVerifySuccess(biometricType: biometricType));
+        // Get biometric type
+        String biometricType = 'unknown';
+        final typeResult = await repository.getBiometricType();
+        biometricType = typeResult.fold(
+          (failure) {
+            debugPrint('Unable to read biometric type: ${failure.message}');
+            return 'unknown';
+          },
+          (value) => value ?? 'unknown',
+        );
 
-      await _persistLoginAfterSuccess();
-    } catch (e) {
-      emit(BiometricVerifyFailed(e.toString()));
-    }
-  }
-
-  Future<void> _persistLoginAfterSuccess() async {
-    try {
-      final token = await biometricLoginUseCase();
-
-      await storeCredentials(
-        userId: "biometric-user-id",
-        token: token,
-      );
-      await SessionManager.startSession();
-    } catch (e) {
-      // Do not block the success state; just log for debugging
-      debugPrint('Biometric login persistence failed: $e');
-    }
+        emit(BiometricVerifySuccess(biometricType: biometricType));
+      },
+    );
   }
 }

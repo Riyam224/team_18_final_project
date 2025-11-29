@@ -10,8 +10,8 @@ import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
-import 'package:team_18_final_project/core/security/local_auth_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/biometric_setup_cubit/biometric_setup_cubit.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/biometric_setup_cubit/biometric_setup_state.dart';
 
@@ -31,13 +31,21 @@ class _FaceIDScanningRegisterContent extends StatefulWidget {
   const _FaceIDScanningRegisterContent();
 
   @override
-  State<_FaceIDScanningRegisterContent> createState() => _FaceIDScanningRegisterContentState();
+  State<_FaceIDScanningRegisterContent> createState() =>
+      _FaceIDScanningRegisterContentState();
 }
 
-class _FaceIDScanningRegisterContentState extends State<_FaceIDScanningRegisterContent> {
+class _FaceIDScanningRegisterContentState
+    extends State<_FaceIDScanningRegisterContent> {
+  late final IAppLockService _appLockService;
+  late final IBiometricService _biometricService;
+
   @override
   void initState() {
     super.initState();
+    _appLockService = sl<IAppLockService>();
+    _biometricService = sl<IBiometricService>();
+
     // Automatically trigger Face ID setup when screen loads
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
@@ -49,14 +57,21 @@ class _FaceIDScanningRegisterContentState extends State<_FaceIDScanningRegisterC
   Future<void> _setupFaceID() async {
     try {
       // Update activity timestamp BEFORE authentication to prevent app lock during Face ID
-      await AppLockService.updateActivity();
+      await _appLockService.updateActivity();
 
       // Authenticate with Face ID
-      final authenticated = await LocalAuthService.authenticate();
+      final result = await _biometricService.authenticate(
+        localizedReason: 'Authenticate to set up Face ID',
+      );
+
+      final authenticated = result.fold(
+        (failure) => false,
+        (success) => success,
+      );
 
       if (authenticated && mounted) {
         // Save biometric settings
-        context.read<BiometricSetupCubit>().saveBiometric('face');
+                context.read<BiometricSetupCubit>().saveBiometric(type: 'face');
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -131,7 +146,8 @@ class _FaceIDScanningRegisterContentState extends State<_FaceIDScanningRegisterC
                     child: Text(
                       AppStrings.placeFaceIDInstruction,
                       textAlign: TextAlign.center,
-                      style: AppTextStyles.authBiometricScanInstruction.copyWith(
+                      style:
+                          AppTextStyles.authBiometricScanInstruction.copyWith(
                         fontSize: 18.sp,
                         color: Colors.white,
                       ),
@@ -148,7 +164,8 @@ class _FaceIDScanningRegisterContentState extends State<_FaceIDScanningRegisterC
                     height: AppSizing.faceIDContainerHeight,
                     decoration: BoxDecoration(
                       color: isDark ? Colors.black : Colors.white,
-                      borderRadius: BorderRadius.circular(AppSizing.radiusMedium),
+                      borderRadius:
+                          BorderRadius.circular(AppSizing.radiusMedium),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -167,7 +184,8 @@ class _FaceIDScanningRegisterContentState extends State<_FaceIDScanningRegisterC
                           AppStrings.faceID,
                           style: AppTextStyles.authBiometricIconLabel.copyWith(
                             fontSize: 20.sp,
-                            color: isDark ? Colors.white : const Color(0xFF1D3A70),
+                            color:
+                                isDark ? Colors.white : const Color(0xFF1D3A70),
                           ),
                         ),
                       ],
@@ -195,7 +213,8 @@ class _FaceIDScanningRegisterContentState extends State<_FaceIDScanningRegisterC
                           ? AppStrings.processing
                           : AppStrings.faceIDScanComplete,
                       textAlign: TextAlign.center,
-                      style: AppTextStyles.authBiometricScanInstruction.copyWith(
+                      style:
+                          AppTextStyles.authBiometricScanInstruction.copyWith(
                         fontSize: 18.sp,
                         color: Colors.white,
                       ),

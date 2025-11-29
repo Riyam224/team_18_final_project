@@ -6,6 +6,8 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 // Imports environment configuration for API keys and secrets
 import 'package:team_18_final_project/core/config/env_config.dart';
+import 'package:team_18_final_project/core/config/network_config.dart';
+import 'package:team_18_final_project/core/config/timing_config.dart';
 // Imports API base URL constants
 import 'api_base_url.dart';
 
@@ -28,22 +30,22 @@ class DioClient {
         // Base URL for all API requests (e.g., https://api.coingecko.com/api/v3)
         baseUrl: ApiConstants.baseUrl,
 
-        // Maximum time to wait for connection to be established (30 seconds)
+        // Maximum time to wait for connection to be established
         // Prevents app from hanging if server is unreachable
-        connectTimeout: const Duration(seconds: 30),
+        connectTimeout: TimingConfig.connectionTimeout,
 
-        // Maximum time to wait for server to send response data (30 seconds)
+        // Maximum time to wait for server to send response data
         // Prevents app from hanging if server is slow to respond
-        receiveTimeout: const Duration(seconds: 30),
+        receiveTimeout: TimingConfig.receiveTimeout,
 
         // Default headers sent with every request
         headers: {
           // Tell server we accept JSON responses
-          'Accept': 'application/json',
+          NetworkConfig.acceptHeader: NetworkConfig.acceptValue,
 
           // CoinGecko API key header for authentication
           // Required for higher rate limits and full API access
-          'x-cg-demo-api-key': _apiKey,
+          NetworkConfig.apiKeyHeader: _apiKey,
         },
       ),
     );
@@ -65,18 +67,18 @@ class DioClient {
           if (apiKey.isEmpty) {
             // kDebugMode is true only in debug builds (not in release)
             if (kDebugMode) {
-              print('⚠️ [DioClient] Warning: COINGECKO_API_KEY not found in .env file');
+              print(NetworkConfig.apiKeyNotFoundWarning);
             }
           }
 
           // Inject API key into request headers
           // This ensures every request has the API key, even if config changes
-          options.headers['x-cg-demo-api-key'] = apiKey;
+          options.headers[NetworkConfig.apiKeyHeader] = apiKey;
 
           // Log outgoing request details (only in debug mode)
           if (kDebugMode) {
             // Print HTTP method (GET, POST, etc.) and full URL
-            print('🌐 [DioClient] Request → ${options.method} ${options.uri}');
+            print('${NetworkConfig.requestLogPrefix} ${options.method} ${options.uri}');
           }
 
           // Pass request to next interceptor or send it
@@ -90,7 +92,8 @@ class DioClient {
           // Log successful response (only in debug mode)
           if (kDebugMode) {
             // Print status code (e.g., 200, 201) and requested URL
-            print('✅ [DioClient] Response → ${response.statusCode} ${response.requestOptions.uri}');
+            print(
+                '${NetworkConfig.responseLogPrefix} ${response.statusCode} ${response.requestOptions.uri}');
           }
 
           // Pass response to next interceptor or return it to caller
@@ -103,23 +106,24 @@ class DioClient {
           // Log error details (only in debug mode)
           if (kDebugMode) {
             // Print HTTP error code (e.g., 404, 500) and URL that failed
-            print('❌ [DioClient] Error → ${error.response?.statusCode} ${error.requestOptions.uri}');
+            print(
+                '${NetworkConfig.errorLogPrefix} ${error.response?.statusCode} ${error.requestOptions.uri}');
             // Print error message from Dio
-            print('❌ [DioClient] Message → ${error.message}');
+            print('${NetworkConfig.messageLogPrefix} ${error.message}');
           }
 
           // Handle specific CoinGecko API errors with user-friendly messages
 
           // 429 = Too Many Requests (rate limit exceeded)
-          if (error.response?.statusCode == 429) {
+          if (error.response?.statusCode == NetworkConfig.statusTooManyRequests) {
             if (kDebugMode) {
-              print('⚠️ Rate limit exceeded. Please wait before making more requests.');
+              print('${NetworkConfig.warningLogPrefix} ${NetworkConfig.rateLimitExceeded}');
             }
           }
           // 401 = Unauthorized (invalid or missing API key)
-          else if (error.response?.statusCode == 401) {
+          else if (error.response?.statusCode == NetworkConfig.statusUnauthorized) {
             if (kDebugMode) {
-              print('🚫 Unauthorized. API key might be invalid or missing.');
+              print('${NetworkConfig.unauthorizedLogPrefix} ${NetworkConfig.unauthorizedRequest}');
             }
           }
 
@@ -157,9 +161,9 @@ class DioClient {
           // Log error details when requests fail
           error: true,
 
-          // Custom log print function (adds 🔹 emoji for easy identification)
+          // Custom log print function (adds emoji for easy identification)
           // obj is the log message (string) to be printed
-          logPrint: (obj) => print('🔹 $obj'),
+          logPrint: (obj) => print('${NetworkConfig.detailsLogPrefix} $obj'),
         ),
       );
     }

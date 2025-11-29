@@ -167,7 +167,8 @@ class AppSpacing {
 
   // ========= HELPER METHODS (Factory methods) =========
 
-  static SizedBox horizontal(double horizontal) => SizedBox(width: horizontal.w);
+  static SizedBox horizontal(double horizontal) =>
+      SizedBox(width: horizontal.w);
   static SizedBox vertical(double vertical) => SizedBox(height: vertical.h);
 
   static EdgeInsets horizontalPadding(double horizontal) =>

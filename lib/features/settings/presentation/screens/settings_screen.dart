@@ -6,13 +6,17 @@ import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/security/audit_log_service.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
-import 'package:team_18_final_project/core/security/local_auth_service.dart';
-import 'package:team_18_final_project/core/security/secure_storage_service.dart';
-import 'package:team_18_final_project/core/security/session_manager.dart';
+import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -25,28 +29,64 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _avatarPath;
   bool _biometricEnabled = false;
   bool _biometricAvailable = false;
-  int _autoLockMinutes = AppLockService.defaultAutoLockMinutes;
+  int _autoLockSeconds = 60; // default 60 seconds
   bool _loading = true;
 
-  final List<int> _lockOptions = const [0, 2, 5, 10, 30];
+  late final ISecureStorage _secureStorage;
+  late final IBiometricService _biometricService;
+  late final IAppLockService _appLockService;
+  late final IAuditLogService _auditLogService;
+  late final ISessionManager _sessionManager;
+
+  final List<int> _lockOptionsSeconds = const [
+    0, // never
+    30,
+    60,
+    300,
+    600,
+    1800,
+  ];
 
   @override
   void initState() {
     super.initState();
+    _secureStorage = sl<ISecureStorage>();
+    _biometricService = sl<IBiometricService>();
+    _appLockService = sl<IAppLockService>();
+    _auditLogService = sl<IAuditLogService>();
+    _sessionManager = sl<ISessionManager>();
     _loadData();
   }
 
   Future<void> _loadData() async {
-    final avatar = await SecureStorageService.getAvatarPath();
-    final enabled = await SecureStorageService.isBiometricEnabled();
-    final available = await LocalAuthService.isBiometricAvailable();
-    final lock = await AppLockService.getAutoLockTimeout();
+    // Load avatar path
+    final avatarResult = await _secureStorage.read(key: StorageKeysConfig.avatarUrl);
+    final avatar = avatarResult.fold((failure) => null, (value) => value);
+
+    // Load biometric enabled
+    final enabledResult = await _secureStorage.read(key: StorageKeysConfig.biometricEnabled);
+    final enabled = enabledResult.fold((failure) => false, (value) => value == 'true');
+
+    // Check biometric availability
+    final availableResult = await _biometricService.isAvailable();
+    final available = availableResult.fold((failure) => false, (value) => value);
+
+    // Get auto-lock timeout
+    final timeoutResult = await _appLockService.getAutoLockTimeout();
+    final lockDuration = timeoutResult.fold(
+      (failure) => const Duration(seconds: 60),
+      (duration) => duration,
+    );
+    final lock = lockDuration.inSeconds;
+
     if (!mounted) return;
     setState(() {
       _avatarPath = avatar;
       _biometricEnabled = enabled && available;
       _biometricAvailable = available;
-      _autoLockMinutes = lock;
+      _autoLockSeconds = _lockOptionsSeconds.contains(lock)
+          ? lock
+          : _lockOptionsSeconds.first;
       _loading = false;
     });
   }
@@ -64,28 +104,42 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Future<void> _toggleBiometric(bool value) async {
     if (!_biometricAvailable && value) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Biometrics not available on this device')),
+        const SnackBar(
+            content: Text('Biometrics not available on this device')),
       );
       return;
     }
-    await SecureStorageService.setBiometricEnabled(value);
-    await AuditLogService.log(
-      type: 'security',
-      message: 'Biometric auth ${value ? 'enabled' : 'disabled'}',
+
+    await _secureStorage.write(
+      key: StorageKeysConfig.biometricEnabled,
+      value: value.toString(),
     );
+
+    await _auditLogService.log(
+      event: 'Biometric auth ${value ? 'enabled' : 'disabled'}',
+      metadata: {'type': 'security'},
+    );
+
     setState(() {
       _biometricEnabled = value;
     });
   }
 
-  Future<void> _updateLockTimeout(int minutes) async {
-    await AppLockService.setAutoLockTimeout(minutes);
-    await AuditLogService.log(
-      type: 'security',
-      message: 'Auto-lock timeout set to ${minutes == 0 ? 'Never' : '$minutes min'}',
+  Future<void> _updateLockTimeout(int seconds) async {
+    await _appLockService.setAutoLockTimeout(Duration(seconds: seconds));
+
+    await _secureStorage.write(
+      key: StorageKeysConfig.sessionTimeoutMinutes,
+      value: ((seconds / 60).ceil()).toString(),
     );
+
+    await _auditLogService.log(
+      event: 'Auto-lock timeout set to ${seconds == 0 ? 'Never' : '${seconds}s'}',
+      metadata: {'type': 'security'},
+    );
+
     setState(() {
-      _autoLockMinutes = minutes;
+      _autoLockSeconds = seconds;
     });
   }
 
@@ -110,13 +164,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       backgroundImage: _avatarProvider(),
                     ),
                     AppSpacing.gapW12,
-                    Text(
-                      AppStrings.profile,
-                      style: AppTextStyles.titleMedium.copyWith(
-                        fontSize: 18.sp,
-                        fontWeight: FontWeight.w600,
-                        color: textColor,
-                      ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          AppStrings.profile,
+                          style: AppTextStyles.titleMedium.copyWith(
+                            fontSize: 18.sp,
+                            fontWeight: FontWeight.w600,
+                            color: textColor,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: () => context.push(AppRoutes.profile),
+                          child: const Text('View / edit profile'),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -149,15 +212,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 ListTile(
                   title: const Text('Auto-lock timeout'),
-                  subtitle: Text(_autoLockMinutes == 0
-                      ? 'Never'
-                      : 'After $_autoLockMinutes minutes'),
+                  subtitle: Text(
+                    _autoLockSeconds == 0
+                        ? 'Never'
+                        : _autoLockSeconds < 60
+                            ? 'After ${_autoLockSeconds}s'
+                            : 'After ${_autoLockSeconds ~/ 60} minutes',
+                  ),
                   trailing: DropdownButton<int>(
-                    value: _autoLockMinutes,
-                    items: _lockOptions
+                    value: _autoLockSeconds,
+                    items: _lockOptionsSeconds
                         .map((m) => DropdownMenuItem(
                               value: m,
-                              child: Text(m == 0 ? 'Never' : '$m min'),
+                              child: Text(
+                                m == 0
+                                    ? 'Never'
+                                    : m < 60
+                                        ? '$m s'
+                                        : '${m ~/ 60} min',
+                              ),
                             ))
                         .toList(),
                     onChanged: (value) {
@@ -169,8 +242,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     final messenger = ScaffoldMessenger.of(context);
-                    await SessionManager.logout();
-                    await AuditLogService.log(type: 'auth', message: 'User logged out from settings');
+
+                    await _sessionManager.endSession();
+
+                    await _auditLogService.log(
+                      event: 'User logged out from settings',
+                      metadata: {'type': 'auth'},
+                    );
+
                     if (!mounted) return;
                     messenger.showSnackBar(
                       const SnackBar(content: Text('Session ended')),

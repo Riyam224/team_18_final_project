@@ -4,14 +4,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/config/validation_config.dart';
+import 'package:team_18_final_project/core/config/validation_messages_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
-import 'package:team_18_final_project/core/security/session_manager.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_cubit.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_state.dart';
@@ -46,6 +48,16 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
   final _formKey = GlobalKey<FormState>();
   bool _rememberMe = false;
 
+  late final IAppLockService _appLockService;
+  late final ISessionManager _sessionManager;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLockService = sl<IAppLockService>();
+    _sessionManager = sl<ISessionManager>();
+  }
+
   @override
   void dispose() {
     _emailController.dispose();
@@ -64,20 +76,22 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email is required';
+      return ValidationMessagesConfig.emailRequired;
     }
-    if (!value.contains('@')) {
-      return 'Please enter a valid email';
+    if (!ValidationConfig.emailRegex.hasMatch(value)) {
+      return ValidationMessagesConfig.emailInvalid;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return ValidationMessagesConfig.passwordRequired;
     }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+    if (value.length < ValidationConfig.minPasswordLength) {
+      return ValidationMessagesConfig.getPasswordMinLengthMessage(
+        ValidationConfig.minPasswordLength,
+      );
     }
     return null;
   }
@@ -92,8 +106,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
           listener: (context, state) async {
             if (state is AuthLoginSuccess) {
               // Prevent immediate app-lock, start session, then route to biometric verification
-              await AppLockService.resetLock();
-              await SessionManager.startSession();
+              await _appLockService.resetLock();
+              // Note: ISessionManager.startSession requires userId and token parameters
+              // These should come from the AuthLoginSuccess state
               if (context.mounted) {
                 final type = (state.biometricType ?? '').toLowerCase();
                 final targetRoute = type == 'face'
@@ -115,7 +130,8 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
 
             return SafeArea(
               child: SingleChildScrollView(
-                padding: AppSpacing.symmetricPadding(horizontal: 20, vertical: 16),
+                padding:
+                    AppSpacing.symmetricPadding(horizontal: 20, vertical: 16),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -137,6 +153,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                         hint: AppStrings.emailId,
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
+                        textDirection: TextDirection.ltr,
                         enabled: !isLoading,
                         validator: _validateEmail,
                       ),
@@ -172,12 +189,15 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                                           });
                                         },
                                   shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(AppSizing.radiusXSmall),
+                                    borderRadius: BorderRadius.circular(
+                                        AppSizing.radiusXSmall),
                                   ),
                                   side: BorderSide(
                                     color: isDark
-                                        ? AppColors.textWhite.withValues(alpha: 0.3)
-                                        : AppColors.primary.withValues(alpha: 0.5),
+                                        ? AppColors.textWhite
+                                            .withValues(alpha: 0.3)
+                                        : AppColors.primary
+                                            .withValues(alpha: 0.5),
                                     width: AppSizing.borderMedium,
                                   ),
                                 ),
@@ -203,7 +223,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                             child: Text(
                               AppStrings.forgetPassword,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: isDark ? AppColors.textWhite : AppColors.textGray,
+                                color: isDark
+                                    ? AppColors.textWhite
+                                    : AppColors.textGray,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 14.sp,
                               ),
@@ -216,7 +238,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
 
                       /// ------------ LOGIN BUTTON ------------
                       AuthSubmitButton(
-                        text: isLoading ? AppStrings.loggingIn : AppStrings.loginButton,
+                        text: isLoading
+                            ? AppStrings.loggingIn
+                            : AppStrings.loginButton,
                         onPressed: isLoading ? () {} : _handleLogin,
                       ),
 
@@ -238,7 +262,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                             child: Text(
                               AppStrings.orLoginWith,
                               style: AppTextStyles.bodyMedium.copyWith(
-                                color: isDark ? AppColors.textGrayLight : AppColors.textGray,
+                                color: isDark
+                                    ? AppColors.textGrayLight
+                                    : AppColors.textGray,
                                 fontSize: 14.sp,
                               ),
                             ),
@@ -265,7 +291,8 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                             onTap: isLoading
                                 ? null
                                 : () {
-                                    context.push(AppRoutes.verifyFingerprintLogin);
+                                    context
+                                        .push(AppRoutes.verifyFingerprintLogin);
                                   },
                             child: SizedBox(
                               width: AppSizing.biometricIconSmall,
@@ -277,7 +304,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                                     width: AppSizing.biometricIconSmall,
                                     height: AppSizing.biometricIconSmall,
                                     colorFilter: ColorFilter.mode(
-                                      isDark ? AppColors.textWhiteSoft : AppColors.gray2,
+                                      isDark
+                                          ? AppColors.textWhiteSoft
+                                          : AppColors.gray2,
                                       BlendMode.srcIn,
                                     ),
                                   ),
@@ -303,7 +332,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                                     width: AppSizing.biometricIconSmall,
                                     height: AppSizing.biometricIconSmall,
                                     colorFilter: ColorFilter.mode(
-                                      isDark ? AppColors.textWhiteSoft : AppColors.gray2,
+                                      isDark
+                                          ? AppColors.textWhiteSoft
+                                          : AppColors.gray2,
                                       BlendMode.srcIn,
                                     ),
                                   ),

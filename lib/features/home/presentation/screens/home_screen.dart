@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
-import 'package:team_18_final_project/core/security/secure_storage_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/features/home/presentation/cubit/home_cubit.dart';
 import 'package:team_18_final_project/features/home/presentation/cubit/home_state.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/view_all.dart';
@@ -37,15 +38,33 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
   String _userName = 'User';
   String? _avatarPath;
 
+  late final ISecureStorage _secureStorage;
+
   @override
   void initState() {
     super.initState();
+    _secureStorage = sl<ISecureStorage>();
     _loadUserProfile();
   }
 
   Future<void> _loadUserProfile() async {
-    final firstName = await SecureStorageService.getUserFirstName();
-    final avatarPath = await SecureStorageService.getAvatarPath();
+    // Load user first name
+    final firstNameResult = await _secureStorage.read(
+      key: StorageKeysConfig.userDisplayName,
+    );
+    final firstName = firstNameResult.fold(
+      (failure) => null,
+      (value) => value,
+    );
+
+    // Load avatar path
+    final avatarResult = await _secureStorage.read(
+      key: StorageKeysConfig.avatarUrl,
+    );
+    final avatarPath = avatarResult.fold(
+      (failure) => null,
+      (value) => value,
+    );
 
     if (!mounted) return;
 

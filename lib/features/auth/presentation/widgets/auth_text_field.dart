@@ -13,6 +13,7 @@ class AuthTextField extends StatelessWidget {
   final TextInputType keyboardType;
   final bool enabled;
   final String? Function(String?)? validator;
+  final TextDirection? textDirection;
 
   const AuthTextField({
     super.key,
@@ -23,6 +24,7 @@ class AuthTextField extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.enabled = true,
     this.validator,
+    this.textDirection,
   });
 
   @override
@@ -35,7 +37,9 @@ class AuthTextField extends StatelessWidget {
       decoration: ShapeDecoration(
         color: enabled
             ? (isDark ? AppColors.darkSurface : AppColors.lightInputBackground)
-            : (isDark ? AppColors.darkSurface.withValues(alpha: 0.5) : AppColors.lightInputBackground.withValues(alpha: 0.5)),
+            : (isDark
+                ? AppColors.darkSurface.withValues(alpha: 0.5)
+                : AppColors.lightInputBackground.withValues(alpha: 0.5)),
         shape: RoundedRectangleBorder(
           side: BorderSide(
             width: AppSizing.borderThin,
@@ -59,7 +63,9 @@ class AuthTextField extends StatelessWidget {
             size: AppSizing.iconSmall,
             color: enabled
                 ? (isDark ? AppColors.textWhiteSoft : AppColors.gray2)
-                : (isDark ? AppColors.textWhiteSoft.withValues(alpha: 0.5) : AppColors.gray2.withValues(alpha: 0.5)),
+                : (isDark
+                    ? AppColors.textWhiteSoft.withValues(alpha: 0.5)
+                    : AppColors.gray2.withValues(alpha: 0.5)),
           ),
           AppSpacing.hSpace16,
           Expanded(
@@ -69,6 +75,7 @@ class AuthTextField extends StatelessWidget {
               keyboardType: keyboardType,
               enabled: enabled,
               validator: validator,
+              textDirection: textDirection,
               style: AppTextStyles.authTextFieldInput.copyWith(
                 fontSize: 14.sp,
                 color: isDark ? AppColors.textWhite : AppColors.textDark,

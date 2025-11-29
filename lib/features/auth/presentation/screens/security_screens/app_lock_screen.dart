@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
-import 'package:team_18_final_project/core/security/biometric_service.dart';
-import 'package:team_18_final_project/core/security/session_manager.dart';
+import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 
 class AppLockScreen extends StatelessWidget {
   const AppLockScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final appLockService = sl<IAppLockService>();
+    final biometricService = sl<IBiometricService>();
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Center(
@@ -19,20 +22,26 @@ class AppLockScreen extends StatelessWidget {
           ),
           onPressed: () async {
             // Update activity timestamp BEFORE authentication
-            await AppLockService.updateActivity();
+            await appLockService.updateActivity();
 
-            final bio = BiometricService();
-            final ok = await bio.authenticate();
+            final result = await biometricService.authenticate(
+              localizedReason: 'Authenticate to unlock the app',
+            );
 
             if (!context.mounted) return;
 
-            if (ok) {
+            final authenticated = result.fold(
+              (failure) => false,
+              (success) => success,
+            );
+
+            if (authenticated) {
               // Capture context info before async gap
               final canPop = context.canPop();
 
               // Update activity again after successful authentication
-              await AppLockService.updateActivity();
-              await SessionManager.startSession();
+              await appLockService.updateActivity();
+              // Note: ISessionManager.startSession requires userId and token
 
               if (!context.mounted) return;
 

@@ -16,7 +16,8 @@ class OnboardingIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDarkMode = Theme.of(context).brightness == Brightness.dark;
-    final activeColor = isDarkMode ? AppColors.textWhiteSoft : AppColors.primary;
+    final activeColor =
+        isDarkMode ? AppColors.textWhiteSoft : AppColors.primary;
     final inactiveColor = isDarkMode ? AppColors.gray2 : AppColors.gray4;
 
     return Row(

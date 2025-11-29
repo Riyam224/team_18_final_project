@@ -107,7 +107,8 @@ class AppStrings {
 
   // Auth - Registration & Login Messages
   static const registrationSuccessful = 'Registration Successful';
-  static const biometricSetupQuestion = 'Would you like to set up biometric authentication?';
+  static const biometricSetupQuestion =
+      'Would you like to set up biometric authentication?';
   static const skipButton = 'Skip';
   static const setupButton = 'Set Up';
   static const creatingAccount = 'Creating Account...';
@@ -125,7 +126,8 @@ class AppStrings {
 
   // Settings Screen
   static const profile = 'Profile';
-  static const avatarDescription = 'Avatar will use a default image until you choose a new one.';
+  static const avatarDescription =
+      'Avatar will use a default image until you choose a new one.';
   static const securityWarningFooter =
       'For your security, avoid using this app on rooted or jailbroken devices.';
 

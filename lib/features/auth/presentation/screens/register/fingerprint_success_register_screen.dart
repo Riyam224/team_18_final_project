@@ -7,9 +7,10 @@ import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
-import 'package:team_18_final_project/core/security/session_manager.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_submit_button.dart';
@@ -85,8 +86,21 @@ class FingerprintSuccessRegisterScreen extends StatelessWidget {
                 child: AuthSubmitButton(
                   text: AppStrings.continueButton,
                   onPressed: () async {
-                    await AppLockService.updateActivity();
-                    await SessionManager.startSession();
+                    final appLockService = sl<IAppLockService>();
+                    final sessionManager = sl<ISessionManager>();
+
+                    await appLockService.updateActivity();
+
+                    final validResult = await sessionManager.isSessionValid();
+                    validResult.fold(
+                      (failure) => null, // Ignore errors
+                      (valid) async {
+                        if (!valid) {
+                          await sessionManager.updateActivity();
+                        }
+                      },
+                    );
+
                     if (context.mounted) {
                       context.go(AppRoutes.home);
                     }

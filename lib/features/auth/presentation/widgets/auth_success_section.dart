@@ -23,8 +23,9 @@ class AuthSuccessSection extends StatelessWidget {
       children: [
         CircleAvatar(
           radius: AppSizing.avatarRadius,
-          backgroundColor:
-              isDark ? Colors.white10 : AppColors.primary.withValues(alpha: 0.1),
+          backgroundColor: isDark
+              ? Colors.white10
+              : AppColors.primary.withValues(alpha: 0.1),
           child: Icon(
             Icons.check,
             size: AppSizing.iconLarge,

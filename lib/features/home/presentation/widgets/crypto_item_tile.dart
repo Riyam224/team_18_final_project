@@ -54,6 +54,7 @@ class TrendingCryptoCard extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
+
               /// Icon
               Container(
                 height: AppSizing.h32,

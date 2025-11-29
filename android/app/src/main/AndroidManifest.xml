@@ -10,6 +10,8 @@
     <!-- Optional: Needed for face unlock on some devices -->
     <uses-permission android:name="android.permission.CAMERA"/>
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <!-- ⚠️ NOTE: Screenshot blocking cannot be enabled in manifest.
          It is only enabled in Flutter using FLAG_SECURE:
          FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);

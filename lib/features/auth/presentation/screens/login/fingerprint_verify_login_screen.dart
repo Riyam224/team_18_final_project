@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:team_18_final_project/core/config/timing_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
@@ -28,15 +29,17 @@ class _VerifyFingerprintLoginContent extends StatefulWidget {
   const _VerifyFingerprintLoginContent();
 
   @override
-  State<_VerifyFingerprintLoginContent> createState() => _VerifyFingerprintLoginContentState();
+  State<_VerifyFingerprintLoginContent> createState() =>
+      _VerifyFingerprintLoginContentState();
 }
 
-class _VerifyFingerprintLoginContentState extends State<_VerifyFingerprintLoginContent> {
+class _VerifyFingerprintLoginContentState
+    extends State<_VerifyFingerprintLoginContent> {
   @override
   void initState() {
     super.initState();
     // Automatically trigger fingerprint verification when screen loads
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(TimingConfig.biometricScanDelay, () {
       if (mounted) {
         context.read<BiometricVerifyCubit>().verify();
       }
@@ -60,7 +63,7 @@ class _VerifyFingerprintLoginContentState extends State<_VerifyFingerprintLoginC
               );
               // Navigate back to login after failure
               final navigator = Navigator.of(context);
-              Future.delayed(const Duration(seconds: 2), () {
+              Future.delayed(TimingConfig.biometricFailureDelay, () {
                 if (mounted) {
                   navigator.pop();
                 }

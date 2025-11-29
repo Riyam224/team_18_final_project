@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_auth/local_auth.dart';
-import 'package:team_18_final_project/core/security/local_auth_service.dart';
+import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 
 class BiometricTestScreen extends StatefulWidget {
   const BiometricTestScreen({super.key});
@@ -12,8 +13,7 @@ class BiometricTestScreen extends StatefulWidget {
 class _BiometricTestScreenState extends State<BiometricTestScreen> {
   final LocalAuthentication _auth = LocalAuthentication();
 
-  String debugText =
-      "👉 Press a button below to test Face ID / Fingerprint.";
+  String debugText = "👉 Press a button below to test Face ID / Fingerprint.";
 
   /// =========================================================
   /// 🔍 FULL BIOMETRIC DEBUG (Capability + Supported Types)
@@ -46,7 +46,15 @@ class _BiometricTestScreenState extends State<BiometricTestScreen> {
   /// 🔐 TEST ACTUAL AUTHENTICATION
   /// =========================================================
   Future<void> testBiometric() async {
-    final success = await LocalAuthService.authenticate();
+    final biometricService = sl<IBiometricService>();
+    final result = await biometricService.authenticate(
+      localizedReason: 'Test biometric authentication',
+    );
+
+    final success = result.fold(
+      (failure) => false,
+      (authenticated) => authenticated,
+    );
 
     if (!mounted) return;
 

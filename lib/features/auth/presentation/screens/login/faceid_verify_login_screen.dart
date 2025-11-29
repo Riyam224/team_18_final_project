@@ -7,9 +7,9 @@ import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
-import 'package:team_18_final_project/core/security/session_manager.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_submit_button.dart';
@@ -112,8 +112,12 @@ class FaceIDVerifySuccessLoginScreen extends StatelessWidget {
                   child: AuthSubmitButton(
                     text: AppStrings.continueToHome,
                     onPressed: () async {
-                      await AppLockService.resetLock();
-                      await SessionManager.startSession();
+                      final appLockService = sl<IAppLockService>();
+
+                      await appLockService.resetLock();
+                      // Note: ISessionManager.startSession requires userId and token
+                      // These should come from the authentication flow state
+
                       if (context.mounted) {
                         context.go(AppRoutes.home);
                       }

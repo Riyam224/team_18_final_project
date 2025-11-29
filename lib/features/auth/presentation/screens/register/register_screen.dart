@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:team_18_final_project/core/config/validation_config.dart';
+import 'package:team_18_final_project/core/config/validation_messages_config.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
 import 'package:team_18_final_project/features/auth/data/models/user_model.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_cubit.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_state.dart';
@@ -43,6 +45,14 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
   final _phoneController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
 
+  late final IAppLockService _appLockService;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLockService = sl<IAppLockService>();
+  }
+
   @override
   void dispose() {
     _firstNameController.dispose();
@@ -59,8 +69,8 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
       final user = UserModel(
         firstName: _firstNameController.text.trim(),
         lastName: _lastNameController.text.trim(),
-        email: _emailController.text.trim(),
-        phone: _phoneController.text.trim(),
+        email: _emailController.text,
+        phone: _phoneController.text,
         password: _passwordController.text,
         biometricEnabled: false,
       );
@@ -78,40 +88,42 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
 
   String? _validateEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email is required';
+      return ValidationMessagesConfig.emailRequired;
     }
-    if (!value.contains('@')) {
-      return 'Please enter a valid email';
+    if (!ValidationConfig.emailRegex.hasMatch(value)) {
+      return ValidationMessagesConfig.emailInvalid;
     }
     return null;
   }
 
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password is required';
+      return ValidationMessagesConfig.passwordRequired;
     }
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters';
+    if (value.length < ValidationConfig.minPasswordLength) {
+      return ValidationMessagesConfig.getPasswordMinLengthMessage(
+        ValidationConfig.minPasswordLength,
+      );
     }
     return null;
   }
 
   String? _validateConfirmPassword(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Please confirm your password';
+      return ValidationMessagesConfig.confirmPasswordRequired;
     }
     if (value != _passwordController.text) {
-      return 'Passwords do not match';
+      return ValidationMessagesConfig.passwordsDoNotMatch;
     }
     return null;
   }
 
   String? _validatePhone(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Phone number is required';
+      return ValidationMessagesConfig.phoneRequired;
     }
-    if (value.length < 10) {
-      return 'Please enter a valid phone number';
+    if (value.length < ValidationConfig.minPhoneLength) {
+      return ValidationMessagesConfig.phoneInvalid;
     }
     return null;
   }
@@ -135,7 +147,7 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
                       onPressed: () async {
                         Navigator.of(dialogContext).pop();
                         // Update activity timestamp to prevent app lock
-                        await AppLockService.updateActivity();
+                        await _appLockService.updateActivity();
                         if (context.mounted) {
                           context.go(AppRoutes.home);
                         }
@@ -166,7 +178,8 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
 
             return SafeArea(
               child: SingleChildScrollView(
-                padding: AppSpacing.symmetricPadding(horizontal: 20, vertical: 16),
+                padding:
+                    AppSpacing.symmetricPadding(horizontal: 20, vertical: 16),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -188,7 +201,8 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
                         hint: AppStrings.firstName,
                         icon: Icons.person_outline,
                         enabled: !isLoading,
-                        validator: (value) => _validateRequired(value, 'First name'),
+                        validator: (value) =>
+                            _validateRequired(value, 'First name'),
                       ),
                       AppSpacing.vSpace16,
 
@@ -197,7 +211,8 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
                         hint: AppStrings.lastName,
                         icon: Icons.person_outline,
                         enabled: !isLoading,
-                        validator: (value) => _validateRequired(value, 'Last name'),
+                        validator: (value) =>
+                            _validateRequired(value, 'Last name'),
                       ),
                       AppSpacing.vSpace16,
 
@@ -206,6 +221,7 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
                         hint: AppStrings.emailId,
                         icon: Icons.email_outlined,
                         keyboardType: TextInputType.emailAddress,
+                        textDirection: TextDirection.ltr,
                         enabled: !isLoading,
                         validator: _validateEmail,
                       ),
@@ -244,7 +260,9 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
 
                       /// ------------ BUTTON ------------
                       AuthSubmitButton(
-                        text: isLoading ? AppStrings.creatingAccount : AppStrings.register,
+                        text: isLoading
+                            ? AppStrings.creatingAccount
+                            : AppStrings.register,
                         onPressed: isLoading ? () {} : _handleRegister,
                       ),
 

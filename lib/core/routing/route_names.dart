@@ -10,6 +10,7 @@ class AppRoutes {
   static const market = '/market';
   static const portfolio = '/portfolio';
   static const settings = '/settings';
+  static const profile = '/profile';
 
   // Other Routes (outside bottom nav)
   static const coinDetails = '/coinDetails';

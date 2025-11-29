@@ -29,10 +29,12 @@ class _FaceIDScanningLoginContent extends StatefulWidget {
   const _FaceIDScanningLoginContent();
 
   @override
-  State<_FaceIDScanningLoginContent> createState() => _FaceIDScanningLoginContentState();
+  State<_FaceIDScanningLoginContent> createState() =>
+      _FaceIDScanningLoginContentState();
 }
 
-class _FaceIDScanningLoginContentState extends State<_FaceIDScanningLoginContent> {
+class _FaceIDScanningLoginContentState
+    extends State<_FaceIDScanningLoginContent> {
   @override
   void initState() {
     super.initState();
@@ -93,7 +95,8 @@ class _FaceIDScanningLoginContentState extends State<_FaceIDScanningLoginContent
                     height: AppSizing.faceIDContainerHeight,
                     decoration: BoxDecoration(
                       color: isDark ? Colors.black : Colors.white,
-                      borderRadius: BorderRadius.circular(AppSizing.radiusMedium),
+                      borderRadius:
+                          BorderRadius.circular(AppSizing.radiusMedium),
                     ),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -114,7 +117,8 @@ class _FaceIDScanningLoginContentState extends State<_FaceIDScanningLoginContent
                           AppStrings.faceID,
                           style: AppTextStyles.authBiometricIconLabel.copyWith(
                             fontSize: 20.sp,
-                            color: isDark ? Colors.white : const Color(0xFF1D3A70),
+                            color:
+                                isDark ? Colors.white : const Color(0xFF1D3A70),
                           ),
                         ),
                       ],
@@ -142,7 +146,8 @@ class _FaceIDScanningLoginContentState extends State<_FaceIDScanningLoginContent
                           ? AppStrings.faceIDPleaseWaitScanning
                           : AppStrings.authenticationComplete,
                       textAlign: TextAlign.center,
-                      style: AppTextStyles.authBiometricScanInstruction.copyWith(
+                      style:
+                          AppTextStyles.authBiometricScanInstruction.copyWith(
                         fontSize: 18.sp,
                         height: 1.4,
                         color: Colors.white,

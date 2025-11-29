@@ -25,8 +25,11 @@ import 'package:team_18_final_project/features/market/presentation/screens/marke
 import 'package:team_18_final_project/features/market/presentation/screens/payment_screen.dart';
 import 'package:team_18_final_project/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/screens/portfolio_screen.dart';
+import 'package:team_18_final_project/features/profile/presentation/screens/profile_screen.dart';
 import 'package:team_18_final_project/features/settings/presentation/screens/settings_screen.dart';
 import 'package:team_18_final_project/features/splash/presentation/screens/splash_screen.dart';
+import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 
 import '../../features/auth/presentation/debug/biometric_test_screen.dart';
 
@@ -41,6 +44,28 @@ class RouteGenerator {
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
     // Start from splash screen as per splash_onboarding feature
     initialLocation: AppRoutes.splash,
+    redirect: (context, state) async {
+      final protected = <String>{
+        AppRoutes.home,
+        AppRoutes.market,
+        AppRoutes.portfolio,
+        AppRoutes.settings,
+        AppRoutes.profile,
+        AppRoutes.appLock,
+      };
+
+      final isAuthPath =
+          protected.any((p) => state.matchedLocation.startsWith(p));
+      if (!isAuthPath) return null;
+
+      // Use injected session manager to check authentication
+      final sessionManager = sl<ISessionManager>();
+      final isValidResult = await sessionManager.isSessionValid();
+      final authed = isValidResult.fold((_) => false, (valid) => valid);
+
+      if (!authed) return AppRoutes.login;
+      return null;
+    },
     routes: [
       // ==========================
       // SPLASH, ONBOARDING, AUTH
@@ -151,6 +176,10 @@ class RouteGenerator {
           GoRoute(
             path: AppRoutes.settings,
             builder: (_, __) => const SettingsScreen(),
+          ),
+          GoRoute(
+            path: AppRoutes.profile,
+            builder: (_, __) => const ProfileScreen(),
           ),
         ],
       ),

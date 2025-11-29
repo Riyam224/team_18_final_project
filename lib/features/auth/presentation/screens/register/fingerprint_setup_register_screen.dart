@@ -8,8 +8,8 @@ import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
-import 'package:team_18_final_project/core/security/local_auth_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/biometric_setup_cubit/biometric_setup_cubit.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/biometric_setup_cubit/biometric_setup_state.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
@@ -32,13 +32,21 @@ class _SetFingerprintRegisterContent extends StatefulWidget {
   const _SetFingerprintRegisterContent();
 
   @override
-  State<_SetFingerprintRegisterContent> createState() => _SetFingerprintRegisterContentState();
+  State<_SetFingerprintRegisterContent> createState() =>
+      _SetFingerprintRegisterContentState();
 }
 
-class _SetFingerprintRegisterContentState extends State<_SetFingerprintRegisterContent> {
+class _SetFingerprintRegisterContentState
+    extends State<_SetFingerprintRegisterContent> {
+  late final IAppLockService _appLockService;
+  late final IBiometricService _biometricService;
+
   @override
   void initState() {
     super.initState();
+    _appLockService = sl<IAppLockService>();
+    _biometricService = sl<IBiometricService>();
+
     // Automatically trigger fingerprint setup when screen loads
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
@@ -50,14 +58,21 @@ class _SetFingerprintRegisterContentState extends State<_SetFingerprintRegisterC
   Future<void> _setupFingerprint() async {
     try {
       // Update activity timestamp BEFORE authentication to prevent app lock during biometric
-      await AppLockService.updateActivity();
+      await _appLockService.updateActivity();
 
       // Authenticate with fingerprint
-      final authenticated = await LocalAuthService.authenticate();
+      final result = await _biometricService.authenticate(
+        localizedReason: 'Authenticate to set up fingerprint',
+      );
+
+      final authenticated = result.fold(
+        (failure) => false,
+        (success) => success,
+      );
 
       if (authenticated && mounted) {
         // Save biometric settings
-        context.read<BiometricSetupCubit>().saveBiometric('fingerprint');
+        context.read<BiometricSetupCubit>().saveBiometric(type: 'fingerprint');
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -138,7 +153,7 @@ class _SetFingerprintRegisterContentState extends State<_SetFingerprintRegisterC
                                 ? () {}
                                 : () async {
                                     // Update activity timestamp to prevent app lock
-                                    await AppLockService.updateActivity();
+                                    await _appLockService.updateActivity();
                                     if (context.mounted) {
                                       context.go(AppRoutes.home);
                                     }

@@ -82,7 +82,8 @@ class HomeRepositoryImpl implements HomeRepository {
         if (coin.data.priceChangePercentage24h != null) {
           final usdValue = coin.data.priceChangePercentage24h!['usd'];
           if (usdValue != null) {
-            priceChangeUsd = (usdValue is int) ? usdValue.toDouble() : usdValue as double;
+            priceChangeUsd =
+                (usdValue is int) ? usdValue.toDouble() : usdValue as double;
           }
         }
 
@@ -124,9 +125,8 @@ class HomeRepositoryImpl implements HomeRepository {
               coin.priceChangePercentage24h != null &&
               coin.priceChangePercentage24h! > 0)
           .toList()
-        ..sort((a, b) =>
-            (b.priceChangePercentage24h ?? 0)
-                .compareTo(a.priceChangePercentage24h ?? 0));
+        ..sort((a, b) => (b.priceChangePercentage24h ?? 0)
+            .compareTo(a.priceChangePercentage24h ?? 0));
 
       // Take top 10
       final topGainers = gainers.take(10).map((coin) {
@@ -161,7 +161,8 @@ class HomeRepositoryImpl implements HomeRepository {
 
       // Calculate weekly change based on market performance
       // Using market cap change as a proxy for portfolio performance
-      final weeklyChange = marketCapChangePercentage * 7; // Simulate weekly based on daily
+      final weeklyChange =
+          marketCapChangePercentage * 7; // Simulate weekly based on daily
 
       final portfolioBalance = PortfolioBalance(
         totalBalance: baseBalance,

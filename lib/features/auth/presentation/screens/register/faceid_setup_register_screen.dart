@@ -11,8 +11,8 @@ import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/app_lock_service.dart';
-import 'package:team_18_final_project/core/security/local_auth_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/biometric_setup_cubit/biometric_setup_cubit.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/biometric_setup_cubit/biometric_setup_state.dart';
@@ -39,15 +39,32 @@ class _FaceIDSetupContent extends StatefulWidget {
 }
 
 class _FaceIDSetupContentState extends State<_FaceIDSetupContent> {
+  late final IAppLockService _appLockService;
+  late final IBiometricService _biometricService;
+
+  @override
+  void initState() {
+    super.initState();
+    _appLockService = sl<IAppLockService>();
+    _biometricService = sl<IBiometricService>();
+  }
+
   Future<void> _setupFaceId() async {
     try {
       // Update activity timestamp BEFORE authentication to prevent app lock during Face ID
-      await AppLockService.updateActivity();
+      await _appLockService.updateActivity();
 
-      final authenticated = await LocalAuthService.authenticate();
+      final result = await _biometricService.authenticate(
+        localizedReason: 'Authenticate to set up Face ID',
+      );
+
+      final authenticated = result.fold(
+        (failure) => false,
+        (success) => success,
+      );
 
       if (authenticated && mounted) {
-        context.read<BiometricSetupCubit>().saveBiometric('faceid');
+        context.read<BiometricSetupCubit>().saveBiometric(type: 'faceid');
       } else if (mounted) {
         _showErrorSnackBar(AppStrings.faceIDAuthFailed);
       }
@@ -108,7 +125,9 @@ class _FaceIDSetupContentState extends State<_FaceIDSetupContent> {
                       textAlign: TextAlign.center,
                       style: AppTextStyles.authBiometricDescription.copyWith(
                         fontSize: 18.sp,
-                        color: isDark ? AppColors.textWhiteSoft2 : AppColors.textGray,
+                        color: isDark
+                            ? AppColors.textWhiteSoft2
+                            : AppColors.textGray,
                       ),
                     ),
                   ),
@@ -120,12 +139,16 @@ class _FaceIDSetupContentState extends State<_FaceIDSetupContent> {
                     width: AppSizing.faceIDIconContainerSize,
                     height: AppSizing.faceIDIconContainerSize,
                     decoration: BoxDecoration(
-                      color: isDark ? AppColors.textDark : AppColors.lightSurface,
-                      borderRadius: BorderRadius.circular(AppSizing.radiusLarge),
+                      color:
+                          isDark ? AppColors.textDark : AppColors.lightSurface,
+                      borderRadius:
+                          BorderRadius.circular(AppSizing.radiusLarge),
                     ),
                     alignment: Alignment.center,
                     child: SvgPicture.asset(
-                      isDark ? AppAssets.faceIDwhitebig : AppAssets.faceIDdarkbig,
+                      isDark
+                          ? AppAssets.faceIDwhitebig
+                          : AppAssets.faceIDdarkbig,
                       width: AppSizing.biometricIconMedium,
                     ),
                   ),
@@ -159,13 +182,15 @@ class _FaceIDSetupContentState extends State<_FaceIDSetupContent> {
                                 ? null
                                 : () async {
                                     // Update activity timestamp to prevent app lock
-                                    await AppLockService.updateActivity();
+                                    await _appLockService.updateActivity();
                                     if (context.mounted) {
                                       context.go(AppRoutes.home);
                                     }
                                   },
-                            borderColor: isDark ? Colors.white : AppColors.primary,
-                            textColor: isDark ? Colors.white : AppColors.primary,
+                            borderColor:
+                                isDark ? Colors.white : AppColors.primary,
+                            textColor:
+                                isDark ? Colors.white : AppColors.primary,
                           ),
                         ),
                         AppSpacing.hSpace20,
@@ -177,7 +202,8 @@ class _FaceIDSetupContentState extends State<_FaceIDSetupContent> {
                                 : () {
                                     if (state is BiometricSetupSuccess) {
                                       // Navigate to success screen
-                                      context.pushReplacement(AppRoutes.faceIdSuccessRegister);
+                                      context.pushReplacement(
+                                          AppRoutes.faceIdSuccessRegister);
                                     } else {
                                       _setupFaceId();
                                     }
