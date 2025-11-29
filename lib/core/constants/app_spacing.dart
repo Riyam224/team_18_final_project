@@ -1,4 +1,4 @@
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 /// AppSpacing - all padding, margin, and gap values used throughout the app
@@ -167,9 +167,10 @@ class AppSpacing {
 
   // ========= HELPER METHODS (Factory methods) =========
 
-  static SizedBox horizontal(double horizontal) =>
-      SizedBox(width: horizontal.w);
-  static SizedBox vertical(double vertical) => SizedBox(height: vertical.h);
+  static SizedBox horizontal(double horizontal, {Widget? child}) =>
+      SizedBox(width: horizontal.w, child: child);
+  static SizedBox vertical(double vertical, {Widget? child}) =>
+      SizedBox(height: vertical.h, child: child);
 
   static EdgeInsets horizontalPadding(double horizontal) =>
       EdgeInsets.symmetric(horizontal: horizontal.w);

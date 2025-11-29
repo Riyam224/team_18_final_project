@@ -1,4 +1,12 @@
 class AppStrings {
+  AppStrings._();
+
+  // Navigation
+  static const home = 'Home';
+  static const market = 'Market';
+  static const portfolio = 'Portfolio';
+  static const settings = 'Settings';
+
   // Onboarding
   // ---------- Special split title (Screen 1) ----------
   static const onboardingTitle1Part1 = "Welcome To ";
@@ -13,12 +21,6 @@ class AppStrings {
   static const onboardingLogin = "Login";
   static const onboardingRegister = "Register";
   static const onboardingSkip = "Skip";
-
-  // Navigation
-  static const home = 'Home';
-  static const market = 'Market';
-  static const portfolio = 'Portfolio';
-  static const settings = 'Settings';
 
   // Auth - Register Screen
   static const createYourAccount = 'Create Your Account';
@@ -144,4 +146,70 @@ class AppStrings {
   // App Lock Screen
   static const unlockWithBiometrics = 'Unlock with Biometrics';
   static const authenticateToUnlock = 'Authenticate to unlock the app';
+
+  // Market Strings
+  static const String bitcoin = 'Bitcoin';
+  static const String buttonBuyCrypto = 'Continue';
+  static const String buyCrypto = 'Buy Crypto';
+  static const String coinDetails = 'Coin Details';
+  static const String percentage = '15.3%';
+  static const String feePercentageText = '0.05%';
+  static const String btc = '/ 1 BTC';
+  static const String priceDisplay = '\$54,382.64';
+  static const String exchangeAmount = '\$26';
+  static const String sell = 'Sell';
+  static const String buy = 'Buy';
+  static const String aboutBitcoin = 'About Bitcoin';
+  static const String appFontNameLato = 'Lato';
+  static const String statics = 'Statics';
+  static const String paymentTitleYouPay = 'You Pay';
+  static const String paymentTitleYouReceive = 'You Receive';
+  static const String paymentPriceYouPay = '\$1,800.00';
+  static const String paymentPriceYouReceive = '0.9876';
+  static const String cryptoExchangeRate = '1 USD = 0.00078 ETH';
+  static const String circle = '•';
+  static const String exchangeFee = 'Exchange fee';
+
+  static const String bitcoinDescription =
+      "Bitcoin is a decentralized cryptocurrency originally described in a 2008 whitepaper by a person, or group of people, using the alias Satoshi Nakamoto. It was launched soon after, in January 2009.";
+
+  static const List<String> items = ['1h', '1d', '1w', '1m', '1y'];
+  static const List<Map<String, String>> marketStats = [
+    {'Current Price': '44,826.12 \$'},
+    {'Market Cap': '836,819 \$'},
+    {'Volume 24h': '35,867 \$'},
+    {'Available Supply': '18,784'},
+    {'Max Supply': '21,000'},
+  ];
+  static final List<String> currencies = [
+    'USD',
+    'EUR',
+    'JPY',
+    'GBP',
+    'AUD',
+    'CAD',
+    'CHF',
+    'CNY',
+    'HKD',
+    'NZD',
+    'BTC',
+    'ETH',
+    'USDT',
+    'BNB',
+    'ADA',
+    'SOL',
+    'XRP',
+    'DOGE',
+    'DOT',
+    'MATIC',
+    'LTC',
+    'LINK',
+    'SHIB',
+    'TRX',
+    'AVAX',
+    'ATOM',
+    'XLM',
+    'ALGO',
+    'FTT',
+  ];
 }

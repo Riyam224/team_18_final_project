@@ -22,6 +22,7 @@ class AppAssets {
   static const settings = 'assets/icons/settings.svg';
   static const settingsFilled = 'assets/icons/settings_filled.svg';
 
+  // Auth Assets
   static const authEclipsDark = 'assets/images/eclips_dark.png';
   static const authEclipsLight = 'assets/images/eclips_light.png';
 
@@ -30,8 +31,6 @@ class AppAssets {
   static const faceIdSmall = 'assets/icons/faceIDsmall.svg';
   static const fingerPrintBig = 'assets/icons/fingerPrintBig.svg';
   static const fingerPrintSmall = 'assets/icons/fingerPrintSmall.svg';
-
-  // static const verifiedIconFilled = 'assets/icons/verifiedIconDark.svg';
 
   static const whiteCircle = 'assets/icons/white_circle.svg';
   static const whiteCheck = 'assets/icons/white_check.svg';
@@ -44,4 +43,14 @@ class AppAssets {
   static const faceIDDONElight = 'assets/icons/facIDDONElight.svg';
   static const outlinedCircleDark = 'assets/icons/outlined_circle_dark.svg';
   static const outlinedCircleWhite = 'assets/icons/outlined_circle_white.svg';
+
+  // Market/Crypto SVG Icons
+  static const String infoOutline = "assets/icons/info_outline.svg";
+  static const String bitcoinIcon = 'assets/icons/bitcoin.svg';
+  static const String ethLight = 'assets/icons/eth_light.svg';
+  static const String ethDark = 'assets/icons/eth_dark.svg';
+  static const String money = 'assets/icons/money.svg';
+  static const String swap = 'assets/icons/swap.svg';
+  static const String keyboardArrowDown =
+      'assets/icons/keyboard_arrow_down.svg';
 }

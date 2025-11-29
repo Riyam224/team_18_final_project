@@ -187,6 +187,7 @@ class RouteGenerator {
       // ==========================
       // DETAILS (NO BOTTOM NAV)
       // ==========================
+      // todo. _______
       GoRoute(
         path: '${AppRoutes.coinDetails}/:id',
         builder: (_, state) {
@@ -194,6 +195,14 @@ class RouteGenerator {
           return CoinDetailsScreen(coinId: id);
         },
       ),
+      //  todo ___ fix this route
+      // GoRoute(
+      //   path: AppRoutes.coinDetails,
+      //   builder: (_, state) {
+      //     final id = state.uri.queryParameters['id']!;
+      //     return CoinDetailsScreen(coinId: id);
+      //   },
+      // ),
       GoRoute(
         path: '${AppRoutes.buySell}/:id',
         builder: (_, state) {
