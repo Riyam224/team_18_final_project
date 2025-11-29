@@ -4,7 +4,8 @@
       "Bash(flutter analyze:*)",
       "Bash(flutter build:*)",
       "Bash(flutter pub get:*)",
-      "Bash(xargs:*)"
+      "Bash(xargs:*)",
+      "Bash(flutter test:*)"
     ],
     "deny": [],
     "ask": []
