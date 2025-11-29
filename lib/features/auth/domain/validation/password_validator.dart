@@ -16,13 +16,17 @@ class PasswordValidator {
 
     if (password.length < ValidationConfig.minPasswordLength) {
       return ValidationResult.failure(
-        'Password must be at least ${ValidationConfig.minPasswordLength} characters long',
+        ValidationMessagesConfig.getPasswordMinLengthMessage(
+          ValidationConfig.minPasswordLength,
+        ),
       );
     }
 
     if (password.length > ValidationConfig.maxPasswordLength) {
       return ValidationResult.failure(
-        'Password must not exceed ${ValidationConfig.maxPasswordLength} characters',
+        ValidationMessagesConfig.getPasswordMaxLengthMessage(
+          ValidationConfig.maxPasswordLength,
+        ),
       );
     }
 

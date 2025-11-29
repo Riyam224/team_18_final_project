@@ -1,4 +1,5 @@
 import 'package:team_18_final_project/core/config/validation_config.dart';
+import 'package:team_18_final_project/core/config/validation_messages_config.dart';
 import 'package:team_18_final_project/features/auth/domain/validation/validation_result.dart';
 
 /// Phone number validation logic
@@ -17,19 +18,23 @@ class PhoneValidator {
 
     if (cleanPhone.length < ValidationConfig.minPhoneLength) {
       return ValidationResult.failure(
-        'Phone number must be at least ${ValidationConfig.minPhoneLength} digits',
+        ValidationMessagesConfig.getPhoneMinLengthMessage(
+          ValidationConfig.minPhoneLength,
+        ),
       );
     }
 
     if (cleanPhone.length > ValidationConfig.maxPhoneLength) {
       return ValidationResult.failure(
-        'Phone number must not exceed ${ValidationConfig.maxPhoneLength} digits',
+        ValidationMessagesConfig.getPhoneMaxLengthMessage(
+          ValidationConfig.maxPhoneLength,
+        ),
       );
     }
 
     if (!ValidationConfig.phoneRegex.hasMatch(phone)) {
       return const ValidationResult.failure(
-        'Please enter a valid phone number',
+        ValidationMessagesConfig.phoneInvalid,
       );
     }
 
@@ -39,7 +44,9 @@ class PhoneValidator {
   /// Validates a required phone number
   static ValidationResult validateRequired(String phone) {
     if (phone.isEmpty) {
-      return const ValidationResult.failure('Phone number is required');
+      return const ValidationResult.failure(
+        ValidationMessagesConfig.phoneRequired,
+      );
     }
 
     return validate(phone);

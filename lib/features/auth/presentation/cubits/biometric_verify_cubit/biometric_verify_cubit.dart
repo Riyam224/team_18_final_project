@@ -50,6 +50,12 @@ class BiometricVerifyCubit extends Cubit<BiometricVerifyState> {
           token: session.token,
         );
 
+        // Unlock the app immediately after successful authentication
+        await _appLockService.unlock();
+
+        // Update activity timestamp to prevent auto-lock
+        await _appLockService.updateActivity();
+
         // Get biometric type
         String biometricType = 'unknown';
         final typeResult = await repository.getBiometricType();

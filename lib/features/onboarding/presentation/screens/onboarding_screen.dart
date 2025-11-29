@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../../core/config/app_text_styles.dart';
+import '../../../../core/config/timing_config.dart';
 import '../../../../core/storage/shared_prefs.dart';
 import '../../../../core/routing/route_names.dart';
 import '../../../../core/constants/app_spacing.dart';
@@ -25,7 +28,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   void _next() {
     if (_currentPage == onboardingItems.length - 1) return;
     _controller.nextPage(
-        duration: const Duration(milliseconds: 300), curve: Curves.ease);
+        duration: TimingConfig.onboardingPageTransitionDuration,
+        curve: Curves.ease);
   }
 
   void _skip() async {
@@ -61,10 +65,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onTap: _skip,
                   child: Text(
                     AppStrings.onboardingSkip,
-                    style: TextStyle(
-                        color: primary,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600),
+                    style: AppTextStyles.titleMedium.copyWith(color: primary),
                   ),
                 ),
               ),
@@ -89,10 +90,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
             if (_currentPage != onboardingItems.length - 1)
               Padding(
-                padding: AppSpacing.paddingOnly(
-                  left: 24,
-                  right: 24,
-                  bottom: 53.19,
+                padding: EdgeInsets.only(
+                  left: 24.w,
+                  right: 24.w,
+                  bottom: AppSpacing.gapH53.height!,
                 ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

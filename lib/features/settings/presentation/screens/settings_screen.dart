@@ -2,21 +2,23 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:team_18_final_project/core/config/app_constants.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
-import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:go_router/go_router.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -29,7 +31,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   String? _avatarPath;
   bool _biometricEnabled = false;
   bool _biometricAvailable = false;
-  int _autoLockSeconds = 60; // default 60 seconds
+  int _autoLockSeconds = AppConstants.defaultAutoLockTimeout;
   bool _loading = true;
 
   late final ISecureStorage _secureStorage;
@@ -37,15 +39,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late final IAppLockService _appLockService;
   late final IAuditLogService _auditLogService;
   late final ISessionManager _sessionManager;
-
-  final List<int> _lockOptionsSeconds = const [
-    0, // never
-    30,
-    60,
-    300,
-    600,
-    1800,
-  ];
 
   @override
   void initState() {
@@ -74,7 +67,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     // Get auto-lock timeout
     final timeoutResult = await _appLockService.getAutoLockTimeout();
     final lockDuration = timeoutResult.fold(
-      (failure) => const Duration(seconds: 60),
+      (failure) => Duration(seconds: AppConstants.defaultAutoLockTimeout),
       (duration) => duration,
     );
     final lock = lockDuration.inSeconds;
@@ -84,9 +77,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
       _avatarPath = avatar;
       _biometricEnabled = enabled && available;
       _biometricAvailable = available;
-      _autoLockSeconds = _lockOptionsSeconds.contains(lock)
+      _autoLockSeconds = AppConstants.autoLockTimeoutOptions.contains(lock)
           ? lock
-          : _lockOptionsSeconds.first;
+          : AppConstants.autoLockTimeoutOptions.first;
       _loading = false;
     });
   }
@@ -221,7 +214,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   ),
                   trailing: DropdownButton<int>(
                     value: _autoLockSeconds,
-                    items: _lockOptionsSeconds
+                    items: AppConstants.autoLockTimeoutOptions
                         .map((m) => DropdownMenuItem(
                               value: m,
                               child: Text(

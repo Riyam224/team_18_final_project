@@ -121,6 +121,10 @@ class AppStrings {
   static const fingerprintAuthFailed = 'Fingerprint authentication failed';
   static const faceIDAuthFailed = 'Face ID authentication failed';
 
+  // Auth - Biometric Setup Localized Reasons
+  static const authenticateSetupFingerprint = 'Authenticate to set up fingerprint';
+  static const authenticateSetupFaceID = 'Authenticate to set up Face ID';
+
   // Error Template
   static String errorTemplate(String error) => 'Error: $error';
 
@@ -133,4 +137,11 @@ class AppStrings {
 
   // Common
   static const notFound = '404 Not Found';
+
+  // App Metadata
+  static const appTitle = 'Team 18 Fintech';
+
+  // App Lock Screen
+  static const unlockWithBiometrics = 'Unlock with Biometrics';
+  static const authenticateToUnlock = 'Authenticate to unlock the app';
 }

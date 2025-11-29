@@ -27,11 +27,32 @@ class ValidationMessagesConfig {
   static const String phoneRequired = 'Phone number is required';
   static const String phoneInvalid = 'Please enter a valid phone number';
 
+  static String getPhoneMinLengthMessage(int minLength) =>
+      'Phone number must be at least $minLength digits';
+
+  static String getPhoneMaxLengthMessage(int maxLength) =>
+      'Phone number must not exceed $maxLength digits';
+
   // Name Validation Messages
   static const String nameRequired = 'Name is required';
   static const String fullNameRequired =
       'Please enter your full name (first and last name)';
   static const String nameInvalid = 'Please enter a valid name';
+  static const String nameOnlyLettersAndSpaces =
+      'Name can only contain letters and spaces';
+  static const String displayNameRequired = 'Display name is required';
+
+  static String getNameMinLengthMessage(int minLength) =>
+      'Name must be at least $minLength characters';
+
+  static String getNameMaxLengthMessage(int maxLength) =>
+      'Name must not exceed $maxLength characters';
+
+  static String getDisplayNameMinLengthMessage(int minLength) =>
+      'Display name must be at least $minLength characters';
+
+  static String getDisplayNameMaxLengthMessage(int maxLength) =>
+      'Display name must not exceed $maxLength characters';
 
   // General Form Messages
   static const String allFieldsRequired = 'Please fill all fields';
@@ -63,4 +84,7 @@ class ValidationMessagesConfig {
   // Password Strength Messages
   static String getPasswordMinLengthMessage(int minLength) =>
       'Password must be at least $minLength characters';
+
+  static String getPasswordMaxLengthMessage(int maxLength) =>
+      'Password must not exceed $maxLength characters';
 }

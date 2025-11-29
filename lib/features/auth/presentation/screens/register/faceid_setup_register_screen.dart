@@ -55,7 +55,7 @@ class _FaceIDSetupContentState extends State<_FaceIDSetupContent> {
       await _appLockService.updateActivity();
 
       final result = await _biometricService.authenticate(
-        localizedReason: 'Authenticate to set up Face ID',
+        localizedReason: AppStrings.authenticateSetupFaceID,
       );
 
       final authenticated = result.fold(

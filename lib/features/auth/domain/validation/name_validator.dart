@@ -1,4 +1,5 @@
 import 'package:team_18_final_project/core/config/validation_config.dart';
+import 'package:team_18_final_project/core/config/validation_messages_config.dart';
 import 'package:team_18_final_project/features/auth/domain/validation/validation_result.dart';
 
 /// Name validation logic
@@ -8,24 +9,30 @@ class NameValidator {
   /// Validates a name (first name or last name)
   static ValidationResult validate(String name) {
     if (name.isEmpty) {
-      return const ValidationResult.failure('Name is required');
+      return const ValidationResult.failure(
+        ValidationMessagesConfig.nameRequired,
+      );
     }
 
     if (name.length < ValidationConfig.minNameLength) {
       return ValidationResult.failure(
-        'Name must be at least ${ValidationConfig.minNameLength} characters',
+        ValidationMessagesConfig.getNameMinLengthMessage(
+          ValidationConfig.minNameLength,
+        ),
       );
     }
 
     if (name.length > ValidationConfig.maxNameLength) {
       return ValidationResult.failure(
-        'Name must not exceed ${ValidationConfig.maxNameLength} characters',
+        ValidationMessagesConfig.getNameMaxLengthMessage(
+          ValidationConfig.maxNameLength,
+        ),
       );
     }
 
     if (!ValidationConfig.nameRegex.hasMatch(name)) {
       return const ValidationResult.failure(
-        'Name can only contain letters and spaces',
+        ValidationMessagesConfig.nameOnlyLettersAndSpaces,
       );
     }
 
@@ -35,18 +42,24 @@ class NameValidator {
   /// Validates a display name
   static ValidationResult validateDisplayName(String displayName) {
     if (displayName.isEmpty) {
-      return const ValidationResult.failure('Display name is required');
+      return const ValidationResult.failure(
+        ValidationMessagesConfig.displayNameRequired,
+      );
     }
 
     if (displayName.length < ValidationConfig.minDisplayNameLength) {
       return ValidationResult.failure(
-        'Display name must be at least ${ValidationConfig.minDisplayNameLength} characters',
+        ValidationMessagesConfig.getDisplayNameMinLengthMessage(
+          ValidationConfig.minDisplayNameLength,
+        ),
       );
     }
 
     if (displayName.length > ValidationConfig.maxDisplayNameLength) {
       return ValidationResult.failure(
-        'Display name must not exceed ${ValidationConfig.maxDisplayNameLength} characters',
+        ValidationMessagesConfig.getDisplayNameMaxLengthMessage(
+          ValidationConfig.maxDisplayNameLength,
+        ),
       );
     }
 

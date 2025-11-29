@@ -12,6 +12,7 @@
 /// ```
 
 // Configuration exports
+export 'app_constants.dart';
 export 'audit_log_config.dart';
 export 'biometric_config.dart';
 export 'firebase_config.dart';

@@ -1,28 +1,48 @@
-# Cryptocurrency Tracking App - Complete Documentation
+# 📚 Team 18 Fintech - Documentation Index
 
-## 📚 Table of Contents
+Welcome to the documentation for Team 18 Fintech application. This directory contains comprehensive documentation covering all aspects of the project.
 
-1. [Project Overview](#project-overview)
-2. [Architecture & Design Patterns](#architecture--design-patterns)
-3. [Technology Stack](#technology-stack)
-4. [Project Structure](#project-structure)
-5. [Features](#features)
-6. [Getting Started](#getting-started)
-7. [Documentation Index](#documentation-index)
+## 📖 Main Documentation
+
+### 🌟 **[COMPLETE_DOCUMENTATION.md](./COMPLETE_DOCUMENTATION.md)** - START HERE
+**The most comprehensive guide covering everything in the project.**
+
+This is your one-stop documentation covering:
+- Complete Architecture & Design Patterns
+- Authentication & Security (Firebase, Biometric, Session Management)
+- Home Screen & Dashboard
+- Bottom Navigation Bar
+- Theme System (Light & Dark Mode)
+- Splash Screen & Onboarding
+- Configuration & Constants
+- State Management (BLoC/Cubit)
+- Networking & API Integration
+- Routing & Navigation
+- Dependency Injection
+- Testing Strategy
+- Security Best Practices
+- Performance Optimizations
+- Getting Started Guide
+- And much more...
+
+**👉 This should be your primary reference document.**
 
 ---
 
 ## 🎯 Project Overview
 
-**Team 18 Final Project** is a modern Flutter application for tracking cryptocurrency market data in real-time. The app provides users with comprehensive market insights, trending coins, top gainers, and portfolio tracking functionality.
+**Team 18 Final Project** is a modern Flutter application for cryptocurrency portfolio management with enterprise-grade security features. The app provides real-time market data, portfolio tracking, and advanced security including biometric authentication, session management, and app-level security controls.
 
 ### Key Capabilities
-- 📊 **Global Market Overview** - View total market cap, 24h volume, and Bitcoin dominance
-- 📈 **Trending Cryptocurrencies** - Discover coins with highest search volume and popularity
+- 🔐 **Enterprise Security** - Biometric auth, session management, app lock, root detection
+- 📊 **Market Overview** - Global market cap, 24h volume, Bitcoin dominance
+- 📈 **Trending Cryptocurrencies** - Discover coins with highest search volume
 - 🚀 **Top Gainers** - Track cryptocurrencies with biggest 24h price increases
-- 💰 **Portfolio Balance** - Monitor portfolio value and weekly performance
+- 💰 **Portfolio Tracking** - Monitor portfolio value and weekly performance
 - 🔄 **Real-time Updates** - Pull-to-refresh for latest market data
-- 🎨 **Modern UI** - Clean, responsive design with custom theming
+- 🎨 **Modern UI** - Clean, responsive design with light/dark themes
+- 🔒 **Privacy Protection** - Screenshot prevention, background blur
+- 📱 **Responsive Design** - Optimized for all screen sizes
 
 ---
 
@@ -213,25 +233,187 @@ lib/core/networking/endpoints.dart
 
 ---
 
-## 📖 Documentation Index
+## 🗂️ Topic-Specific Documentation
 
-For detailed information about specific aspects of the project:
+### Architecture & Structure
 
-1. **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Deep dive into Clean Architecture implementation
-2. **[FILE_STRUCTURE.md](./FILE_STRUCTURE.md)** - Detailed explanation of every file
-3. **[API_INTEGRATION.md](./API_INTEGRATION.md)** - API endpoints, models, and data flow
-4. **[STATE_MANAGEMENT.md](./STATE_MANAGEMENT.md)** - Bloc/Cubit pattern and state handling
-5. **[WIDGET_GUIDE.md](./WIDGET_GUIDE.md)** - UI components and widget tree
+- **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Clean Architecture implementation details
+- **[FILE_STRUCTURE.md](./FILE_STRUCTURE.md)** - Project folder structure and organization
+- **[STATE_MANAGEMENT.md](./STATE_MANAGEMENT.md)** - BLoC/Cubit pattern implementation
+- **[QUICK_START_GUIDE.md](./QUICK_START_GUIDE.md)** - Quick reference for project structure
+
+### Features
+
+- **[AUTH_FLOW.md](./AUTH_FLOW.md)** - Authentication flow and implementation
+- **[SPLASH_ONBOARDING.md](./SPLASH_ONBOARDING.md)** - Splash screen and onboarding flow
+- **[splash.md](./splash.md)** - Detailed splash screen documentation
+- **[onboarding.md](./onboarding.md)** - Detailed onboarding documentation
+
+### Security
+
+- **[SECURITY.md](./SECURITY.md)** - Security overview
+- **[SECURITY_ARCHITECTURE.md](./SECURITY_ARCHITECTURE.md)** - Detailed security implementation
+
+### Technical
+
+- **[API_INTEGRATION.md](./API_INTEGRATION.md)** - API integration guide
+- **[networking.md](./networking.md)** - Network layer documentation
+- **[theming.md](./theming.md)** - Theme system documentation
+
+### Project Information
+
+- **[PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md)** - Project overview and summary
+
+---
+
+## 🚀 Quick Navigation Guide
+
+**I want to...**
+
+### Learn about the entire project
+→ Read [COMPLETE_DOCUMENTATION.md](./COMPLETE_DOCUMENTATION.md)
+
+### Understand the architecture
+→ Read [ARCHITECTURE.md](./ARCHITECTURE.md) and [FILE_STRUCTURE.md](./FILE_STRUCTURE.md)
+
+### Implement authentication
+→ Read [AUTH_FLOW.md](./AUTH_FLOW.md)
+
+### Understand security features
+→ Read [SECURITY_ARCHITECTURE.md](./SECURITY_ARCHITECTURE.md)
+
+### Work with the API
+→ Read [API_INTEGRATION.md](./API_INTEGRATION.md)
+
+### Customize the theme
+→ Read [theming.md](./theming.md)
+
+### Understand state management
+→ Read [STATE_MANAGEMENT.md](./STATE_MANAGEMENT.md)
+
+### Get started quickly
+→ Read [QUICK_START_GUIDE.md](./QUICK_START_GUIDE.md)
+
+---
+
+## 📁 Documentation Structure
+
+```
+docs/
+├── README.md                        # This file - Documentation index
+├── COMPLETE_DOCUMENTATION.md        # 🌟 Main comprehensive documentation
+│
+├── Architecture & Structure
+│   ├── ARCHITECTURE.md
+│   ├── FILE_STRUCTURE.md
+│   ├── STATE_MANAGEMENT.md
+│   └── QUICK_START_GUIDE.md
+│
+├── Features
+│   ├── AUTH_FLOW.md
+│   ├── SPLASH_ONBOARDING.md
+│   ├── splash.md
+│   └── onboarding.md
+│
+├── Security
+│   ├── SECURITY.md
+│   └── SECURITY_ARCHITECTURE.md
+│
+├── Technical
+│   ├── API_INTEGRATION.md
+│   ├── networking.md
+│   └── theming.md
+│
+├── Project Info
+│   └── PROJECT_SUMMARY.md
+│
+└── archive/                         # Historical/outdated documentation
+    ├── ARCHITECTURE_COMPARISON.md
+    ├── CLEAN_ARCHITECTURE_SUMMARY.md
+    ├── CLEAN_CODE_IMPROVEMENTS.md
+    └── ... (17 archived files)
+```
+
+---
+
+## 📋 Documentation Organization
+
+### Current Documentation
+
+Located in the `docs/` folder, organized by topic for easy navigation.
+
+### Archived Documentation
+
+Located in `docs/archive/` - Contains historical documents from development:
+
+- Migration guides
+- Refactoring plans
+- Implementation progress logs
+- Fix documentation
+- Legacy configuration references
+
+These are kept for historical reference but may contain outdated information.
+
+---
+
+## 🔄 Keeping Documentation Updated
+
+When updating the project:
+
+1. Update relevant topic-specific documentation
+2. Update the main [COMPLETE_DOCUMENTATION.md](./COMPLETE_DOCUMENTATION.md)
+3. Keep this README.md index up to date
+4. Archive outdated documentation rather than deleting it
+
+---
+
+## 📝 Documentation Standards
+
+All documentation follows these standards:
+
+- Clear headings and structure
+- Code examples where applicable
+- File paths referenced with links
+- Emoji icons for visual organization
+- Up-to-date with current implementation
+
+---
+
+## 👥 Contributing to Documentation
+
+When adding new features:
+
+1. Document in the appropriate topic file
+2. Update COMPLETE_DOCUMENTATION.md
+3. Add references to this index
+4. Include code examples
+5. Link to relevant files
+
+---
+
+## 📞 Support
+
+For questions about the documentation:
+
+- Check the comprehensive [COMPLETE_DOCUMENTATION.md](./COMPLETE_DOCUMENTATION.md) first
+- Search through topic-specific docs
+- Review code examples in the documentation
+- Check archived docs for historical context
 
 ---
 
 ## 👥 Team
+
 Team 18 - Final Project
 
+---
+
 ## 📄 License
+
 This project is for educational purposes.
 
 ---
 
-**Last Updated**: 2025
-**Version**: 1.0.0
+**Last Updated**: 2024-01-29
+**Documentation Version**: 2.0.0
+**Maintained By**: Team 18

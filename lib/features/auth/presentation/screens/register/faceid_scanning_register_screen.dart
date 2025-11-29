@@ -61,7 +61,7 @@ class _FaceIDScanningRegisterContentState
 
       // Authenticate with Face ID
       final result = await _biometricService.authenticate(
-        localizedReason: 'Authenticate to set up Face ID',
+        localizedReason: AppStrings.authenticateSetupFaceID,
       );
 
       final authenticated = result.fold(
@@ -75,7 +75,7 @@ class _FaceIDScanningRegisterContentState
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Face ID authentication failed'),
+            content: Text(AppStrings.faceIDAuthFailed),
             backgroundColor: Colors.red,
           ),
         );
@@ -90,7 +90,7 @@ class _FaceIDScanningRegisterContentState
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Error: $e'),
+            content: Text(AppStrings.errorTemplate(e.toString())),
             backgroundColor: Colors.red,
           ),
         );
@@ -124,6 +124,7 @@ class _FaceIDScanningRegisterContentState
         final isLoading = state is BiometricSetupSaving;
 
         return Scaffold(
+          backgroundColor: isDark ? const Color(0xFF0A1128) : const Color(0xFFF5F5F5),
           body: Container(
             width: AppSizing.screenWidth,
             height: AppSizing.screenHeight,

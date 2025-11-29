@@ -62,7 +62,7 @@ class _SetFingerprintRegisterContentState
 
       // Authenticate with fingerprint
       final result = await _biometricService.authenticate(
-        localizedReason: 'Authenticate to set up fingerprint',
+        localizedReason: AppStrings.authenticateSetupFingerprint,
       );
 
       final authenticated = result.fold(

@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+
+import 'package:team_18_final_project/core/config/timing_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
@@ -34,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen>
 
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2000),
+      duration: TimingConfig.splashAnimationDuration,
     );
 
     _fade = CurvedAnimation(
@@ -56,7 +58,7 @@ class _SplashScreenState extends State<SplashScreen>
 
         if (hasValidSession) {
           // Registered user - wait 3 seconds
-          await Future.delayed(const Duration(milliseconds: 3000));
+          await Future.delayed(TimingConfig.splashRegisteredUserDelay);
 
           await _appLockService.updateActivity();
 
@@ -77,7 +79,7 @@ class _SplashScreenState extends State<SplashScreen>
     }
 
     // Non-registered user - wait 2 seconds
-    await Future.delayed(const Duration(milliseconds: 2000));
+    await Future.delayed(TimingConfig.splashNonRegisteredUserDelay);
 
     if (!mounted) return;
 

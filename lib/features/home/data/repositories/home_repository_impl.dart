@@ -1,4 +1,6 @@
 import 'package:dartz/dartz.dart';
+
+import 'package:team_18_final_project/core/config/app_constants.dart';
 import 'package:team_18_final_project/core/error/failure.dart';
 import 'package:team_18_final_project/core/networking/api_error_handler.dart';
 import 'package:team_18_final_project/features/home/data/data_sources/home_api_service.dart';
@@ -16,7 +18,6 @@ class HomeRepositoryImpl implements HomeRepository {
   // Cache for global data to avoid duplicate calls
   dynamic _cachedGlobalData;
   DateTime? _cacheTimestamp;
-  static const _cacheDuration = Duration(seconds: 30);
 
   /// Fetches global data with caching to prevent duplicate API calls
   Future<dynamic> _getGlobalDataCached() async {
@@ -25,7 +26,7 @@ class HomeRepositoryImpl implements HomeRepository {
     // Return cached data if it's still valid
     if (_cachedGlobalData != null &&
         _cacheTimestamp != null &&
-        now.difference(_cacheTimestamp!) < _cacheDuration) {
+        now.difference(_cacheTimestamp!) < AppConstants.marketDataCacheDuration) {
       return _cachedGlobalData;
     }
 
@@ -157,12 +158,12 @@ class HomeRepositoryImpl implements HomeRepository {
       final marketCapChangePercentage = data.marketCapChangePercentage24hUsd;
 
       // Simulated portfolio value (this would be real user data in production)
-      const double baseBalance = 143421.20;
+      const double baseBalance = AppConstants.defaultDemoBalance;
 
       // Calculate weekly change based on market performance
       // Using market cap change as a proxy for portfolio performance
       final weeklyChange =
-          marketCapChangePercentage * 7; // Simulate weekly based on daily
+          marketCapChangePercentage * AppConstants.weeklyChangeMultiplier;
 
       final portfolioBalance = PortfolioBalance(
         totalBalance: baseBalance,

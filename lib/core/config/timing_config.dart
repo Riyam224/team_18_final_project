@@ -39,4 +39,16 @@ class TimingConfig {
   static const int shortDelayMs = 500;
   static const int mediumDelayMs = 2000;
   static const int longDelayMs = 5000;
+
+  // Splash Screen Delays
+  static const Duration splashAnimationDuration = Duration(milliseconds: 2000);
+  static const Duration splashRegisteredUserDelay = Duration(milliseconds: 3000);
+  static const Duration splashNonRegisteredUserDelay = Duration(milliseconds: 2000);
+  static const Duration splashRootWarningDelay = Duration(milliseconds: 2200);
+
+  // Onboarding Page Transition
+  static const Duration onboardingPageTransitionDuration = Duration(milliseconds: 300);
+
+  // Onboarding Indicator Animation
+  static const Duration indicatorAnimationDuration = Duration(milliseconds: 250);
 }

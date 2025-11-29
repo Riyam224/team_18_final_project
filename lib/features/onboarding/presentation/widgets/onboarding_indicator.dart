@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:team_18_final_project/core/config/timing_config.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 /// Page indicator widget for onboarding screens.
@@ -24,7 +26,7 @@ class OnboardingIndicator extends StatelessWidget {
       children: List.generate(count, (index) {
         final isActive = index == currentPage;
         return AnimatedContainer(
-          duration: const Duration(milliseconds: 250),
+          duration: TimingConfig.indicatorAnimationDuration,
           margin: EdgeInsets.only(right: 8.w),
           height: 6.h,
           width: isActive ? 24.w : 12.w,

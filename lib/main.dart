@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router/go_router.dart';
 import 'package:secure_application/secure_application.dart';
 
+import 'package:team_18_final_project/core/config/app_config.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/app_router.dart';
@@ -105,7 +106,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       // App returns to foreground
-      final tokenResult = await _secureStorage.read(key: 'auth_token');
+      final tokenResult = await _secureStorage.read(key: StorageKeysConfig.authToken);
       final token = tokenResult.fold((_) => null, (value) => value);
 
       // Check if session is still valid
@@ -145,6 +146,9 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
             event: 'security_root_jailbreak_detected',
             metadata: {'message': 'Root/Jailbreak detected'},
           );
+          // Allow splash screen to display before showing the warning
+          await Future.delayed(TimingConfig.splashRootWarningDelay);
+
           WidgetsBinding.instance.addPostFrameCallback((_) {
             appNavigatorKey.currentContext?.go('/root-warning');
           });
@@ -164,13 +168,10 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   @override
   Widget build(BuildContext context) {
     // Set preferred orientations (optional - remove if you want landscape support)
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
+    SystemChrome.setPreferredOrientations(AppConstants.allowedOrientations);
 
     return ScreenUtilInit(
-      designSize: const Size(375, 812),
+      designSize: AppConstants.designSize,
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, __) {
@@ -182,7 +183,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
             _sessionManager.updateActivity();
           },
           child: MaterialApp.router(
-            title: 'Team 18 Fintech',
+            title: AppConstants.appTitle,
             debugShowCheckedModeBanner: false,
 
             // Themes

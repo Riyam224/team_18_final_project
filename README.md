@@ -195,14 +195,38 @@ Your team uses **GitFlow**:
 
 ## 📚 **Documentation**
 
-All detailed documentation is located in the `docs/` folder:
+### 🌟 Main Documentation
 
-- [Splash Feature](docs/splash.md)
-- [Onboarding Feature](docs/onboarding.md)
-- [Authentication & Security](docs/AUTH_FLOW.md)
-- [Security Architecture](docs/SECURITY_ARCHITECTURE.md)
-- [Theming System](docs/theming.md)
-- [Networking Layer](docs/networking.md)
+**[📖 Complete Documentation](docs/COMPLETE_DOCUMENTATION.md)** - Your primary reference covering everything in the project.
+
+### 📁 Topic-Specific Guides
+
+Comprehensive documentation is organized in the [`docs/`](docs/) folder:
+
+**Architecture & Structure**
+- [Clean Architecture](docs/ARCHITECTURE.md) - Implementation details
+- [File Structure](docs/FILE_STRUCTURE.md) - Project organization
+- [State Management](docs/STATE_MANAGEMENT.md) - BLoC/Cubit patterns
+- [Quick Start Guide](docs/QUICK_START_GUIDE.md) - Quick reference
+
+**Features**
+- [Authentication Flow](docs/AUTH_FLOW.md) - Firebase & Biometric auth
+- [Splash & Onboarding](docs/SPLASH_ONBOARDING.md) - User onboarding flow
+- [Splash Screen](docs/splash.md) - Detailed splash documentation
+- [Onboarding](docs/onboarding.md) - Detailed onboarding documentation
+
+**Security**
+- [Security Overview](docs/SECURITY.md) - Security features overview
+- [Security Architecture](docs/SECURITY_ARCHITECTURE.md) - Detailed implementation
+
+**Technical**
+- [API Integration](docs/API_INTEGRATION.md) - CoinGecko API integration
+- [Networking Layer](docs/networking.md) - Network implementation
+- [Theming System](docs/theming.md) - Light/Dark mode themes
+
+**Project Information**
+- [Project Summary](docs/PROJECT_SUMMARY.md) - Overview and summary
+- [Documentation Index](docs/README.md) - Full documentation index
 
 ---
 
