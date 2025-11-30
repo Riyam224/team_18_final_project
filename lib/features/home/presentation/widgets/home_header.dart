@@ -32,6 +32,7 @@ class HomeHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final waveColor = isDark ? AppColors.textWhite : AppColors.primary;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -44,10 +45,22 @@ class HomeHeader extends StatelessWidget {
               backgroundColor: isDark ? AppColors.darkCard : AppColors.gray5,
             ),
             AppSpacing.gapW12,
-            Text(AppStrings.greetingTemplate(userName),
-                style: AppTextStyles.headlineMedium.copyWith(
-                  color: isDark ? AppColors.textWhite : AppColors.textBlack,
-                ))
+            Row(
+              children: [
+                Text(
+                  AppStrings.greetingTemplate(userName),
+                  style: AppTextStyles.headlineMedium.copyWith(
+                    color: isDark ? AppColors.textWhite : AppColors.textBlack,
+                  ),
+                ),
+                AppSpacing.gapW8,
+                Icon(
+                  Icons.waving_hand,
+                  color: waveColor,
+                  size: AppSizing.iconMedium,
+                ),
+              ],
+            ),
           ],
         ),
         Icon(

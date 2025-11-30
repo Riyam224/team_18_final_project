@@ -57,6 +57,15 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
       (value) => value,
     );
 
+    // Fallback to email username if no stored display name
+    final emailResult = await _secureStorage.read(
+      key: StorageKeysConfig.userEmail,
+    );
+    final email = emailResult.fold(
+      (failure) => null,
+      (value) => value,
+    );
+
     // Load avatar path
     final avatarResult = await _secureStorage.read(
       key: StorageKeysConfig.avatarUrl,
@@ -69,11 +78,26 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     if (!mounted) return;
 
     setState(() {
-      if (firstName != null && firstName.isNotEmpty) {
-        _userName = firstName;
-      }
+      _userName = _extractFirstName(firstName) ??
+          _extractFirstName(email) ??
+          _userName;
       _avatarPath = avatarPath;
     });
+  }
+
+  String? _extractFirstName(String? value) {
+    if (value == null) return null;
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return null;
+
+    // If value looks like an email, use the part before @
+    final emailSplit = trimmed.split('@');
+    final base = emailSplit.first;
+
+    final parts = base.split(RegExp(r'\s+'));
+    final first = parts.first;
+    if (first.isEmpty) return null;
+    return first;
   }
 
   @override

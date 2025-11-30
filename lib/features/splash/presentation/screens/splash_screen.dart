@@ -5,10 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import 'package:team_18_final_project/core/config/timing_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/storage/shared_prefs.dart';
 import 'package:team_18_final_project/features/splash/presentation/widgets/splash_icon.dart';
 
@@ -23,16 +20,10 @@ class _SplashScreenState extends State<SplashScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fade;
-  late final ISessionManager _sessionManager;
-  late final IAppLockService _appLockService;
 
   @override
   void initState() {
     super.initState();
-
-    // Inject services from DI container
-    _sessionManager = sl<ISessionManager>();
-    _appLockService = sl<IAppLockService>();
 
     _controller = AnimationController(
       vsync: this,
@@ -50,51 +41,36 @@ class _SplashScreenState extends State<SplashScreen>
 
   Future<void> _navigate() async {
     try {
+      // Ensure splash is visible for the animation duration
+      await Future.delayed(TimingConfig.splashAnimationDuration);
+
       final user = FirebaseAuth.instance.currentUser;
+      final hasSeenOnboarding = await AppPrefs.isOnboardingCompleted();
 
+      // Registered users go straight to login after splash delay
       if (user != null) {
-        final isValidResult = await _sessionManager.isSessionValid();
-        final hasValidSession = isValidResult.fold((_) => false, (valid) => valid);
+        if (!mounted) return;
+        context.go(AppRoutes.login);
+        return;
+      }
 
-        if (hasValidSession) {
-          // Registered user - wait 3 seconds
-          await Future.delayed(TimingConfig.splashRegisteredUserDelay);
-
-          await _appLockService.updateActivity();
-
-          final shouldLockResult = await _appLockService.isLocked();
-          final shouldLock = shouldLockResult.fold((_) => false, (locked) => locked);
-
-          if (!mounted) return;
-          if (shouldLock) {
-            context.go(AppRoutes.appLock);
-          } else {
-            context.go(AppRoutes.home);
-          }
-          return;
-        }
+      // First-time users see onboarding before login
+      if (!hasSeenOnboarding) {
+        if (!mounted) return;
+        context.go(AppRoutes.onboarding);
+        return;
       }
     } catch (_) {
-      // Fall through to non-registered flow on any auth/session error
-    }
-
-    // Non-registered user - wait 2 seconds
-    await Future.delayed(TimingConfig.splashNonRegisteredUserDelay);
-
-    if (!mounted) return;
-
-    // Check if user has seen onboarding
-    final hasSeenOnboarding = await AppPrefs.isOnboardingCompleted();
-
-    if (!mounted) return;
-
-    if (hasSeenOnboarding) {
-      // User has seen onboarding before, go to login
-      context.go(AppRoutes.login);
-    } else {
-      // First time user, show onboarding
+      // On any error, default to onboarding flow
+      if (!mounted) return;
       context.go(AppRoutes.onboarding);
+      return;
     }
+
+    // Returning users who already saw onboarding go to login
+    if (!mounted) return;
+
+    context.go(AppRoutes.login);
   }
 
   @override

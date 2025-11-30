@@ -105,7 +105,7 @@ class AppStrings {
   static const noTopGainersAvailable = 'No top gainers available';
 
   // Greeting Template
-  static String greetingTemplate(String userName) => "Hi, $userName 👋";
+  static String greetingTemplate(String userName) => "Hi $userName";
 
   // Auth - Registration & Login Messages
   static const registrationSuccessful = 'Registration Successful';
