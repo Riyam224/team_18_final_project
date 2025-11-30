@@ -8,13 +8,15 @@ class EmailValidator {
 
   /// Validates an email address
   static ValidationResult validate(String email) {
-    if (email.isEmpty) {
+    final trimmed = email.trim();
+
+    if (trimmed.isEmpty) {
       return const ValidationResult.failure(
         ValidationMessagesConfig.emailRequired,
       );
     }
 
-    if (!ValidationConfig.emailRegex.hasMatch(email)) {
+    if (!ValidationConfig.emailRegex.hasMatch(trimmed)) {
       return const ValidationResult.failure(
         ValidationMessagesConfig.emailInvalid,
       );

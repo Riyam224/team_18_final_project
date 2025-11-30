@@ -9,13 +9,12 @@ class ValidationConfig {
   );
 
   // Password Validation
-  // Align with Firebase minimum (6) and relax complexity for smoother sign-up
   static const int minPasswordLength = 6;
   static const int maxPasswordLength = 128;
-  static const bool requireUppercase = false;
-  static const bool requireLowercase = false;
-  static const bool requireNumber = false;
-  static const bool requireSpecialChar = false;
+  static const bool requireUppercase = true;
+  static const bool requireLowercase = true;
+  static const bool requireNumber = true;
+  static const bool requireSpecialChar = true;
 
   static final RegExp uppercaseRegex = RegExp(r'[A-Z]');
   static final RegExp lowercaseRegex = RegExp(r'[a-z]');
@@ -30,7 +29,7 @@ class ValidationConfig {
   // Name Validation
   static const int minNameLength = 2;
   static const int maxNameLength = 50;
-  static final RegExp nameRegex = RegExp(r'^[a-zA-Z\s]+$');
+  static final RegExp nameRegex = RegExp(r"^[a-zA-Z\s'-]+$");
 
   // Display Name Validation
   static const int minDisplayNameLength = 3;

@@ -14,6 +14,8 @@ class ValidationMessagesConfig {
   static const String passwordTooWeak = 'Password is too weak';
   static const String passwordMissingUppercase =
       'Password must contain at least one uppercase letter';
+  static const String passwordMissingLowercase =
+      'Password must contain at least one lowercase letter';
   static const String passwordMissingNumber =
       'Password must contain at least one number';
   static const String passwordMissingSpecialChar =

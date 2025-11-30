@@ -64,6 +64,13 @@ Get your free API key: [CoinGecko API](https://www.coingecko.com/en/api/pricing)
 - **Smooth Navigation** - GoRouter with declarative routing
 - **Onboarding Flow** - Welcoming first-time user experience
 
+### 🛂 Auth & Security Overview
+- **Auth Flow**: Splash → Onboarding (first-time) → Login/Register → optional biometric verify (Face/Touch/Fingerprint) using `local_auth`.
+- **Session Management**: `ISessionManager` stores tokens securely, tracks activity, and guards protected routes; auto-lock via `IAppLockService`.
+- **Biometrics**: Setup and login flows with shared `TimingConfig` delays and stored biometric credentials; falls back to password on failure.
+- **Root/Screenshot Protection**: Root/JB checks on startup; screenshot/recording blocked on sensitive routes via platform channel blur/`FLAG_SECURE`.
+- **Data Protection**: AES encryption for sensitive storage, secure storage keys centralized; audit logging for security events.
+
 ---
 
 ## 🏗️ Architecture
@@ -149,13 +156,17 @@ flutter test integration_test/
 flutter test --coverage
 ```
 
+> Notes:
+> - Hardware/platform-dependent suites (app lock, session manager, root detection, biometrics, screenshot prevention) are currently `@Skip`ped until platform mocks are added.
+> - Tests bootstrap a test-safe DI graph (in-memory/no-op security services) via `test/test_config.dart`; integration tests launch `main(env: AppEnvironment.test, securityOverrides: createTestSecurityOverrides())`.
+
 ### Test Structure
 
 - `test/` - Unit and widget tests
 - `integration_test/` - End-to-end tests
 - Test coverage reports available
 
-**→ [Testing Guide](docs/TESTING_GUIDE.md)** | **[Coverage Guide](docs/TEST_COVERAGE.md)**
+**→ [Testing Guide](docs/TESTING_GUIDE.md)** | **[Coverage Guide](docs/TEST_COVERAGE.md)** | **[Tests Overview](docs/TESTS_OVERVIEW.md)**
 
 ---
 

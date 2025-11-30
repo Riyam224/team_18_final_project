@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/buttons/primary_button.dart';
 
 void main() {
   Widget _wrap(Widget child) {
-    return MaterialApp(
-      home: Scaffold(body: child),
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      builder: (_, __) => MaterialApp(
+        home: Scaffold(body: child),
+      ),
     );
   }
 

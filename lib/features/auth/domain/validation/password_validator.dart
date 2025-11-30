@@ -8,13 +8,15 @@ class PasswordValidator {
 
   /// Validates a password with all requirements
   static ValidationResult validate(String password) {
-    if (password.isEmpty) {
+    final trimmed = password.trim();
+
+    if (trimmed.isEmpty) {
       return const ValidationResult.failure(
         ValidationMessagesConfig.passwordRequired,
       );
     }
 
-    if (password.length < ValidationConfig.minPasswordLength) {
+    if (trimmed.length < ValidationConfig.minPasswordLength) {
       return ValidationResult.failure(
         ValidationMessagesConfig.getPasswordMinLengthMessage(
           ValidationConfig.minPasswordLength,
@@ -22,7 +24,7 @@ class PasswordValidator {
       );
     }
 
-    if (password.length > ValidationConfig.maxPasswordLength) {
+    if (trimmed.length > ValidationConfig.maxPasswordLength) {
       return ValidationResult.failure(
         ValidationMessagesConfig.getPasswordMaxLengthMessage(
           ValidationConfig.maxPasswordLength,
@@ -30,20 +32,49 @@ class PasswordValidator {
       );
     }
 
-    // Complexity checks are disabled to reduce friction; enable as needed.
+    // Complexity checks
+    if (ValidationConfig.requireUppercase &&
+        !ValidationConfig.uppercaseRegex.hasMatch(trimmed)) {
+      return const ValidationResult.failure(
+        ValidationMessagesConfig.passwordMissingUppercase,
+      );
+    }
+
+    if (ValidationConfig.requireLowercase &&
+        !ValidationConfig.lowercaseRegex.hasMatch(trimmed)) {
+      return const ValidationResult.failure(
+        ValidationMessagesConfig.passwordMissingLowercase,
+      );
+    }
+
+    if (ValidationConfig.requireNumber &&
+        !ValidationConfig.numberRegex.hasMatch(trimmed)) {
+      return const ValidationResult.failure(
+        ValidationMessagesConfig.passwordMissingNumber,
+      );
+    }
+
+    if (ValidationConfig.requireSpecialChar &&
+        !ValidationConfig.specialCharRegex.hasMatch(trimmed)) {
+      return const ValidationResult.failure(
+        ValidationMessagesConfig.passwordMissingSpecialChar,
+      );
+    }
 
     return const ValidationResult.success();
   }
 
   /// Validates a password with minimum requirements only (for login)
   static ValidationResult validateMinimum(String password) {
-    if (password.isEmpty) {
+    final trimmed = password.trim();
+
+    if (trimmed.isEmpty) {
       return const ValidationResult.failure(
         ValidationMessagesConfig.passwordRequired,
       );
     }
 
-    if (password.length < ValidationConfig.minPasswordLength) {
+    if (trimmed.length < ValidationConfig.minPasswordLength) {
       return ValidationResult.failure(
         ValidationMessagesConfig.getPasswordMinLengthMessage(
           ValidationConfig.minPasswordLength,

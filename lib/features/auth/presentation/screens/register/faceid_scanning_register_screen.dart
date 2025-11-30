@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/config/timing_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
@@ -47,7 +48,7 @@ class _FaceIDScanningRegisterContentState
     _biometricService = sl<IBiometricService>();
 
     // Automatically trigger Face ID setup when screen loads
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(TimingConfig.biometricScanDelay, () {
       if (mounted) {
         _setupFaceID();
       }
@@ -80,7 +81,7 @@ class _FaceIDScanningRegisterContentState
           ),
         );
         // Navigate back after failure
-        Future.delayed(const Duration(seconds: 2), () {
+        Future.delayed(TimingConfig.biometricFailureDelay, () {
           if (mounted) {
             context.pop();
           }
@@ -94,7 +95,7 @@ class _FaceIDScanningRegisterContentState
             backgroundColor: Colors.red,
           ),
         );
-        Future.delayed(const Duration(seconds: 2), () {
+        Future.delayed(TimingConfig.biometricFailureDelay, () {
           if (mounted) {
             context.pop();
           }

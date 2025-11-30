@@ -20,21 +20,33 @@ import 'package:team_18_final_project/core/security/interfaces/i_audit_log_servi
 import 'package:team_18_final_project/core/utils/app_theme.dart';
 import 'firebase_options.dart';
 
-void main() async {
+Future<void> main({
+  AppEnvironment env = AppEnvironment.prod,
+  SecurityOverrides? securityOverrides,
+}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  if (env == AppEnvironment.prod) {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+  }
 
   // Initialize dependency injection
-  await setupDependencies();
+  await setupDependencies(
+    env: env,
+    securityOverrides: securityOverrides,
+  );
 
   // Set system UI overlay style
-  AppTheme.setSystemUIOverlayStyle(ThemeMode.system);
+  if (env == AppEnvironment.prod) {
+    AppTheme.setSystemUIOverlayStyle(ThemeMode.system);
+  }
 
   // Optional: Check for rooted/jailbroken device
-  await _performSecurityChecks();
+  if (env == AppEnvironment.prod) {
+    await _performSecurityChecks();
+  }
 
   runApp(const FintechApp());
 }

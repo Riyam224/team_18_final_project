@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/main.dart' as app;
+
+import '../test/support/test_security_fakes.dart';
+
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -10,7 +14,10 @@ void main() {
     testWidgets('app should launch and initialize security features',
         (tester) async {
       // Arrange & Act
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Assert - App should be running
@@ -20,7 +27,10 @@ void main() {
     testWidgets('should handle app lifecycle for session management',
         (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Simulate app going to background and returning
@@ -37,7 +47,10 @@ void main() {
 
     testWidgets('should navigate through app without crashing', (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 5));
 
       // Act - Try to find and tap any navigation elements
@@ -54,7 +67,10 @@ void main() {
     testWidgets('should maintain security context during navigation',
         (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Navigate through multiple screens
@@ -66,7 +82,10 @@ void main() {
 
     testWidgets('should handle orientation changes', (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Change orientation
@@ -85,7 +104,10 @@ void main() {
     testWidgets('should initialize encrypted storage on app start',
         (tester) async {
       // Arrange & Act
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Assert - App should initialize without errors
@@ -94,7 +116,10 @@ void main() {
 
     testWidgets('should persist across app restarts', (tester) async {
       // Arrange - First app launch
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Simulate app restart
@@ -108,7 +133,10 @@ void main() {
   group('Root Detection Integration', () {
     testWidgets('should perform security check on launch', (tester) async {
       // Arrange & Act
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Assert - App should launch successfully
@@ -118,7 +146,10 @@ void main() {
     testWidgets('should continue normal operation on secure device',
         (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Navigate around
@@ -132,7 +163,10 @@ void main() {
   group('Session Management Integration', () {
     testWidgets('should handle session timeout scenarios', (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Simulate time passing
@@ -145,7 +179,10 @@ void main() {
 
     testWidgets('should refresh session on user activity', (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Simulate user interaction

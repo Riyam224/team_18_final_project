@@ -10,8 +10,9 @@ class PasswordInput extends FormzInput<String, PasswordValidationError> {
 
   @override
   PasswordValidationError? validator(String value) {
-    if (value.isEmpty) return PasswordValidationError.empty;
-    if (value.length < minLength) return PasswordValidationError.tooShort;
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return PasswordValidationError.empty;
+    if (trimmed.length < minLength) return PasswordValidationError.tooShort;
     return null;
   }
 }

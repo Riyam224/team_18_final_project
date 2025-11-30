@@ -54,81 +54,67 @@ import 'package:team_18_final_project/features/transactions/domain/usecases/get_
 
 final sl = GetIt.instance;
 
-Future<void> setupDependencies() async {
+/// App environment to allow a test-safe DI graph.
+enum AppEnvironment { prod, test }
+
+class SecurityOverrides {
+  final ISecureStorage Function() secureStorage;
+  final IEncryptionService Function(ISecureStorage secureStorage) encryption;
+  final IBiometricService Function() biometric;
+  final ISessionManager Function(ISecureStorage secureStorage,
+      IEncryptionService encryptionService) sessionManager;
+  final IAppLockService Function(ISecureStorage secureStorage) appLock;
+  final IAuditLogService Function(ISecureStorage secureStorage) auditLog;
+  final IScreenshotPreventionService Function(ISecureStorage secureStorage)
+      screenshot;
+  final IRootDetectionService Function() rootDetection;
+  final IBlurService Function(ISecureStorage secureStorage) blur;
+
+  const SecurityOverrides({
+    required this.secureStorage,
+    required this.encryption,
+    required this.biometric,
+    required this.sessionManager,
+    required this.appLock,
+    required this.auditLog,
+    required this.screenshot,
+    required this.rootDetection,
+    required this.blur,
+  });
+}
+
+Future<void> setupDependencies({
+  AppEnvironment env = AppEnvironment.prod,
+  SecurityOverrides? securityOverrides,
+}) async {
   await _setupCore();
-  await _setupSecurity();
+  await _setupSecurity(env, securityOverrides);
   await _setupAuth();
   await _setupHome();
   await _setupTransactions();
 }
 
 Future<void> _setupCore() async {
-  // Dio
   sl.registerLazySingleton<Dio>(() => DioClient.createDio());
 }
 
-Future<void> _setupSecurity() async {
-  // Core Security Services (Clean Architecture)
-
-  // 1. Secure Storage (Foundation - must be first)
-  sl.registerLazySingleton<ISecureStorage>(
-    () => FlutterSecureStorageImpl(),
-  );
-
-  // 2. Encryption Service
-  sl.registerLazySingleton<IEncryptionService>(
-    () => EncryptionServiceImpl(secureStorage: sl<ISecureStorage>()),
-  );
-
-  // 2. Biometric Service
-  sl.registerLazySingleton<IBiometricService>(
-    () => LocalAuthBiometricImpl(),
-  );
-
-  // 3. Session Manager
-  sl.registerLazySingleton<ISessionManager>(
-    () => SessionManagerImpl(
-      secureStorage: sl<ISecureStorage>(),
-      encryptionService: sl<IEncryptionService>(),
-    ),
-  );
-
-  // 4. App Lock Service
-  sl.registerLazySingleton<IAppLockService>(
-    () => AppLockServiceImpl(
-      secureStorage: sl<ISecureStorage>(),
-    ),
-  );
-
-  // 5. Audit Log Service
-  sl.registerLazySingleton<IAuditLogService>(
-    () => AuditLogServiceImpl(
-      secureStorage: sl<ISecureStorage>(),
-    ),
-  );
-
-  // 6. Screenshot Prevention Service
-  sl.registerLazySingleton<IScreenshotPreventionService>(
-    () => ScreenshotPreventionServiceImpl(
-      secureStorage: sl<ISecureStorage>(),
-    ),
-  );
-
-  // 7. Root Detection Service
-  sl.registerLazySingleton<IRootDetectionService>(
-    () => RootDetectionServiceImpl(),
-  );
-
-  // 8. Blur Service
-  sl.registerLazySingleton<IBlurService>(
-    () => BlurServiceImpl(
-      secureStorage: sl<ISecureStorage>(),
-    ),
-  );
+Future<void> _setupSecurity(
+  AppEnvironment env,
+  SecurityOverrides? overrides,
+) async {
+  if (env == AppEnvironment.test) {
+    if (overrides == null) {
+      throw ArgumentError(
+        'SecurityOverrides must be provided when using AppEnvironment.test',
+      );
+    }
+    _registerSecurityTest(overrides);
+    return;
+  }
+  _registerSecurityProd();
 }
 
 Future<void> _setupAuth() async {
-  // Data Sources (Clean Architecture)
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSourceImpl(
       firebaseAuth: FirebaseAuth.instance,
@@ -198,7 +184,6 @@ Future<void> _setupAuth() async {
 }
 
 Future<void> _setupHome() async {
-  // Data sources
   sl.registerLazySingleton<HomeApiService>(
     () => HomeApiService(sl<Dio>()),
   );
@@ -240,4 +225,68 @@ Future<void> _setupTransactions() async {
   sl.registerLazySingleton(() => GetTransactionsUseCase(sl()));
   sl.registerLazySingleton(() => AddTransactionUseCase(sl()));
   sl.registerLazySingleton(() => ClearTransactionsUseCase(sl()));
+}
+
+void _registerSecurityProd() {
+  sl.registerLazySingleton<ISecureStorage>(() => FlutterSecureStorageImpl());
+  sl.registerLazySingleton<IEncryptionService>(
+    () => EncryptionServiceImpl(secureStorage: sl<ISecureStorage>()),
+  );
+  sl.registerLazySingleton<IBiometricService>(() => LocalAuthBiometricImpl());
+  sl.registerLazySingleton<ISessionManager>(
+    () => SessionManagerImpl(
+      secureStorage: sl<ISecureStorage>(),
+      encryptionService: sl<IEncryptionService>(),
+    ),
+  );
+  sl.registerLazySingleton<IAppLockService>(
+    () => AppLockServiceImpl(
+      secureStorage: sl<ISecureStorage>(),
+    ),
+  );
+  sl.registerLazySingleton<IAuditLogService>(
+    () => AuditLogServiceImpl(
+      secureStorage: sl<ISecureStorage>(),
+    ),
+  );
+  sl.registerLazySingleton<IScreenshotPreventionService>(
+    () => ScreenshotPreventionServiceImpl(
+      secureStorage: sl<ISecureStorage>(),
+    ),
+  );
+  sl.registerLazySingleton<IRootDetectionService>(
+    () => RootDetectionServiceImpl(),
+  );
+  sl.registerLazySingleton<IBlurService>(
+    () => BlurServiceImpl(
+      secureStorage: sl<ISecureStorage>(),
+    ),
+  );
+}
+
+void _registerSecurityTest(SecurityOverrides overrides) {
+  final secure = overrides.secureStorage();
+  final encryption = overrides.encryption(secure);
+
+  sl.registerLazySingleton<ISecureStorage>(() => secure);
+  sl.registerLazySingleton<IEncryptionService>(() => encryption);
+  sl.registerLazySingleton<IBiometricService>(overrides.biometric);
+  sl.registerLazySingleton<ISessionManager>(
+    () => overrides.sessionManager(secure, encryption),
+  );
+  sl.registerLazySingleton<IAppLockService>(
+    () => overrides.appLock(secure),
+  );
+  sl.registerLazySingleton<IAuditLogService>(
+    () => overrides.auditLog(secure),
+  );
+  sl.registerLazySingleton<IScreenshotPreventionService>(
+    () => overrides.screenshot(secure),
+  );
+  sl.registerLazySingleton<IRootDetectionService>(
+    overrides.rootDetection,
+  );
+  sl.registerLazySingleton<IBlurService>(
+    () => overrides.blur(secure),
+  );
 }

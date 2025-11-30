@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/main.dart' as app;
+
+import '../test/support/test_security_fakes.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
@@ -9,7 +12,10 @@ void main() {
   group('Transaction Flow Integration Tests', () {
     testWidgets('should initialize transaction storage', (tester) async {
       // Arrange & Act
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Assert - App should launch successfully
@@ -18,7 +24,10 @@ void main() {
 
     testWidgets('should encrypt transaction data', (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Transactions should be encrypted in background
@@ -31,7 +40,10 @@ void main() {
     testWidgets('should persist transactions across app restarts',
         (tester) async {
       // Arrange - First launch
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Simulate restart
@@ -44,7 +56,10 @@ void main() {
     testWidgets('should handle concurrent transaction operations',
         (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Multiple operations
@@ -56,7 +71,10 @@ void main() {
 
     testWidgets('should maintain transaction integrity', (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act - Perform operations
@@ -70,7 +88,10 @@ void main() {
   group('Transaction Security Integration', () {
     testWidgets('should protect transaction data', (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act
@@ -82,7 +103,10 @@ void main() {
 
     testWidgets('should handle decryption errors gracefully', (tester) async {
       // Arrange
-      app.main();
+      await app.main(
+        env: AppEnvironment.test,
+        securityOverrides: createTestSecurityOverrides(),
+      );
       await tester.pumpAndSettle(const Duration(seconds: 3));
 
       // Act

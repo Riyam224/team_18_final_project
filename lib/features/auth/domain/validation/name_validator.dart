@@ -8,13 +8,15 @@ class NameValidator {
 
   /// Validates a name (first name or last name)
   static ValidationResult validate(String name) {
-    if (name.isEmpty) {
+    final trimmed = name.trim();
+
+    if (trimmed.isEmpty) {
       return const ValidationResult.failure(
         ValidationMessagesConfig.nameRequired,
       );
     }
 
-    if (name.length < ValidationConfig.minNameLength) {
+    if (trimmed.length < ValidationConfig.minNameLength) {
       return ValidationResult.failure(
         ValidationMessagesConfig.getNameMinLengthMessage(
           ValidationConfig.minNameLength,
@@ -22,7 +24,7 @@ class NameValidator {
       );
     }
 
-    if (name.length > ValidationConfig.maxNameLength) {
+    if (trimmed.length > ValidationConfig.maxNameLength) {
       return ValidationResult.failure(
         ValidationMessagesConfig.getNameMaxLengthMessage(
           ValidationConfig.maxNameLength,
@@ -30,7 +32,7 @@ class NameValidator {
       );
     }
 
-    if (!ValidationConfig.nameRegex.hasMatch(name)) {
+    if (!ValidationConfig.nameRegex.hasMatch(trimmed)) {
       return const ValidationResult.failure(
         ValidationMessagesConfig.nameOnlyLettersAndSpaces,
       );

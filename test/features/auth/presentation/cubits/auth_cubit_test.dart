@@ -50,16 +50,13 @@ void main() {
   });
 
   setUpAll(() {
-    registerFallbackValue(RegisterUserEntity(
-      user: UserModel(
-        firstName: 'Test',
-        lastName: 'User',
-        email: 'test@example.com',
-        phone: '1234567890',
-        password: 'password',
-        biometricEnabled: false,
-      ),
-      saveBiometricCredentials: false,
+    registerFallbackValue(const RegisterUserEntity(
+      firstName: 'Test',
+      lastName: 'User',
+      email: 'test@example.com',
+      phone: '1234567890',
+      password: 'password',
+      biometricEnabled: false,
     ));
     registerFallbackValue(UserModel(
       firstName: 'Test',

@@ -8,13 +8,16 @@ class PhoneValidator {
 
   /// Validates a phone number
   static ValidationResult validate(String phone) {
-    // Phone is optional, so empty is valid
-    if (phone.isEmpty) {
-      return const ValidationResult.success();
+    final trimmed = phone.trim();
+
+    if (trimmed.isEmpty) {
+      return const ValidationResult.failure(
+        ValidationMessagesConfig.phoneRequired,
+      );
     }
 
     // Remove common formatting characters for validation
-    final cleanPhone = phone.replaceAll(RegExp(r'[\s\-\(\)]'), '');
+    final cleanPhone = trimmed.replaceAll(RegExp(r'[\s\-()]'), '');
 
     if (cleanPhone.length < ValidationConfig.minPhoneLength) {
       return ValidationResult.failure(
@@ -32,7 +35,7 @@ class PhoneValidator {
       );
     }
 
-    if (!ValidationConfig.phoneRegex.hasMatch(phone)) {
+    if (!ValidationConfig.phoneRegex.hasMatch(trimmed)) {
       return const ValidationResult.failure(
         ValidationMessagesConfig.phoneInvalid,
       );
@@ -59,6 +62,6 @@ class PhoneValidator {
 
   /// Cleans a phone number (removes formatting)
   static String clean(String phone) {
-    return phone.replaceAll(RegExp(r'[\s\-\(\)]'), '');
+    return phone.replaceAll(RegExp(r'[\s\-()]'), '');
   }
 }

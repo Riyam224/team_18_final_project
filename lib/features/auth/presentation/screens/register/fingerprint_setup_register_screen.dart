@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/buttons/secondary_button.dart';
+import 'package:team_18_final_project/core/config/timing_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
@@ -48,7 +49,7 @@ class _SetFingerprintRegisterContentState
     _biometricService = sl<IBiometricService>();
 
     // Automatically trigger fingerprint setup when screen loads
-    Future.delayed(const Duration(milliseconds: 500), () {
+    Future.delayed(TimingConfig.biometricScanDelay, () {
       if (mounted) {
         _setupFingerprint();
       }
