@@ -1,17 +1,18 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/foundation.dart';
 import 'package:team_18_final_project/core/validation/input_cleaner.dart';
-import '../../data/models/user_model.dart';
-import '../repositories/auth_repository.dart';
 import '../entities/auth_session_entity.dart';
+import '../entities/register_user_entity.dart';
 import '../failures/auth_failure.dart';
+import '../repositories/auth_repository.dart';
 
 class RegisterUserUseCase {
   final AuthRepository repository;
 
   RegisterUserUseCase(this.repository);
 
-  Future<Either<AuthFailure, AuthSessionEntity>> call(UserModel user) {
-    final cleaned = UserModel(
+  Future<Either<AuthFailure, AuthSessionEntity>> call(RegisterUserEntity user) {
+    final cleaned = RegisterUserEntity(
       firstName: user.firstName.trim(),
       lastName: user.lastName.trim(),
       email: cleanInput(user.email),
@@ -19,9 +20,8 @@ class RegisterUserUseCase {
       password: cleanInput(user.password),
       biometricEnabled: user.biometricEnabled,
     );
-    // Debug: log raw vs cleaned to diagnose hidden characters
-    // ignore: avoid_print
-    print('EMAIL RAW="${user.email}" CLEAN="${cleaned.email}"');
+
+    debugPrint('EMAIL RAW="${user.email}" CLEAN="${cleaned.email}"');
     return repository.register(cleaned);
   }
 }

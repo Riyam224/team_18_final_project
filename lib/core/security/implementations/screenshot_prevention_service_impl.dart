@@ -8,26 +8,27 @@ import 'package:team_18_final_project/core/error/failures.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_screenshot_prevention_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 
-/// Implementation of IScreenshotPreventionService
 class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
   final ISecureStorage _secureStorage;
   static const MethodChannel _channel = MethodChannel('screenshot_prevention');
 
-  final StreamController<bool> _stateController = StreamController<bool>.broadcast();
-  bool _isEnabled = false;
+  final StreamController<bool> _stateController =
+      StreamController<bool>.broadcast();
 
   ScreenshotPreventionServiceImpl({
     required ISecureStorage secureStorage,
   }) : _secureStorage = secureStorage;
 
+  bool _isAndroid() =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+
+  bool _isIOS() => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
+
   @override
   Future<Either<Failure, void>> enable() async {
     try {
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-        await _channel.invokeMethod('enableSecureMode');
-      }
+      await _channel.invokeMethod('enableSecureMode');
 
-      _isEnabled = true;
       _stateController.add(true);
 
       final writeResult = await _secureStorage.write(
@@ -38,13 +39,6 @@ class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
       return writeResult.fold(
         (failure) => Left(failure),
         (_) => const Right(null),
-      );
-    } on PlatformException catch (e) {
-      return Left(
-        UnexpectedFailure(
-          message: 'Platform error enabling screenshot prevention',
-          details: e.toString(),
-        ),
       );
     } catch (e) {
       return Left(
@@ -59,11 +53,10 @@ class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
   @override
   Future<Either<Failure, void>> disable() async {
     try {
-      if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
-        await _channel.invokeMethod('disableSecureMode');
-      }
+      // Allow Android and iOS to clear secure mode when navigating away from
+      // sensitive screens. Native side no-ops if not supported.
+      await _channel.invokeMethod('disableSecureMode');
 
-      _isEnabled = false;
       _stateController.add(false);
 
       final writeResult = await _secureStorage.write(
@@ -74,13 +67,6 @@ class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
       return writeResult.fold(
         (failure) => Left(failure),
         (_) => const Right(null),
-      );
-    } on PlatformException catch (e) {
-      return Left(
-        UnexpectedFailure(
-          message: 'Platform error disabling screenshot prevention',
-          details: e.toString(),
-        ),
       );
     } catch (e) {
       return Left(
@@ -118,7 +104,6 @@ class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
         await _saveProtectedRoutes(protectedRoutes);
       }
 
-      // Check if route should have screenshot prevention
       if (_shouldProtectRoute(route)) {
         return enable();
       }
@@ -141,6 +126,11 @@ class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
       protectedRoutes.remove(route);
       await _saveProtectedRoutes(protectedRoutes);
 
+      // ❗ Do not disable secure mode on Android
+      if (_isIOS()) {
+        await _channel.invokeMethod('disableSecureMode');
+      }
+
       return const Right(null);
     } catch (e) {
       return Left(
@@ -156,13 +146,13 @@ class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
   Future<Either<Failure, bool>> isRouteProtected(String route) async {
     try {
       final protectedRoutes = await _getProtectedRoutes();
-      return Right(protectedRoutes.contains(route) || _shouldProtectRoute(route));
+      return Right(
+          protectedRoutes.contains(route) || _shouldProtectRoute(route));
     } catch (e) {
       return const Right(false);
     }
   }
 
-  /// Internal method to get protected routes from storage
   Future<List<String>> _getProtectedRoutes() async {
     final result = await _secureStorage.read(
       key: StorageKeysConfig.protectedRoutes,
@@ -171,15 +161,12 @@ class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
     return result.fold(
       (failure) => [],
       (value) {
-        if (value == null || value.isEmpty) {
-          return [];
-        }
+        if (value == null || value.isEmpty) return [];
         return value.split(',');
       },
     );
   }
 
-  /// Internal method to save protected routes
   Future<void> _saveProtectedRoutes(List<String> routes) async {
     await _secureStorage.write(
       key: StorageKeysConfig.protectedRoutes,
@@ -187,14 +174,12 @@ class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
     );
   }
 
-  /// Check if a route should be protected based on config
   bool _shouldProtectRoute(String route) {
     return SecurityConfig.sensitiveRoutes.any(
       (sensitiveRoute) => route.startsWith(sensitiveRoute),
     );
   }
 
-  /// Dispose resources
   Future<void> dispose() async {
     await _stateController.close();
   }

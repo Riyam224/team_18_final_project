@@ -1,31 +1,17 @@
-// Imports flutter_bloc for Cubit state management
 import 'package:flutter_bloc/flutter_bloc.dart';
-// Imports use cases for fetching home screen data
 import 'package:team_18_final_project/features/home/domain/usecases/get_market_overview_usecase.dart';
 import 'package:team_18_final_project/features/home/domain/usecases/get_portfolio_balance_usecase.dart';
 import 'package:team_18_final_project/features/home/domain/usecases/get_top_gainers_usecase.dart';
 import 'package:team_18_final_project/features/home/domain/usecases/get_trending_coins_usecase.dart';
-// Imports home state definitions
 import 'home_state.dart';
 
-/// Cubit managing state and business logic for the home screen
-/// Extends Cubit from flutter_bloc for simplified state management (vs full Bloc)
-/// Coordinates multiple use cases and emits appropriate states to the UI
+/// Manages home screen state by coordinating multiple use cases
 class HomeCubit extends Cubit<HomeState> {
-  /// Use case for fetching market overview data
   final GetMarketOverviewUseCase getMarketOverviewUseCase;
-
-  /// Use case for fetching trending coins
   final GetTrendingCoinsUseCase getTrendingCoinsUseCase;
-
-  /// Use case for fetching top gainers
   final GetTopGainersUseCase getTopGainersUseCase;
-
-  /// Use case for fetching portfolio balance
   final GetPortfolioBalanceUseCase getPortfolioBalanceUseCase;
 
-  /// Constructor requiring all use case dependencies
-  /// Initializes with HomeInitial state
   HomeCubit({
     required this.getMarketOverviewUseCase,
     required this.getTrendingCoinsUseCase,
@@ -33,16 +19,11 @@ class HomeCubit extends Cubit<HomeState> {
     required this.getPortfolioBalanceUseCase,
   }) : super(HomeInitial());
 
-  /// Loads all home screen data by executing use cases
-  /// Emits HomeLoading, then either HomeLoaded or HomeError based on results
+  /// Loads all home screen data by executing use cases in parallel
   Future<void> loadHomeData() async {
-    // Emit loading state to show progress indicators
     emit(HomeLoading());
 
     try {
-      // Execute API calls in parallel for better performance
-      // marketOverview and portfolioBalance share cached global data
-      // trendingCoins and topGainers are independent calls
       final results = await Future.wait([
         getMarketOverviewUseCase(),
         getTrendingCoinsUseCase(),
@@ -50,65 +31,59 @@ class HomeCubit extends Cubit<HomeState> {
         getPortfolioBalanceUseCase(),
       ]);
 
-      // Check if cubit is still active before emitting states
       if (isClosed) return;
 
-      // Extract and properly type the results from Future.wait
       final marketOverviewResult = results[0] as dynamic;
       final trendingCoinsResult = results[1] as dynamic;
       final topGainersResult = results[2] as dynamic;
       final portfolioBalanceResult = results[3] as dynamic;
 
-      // Check results using fold pattern for Either<Failure, Data>
-      // If any request fails, emit error state immediately
-      // If all succeed, emit loaded state with all data
-      marketOverviewResult.fold(
-        (failure) {
-          if (!isClosed) emit(HomeError(message: failure.message));
-        },
-        (marketOverview) {
-          trendingCoinsResult.fold(
-            (failure) {
-              if (!isClosed) emit(HomeError(message: failure.message));
-            },
-            (trendingCoins) {
-              topGainersResult.fold(
-                (failure) {
-                  if (!isClosed) emit(HomeError(message: failure.message));
-                },
-                (topGainers) {
-                  portfolioBalanceResult.fold(
-                    (failure) {
-                      if (!isClosed) emit(HomeError(message: failure.message));
-                    },
-                    (portfolioBalance) {
-                      // All requests succeeded - emit loaded state with all data
-                      if (!isClosed) {
-                        emit(HomeLoaded(
-                          marketOverview: marketOverview,
-                          trendingCoins: trendingCoins,
-                          topGainers: topGainers,
-                          portfolioBalance: portfolioBalance,
-                        ));
-                      }
-                    },
-                  );
-                },
-              );
-            },
-          );
-        },
-      );
+      // Extract failures or values from each result
+      final marketOverviewFailure = marketOverviewResult.fold((f) => f, (_) => null);
+      if (marketOverviewFailure != null) {
+        if (!isClosed) emit(HomeError(message: marketOverviewFailure.message));
+        return;
+      }
+
+      final trendingCoinsFailure = trendingCoinsResult.fold((f) => f, (_) => null);
+      if (trendingCoinsFailure != null) {
+        if (!isClosed) emit(HomeError(message: trendingCoinsFailure.message));
+        return;
+      }
+
+      final topGainersFailure = topGainersResult.fold((f) => f, (_) => null);
+      if (topGainersFailure != null) {
+        if (!isClosed) emit(HomeError(message: topGainersFailure.message));
+        return;
+      }
+
+      final portfolioBalanceFailure = portfolioBalanceResult.fold((f) => f, (_) => null);
+      if (portfolioBalanceFailure != null) {
+        if (!isClosed) emit(HomeError(message: portfolioBalanceFailure.message));
+        return;
+      }
+
+      // All succeeded - extract the actual data
+      final marketOverview = marketOverviewResult.fold((_) => null, (data) => data);
+      final trendingCoins = trendingCoinsResult.fold((_) => null, (data) => data);
+      final topGainers = topGainersResult.fold((_) => null, (data) => data);
+      final portfolioBalance = portfolioBalanceResult.fold((_) => null, (data) => data);
+
+      if (!isClosed) {
+        emit(HomeLoaded(
+          marketOverview: marketOverview!,
+          trendingCoins: trendingCoins!,
+          topGainers: topGainers!,
+          portfolioBalance: portfolioBalance!,
+        ));
+      }
     } catch (e) {
-      // Handle any unexpected errors during data loading
       if (!isClosed) {
         emit(HomeError(message: 'An unexpected error occurred: $e'));
       }
     }
   }
 
-  /// Refreshes home screen data (typically triggered by pull-to-refresh)
-  /// Delegates to loadHomeData to fetch fresh data from APIs
   Future<void> refreshHomeData() async {
     await loadHomeData();
   }

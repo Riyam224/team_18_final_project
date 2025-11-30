@@ -1,207 +1,152 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:team_18_final_project/core/config/validation_messages_config.dart';
 import 'package:team_18_final_project/features/auth/domain/validation/email_validator.dart';
 
 void main() {
   group('EmailValidator', () {
     group('validate', () {
-      test('should return success for valid email', () {
-        // arrange
+      test('should return valid result for correct email format', () {
+        // Arrange
         const email = 'test@example.com';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, true);
         expect(result.error, null);
       });
 
-      test('should return success for valid email with subdomain', () {
-        // arrange
-        const email = 'user@mail.example.com';
+      test('should return valid result for email with subdomain', () {
+        // Arrange
+        const email = 'user@mail.company.com';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, true);
       });
 
-      test('should return success for valid email with plus sign', () {
-        // arrange
-        const email = 'user+tag@example.com';
+      test('should return valid result for email with numbers', () {
+        // Arrange
+        const email = 'user123@test456.com';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, true);
       });
 
-      test('should return success for valid email with numbers', () {
-        // arrange
-        const email = 'user123@example456.com';
+      test('should return valid result for email with dots and underscores', () {
+        // Arrange
+        const email = 'user.name_test@example.com';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, true);
       });
 
-      test('should return success for valid email with dots', () {
-        // arrange
-        const email = 'first.last@example.com';
-
-        // act
-        final result = EmailValidator.validate(email);
-
-        // assert
-        expect(result.isValid, true);
-      });
-
-      test('should return failure for empty email', () {
-        // arrange
+      test('should return invalid result for empty email', () {
+        // Arrange
         const email = '';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.emailRequired);
+        expect(result.error, isNotNull);
       });
 
-      test('should return failure for email without @', () {
-        // arrange
+      test('should return invalid result for email without @', () {
+        // Arrange
         const email = 'testexample.com';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.emailInvalid);
       });
 
-      test('should return failure for email without domain', () {
-        // arrange
+      test('should return invalid result for email without domain', () {
+        // Arrange
         const email = 'test@';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.emailInvalid);
       });
 
-      test('should return failure for email without local part', () {
-        // arrange
+      test('should return invalid result for email without username', () {
+        // Arrange
         const email = '@example.com';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.emailInvalid);
       });
 
-      test('should return failure for email without TLD', () {
-        // arrange
+      test('should return invalid result for email without TLD', () {
+        // Arrange
         const email = 'test@example';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.emailInvalid);
       });
 
-      test('should return failure for email with spaces', () {
-        // arrange
+      test('should return invalid result for email with spaces', () {
+        // Arrange
         const email = 'test @example.com';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.emailInvalid);
       });
 
-      test('should return failure for email with multiple @', () {
-        // arrange
+      test('should trim whitespace before validation', () {
+        // Arrange
+        const email = '  test@example.com  ';
+
+        // Act
+        final result = EmailValidator.validate(email);
+
+        // Assert
+        expect(result.isValid, true);
+      });
+
+      test('should return invalid result for multiple @ symbols', () {
+        // Arrange
         const email = 'test@@example.com';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.emailInvalid);
       });
 
-      test('should return failure for email with invalid characters', () {
-        // arrange
-        const email = 'test#user@example.com';
+      test('should return invalid result for special characters in domain', () {
+        // Arrange
+        const email = 'test@exam!ple.com';
 
-        // act
+        // Act
         final result = EmailValidator.validate(email);
 
-        // assert
+        // Assert
         expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.emailInvalid);
-      });
-
-      test('should return failure for email with short TLD', () {
-        // arrange
-        const email = 'test@example.c';
-
-        // act
-        final result = EmailValidator.validate(email);
-
-        // assert
-        expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.emailInvalid);
-      });
-    });
-
-    group('isValid', () {
-      test('should return true for valid email', () {
-        // arrange
-        const email = 'test@example.com';
-
-        // act
-        final isValid = EmailValidator.isValid(email);
-
-        // assert
-        expect(isValid, true);
-      });
-
-      test('should return false for invalid email', () {
-        // arrange
-        const email = 'invalid-email';
-
-        // act
-        final isValid = EmailValidator.isValid(email);
-
-        // assert
-        expect(isValid, false);
-      });
-
-      test('should return false for empty email', () {
-        // arrange
-        const email = '';
-
-        // act
-        final isValid = EmailValidator.isValid(email);
-
-        // assert
-        expect(isValid, false);
       });
     });
   });

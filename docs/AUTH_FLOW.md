@@ -363,17 +363,36 @@ Future<void> verify() async {
 
 ## Data Models
 
-### UserModel
+### Domain Entity: RegisterUserEntity
+
+**Location:** `lib/features/auth/domain/entities/register_user_entity.dart`
+
+```dart
+/// Domain entity for user registration
+/// Used in domain layer - no infrastructure concerns
+class RegisterUserEntity {
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String phone;
+  final String password;
+  final bool biometricEnabled;
+}
+```
+
+### Data Model: UserModel
 
 **Location:** `lib/features/auth/data/models/user_model.dart`
 
 ```dart
+/// Data transfer object for API/UI communication
+/// Used in data and presentation layers
 class UserModel {
   final String firstName;
   final String lastName;
   final String email;
   final String phone;
-  final String? password;        // Only used during registration
+  final String password;
   final bool biometricEnabled;
 
   // JSON serialization
@@ -381,6 +400,10 @@ class UserModel {
   Map<String, dynamic> toJson();
 }
 ```
+
+**Mapping:** UI `UserModel` → Domain `RegisterUserEntity` → Repository
+
+See `lib/features/auth/data/mappers/user_mapper.dart` for conversion methods.
 
 ## Repository Pattern
 
@@ -390,22 +413,46 @@ class UserModel {
 
 ```dart
 abstract class AuthRepository {
-  // Authentication
-  Future<String> login(String email, String password);
-  Future<String> register(UserModel user);
+  // Authentication operations
+  Future<Either<AuthFailure, AuthSessionEntity>> login(
+    String email,
+    String password,
+  );
+
+  Future<Either<AuthFailure, AuthSessionEntity>> register(
+    RegisterUserEntity user,  // Domain entity, not data model
+  );
+
+  Future<Either<AuthFailure, void>> signOut();
 
   // Credential storage
-  Future<void> storeUserCredentials(String token, String userId);
-  Future<void> storeCredentialsForBiometric(String email, String password);
+  Future<Either<AuthFailure, void>> storeUserCredentials({
+    required String userId,
+    required String token,
+  });
 
-  // Biometric management
-  Future<void> storeBiometricSettings(String biometricType, bool enabled);
-  Future<bool> isBiometricEnabled();
-  Future<String?> getBiometricType();
-  Future<String?> getStoredEmail();
-  Future<String?> getStoredPassword();
+  Future<Either<BiometricFailure, void>> storeCredentialsForBiometric({
+    required String email,
+    required String password,
+  });
+
+  // Biometric operations
+  Future<Either<BiometricFailure, void>> storeBiometricSettings({
+    required String email,
+    required String password,
+    required String biometricType,
+  });
+
+  Future<Either<AuthFailure, bool>> isBiometricEnabled();
+  Future<Either<AuthFailure, String?>> getBiometricType();
+
+  // User data operations
+  Future<Either<AuthFailure, void>> storeUserData(RegisterUserEntity user);
+  Future<Either<AuthFailure, String?>> getUserFirstName();
 }
 ```
+
+**Note:** Repository uses `RegisterUserEntity` (domain) not `UserModel` (data), following Clean Architecture principles.
 
 ### AuthRepositoryImpl (Implementation)
 

@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:team_18_final_project/features/auth/data/models/user_model.dart';
+import 'package:team_18_final_project/features/auth/domain/entities/register_user_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/user_entity.dart';
 
-/// Mapper class to convert between UserModel (data) and UserEntity (domain)
+/// Mapper class to convert between data models and domain entities
 class UserMapper {
   const UserMapper._();
 
@@ -60,6 +61,30 @@ class UserMapper {
       updatedAt: data['updatedAt'] != null
           ? DateTime.parse(data['updatedAt'] as String)
           : null,
+    );
+  }
+
+  /// Converts RegisterUserEntity (domain) to UserModel (data)
+  static UserModel registerEntityToModel(RegisterUserEntity entity) {
+    return UserModel(
+      firstName: entity.firstName,
+      lastName: entity.lastName,
+      email: entity.email,
+      phone: entity.phone,
+      password: entity.password,
+      biometricEnabled: entity.biometricEnabled,
+    );
+  }
+
+  /// Converts UserModel (data) to RegisterUserEntity (domain)
+  static RegisterUserEntity modelToRegisterEntity(UserModel model) {
+    return RegisterUserEntity(
+      firstName: model.firstName,
+      lastName: model.lastName,
+      email: model.email,
+      phone: model.phone,
+      password: model.password,
+      biometricEnabled: model.biometricEnabled,
     );
   }
 }

@@ -1,7 +1,9 @@
+import 'dart:async';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:go_router/go_router.dart';
 import 'package:secure_application/secure_application.dart';
 
@@ -9,11 +11,12 @@ import 'package:team_18_final_project/core/config/app_config.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/app_router.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_root_detection_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/utils/app_theme.dart';
 import 'firebase_options.dart';
 
@@ -69,7 +72,8 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   late final IAppLockService _appLockService;
   late final IRootDetectionService _rootDetectionService;
   late final IAuditLogService _auditLogService;
-  late final ISecureStorage _secureStorage;
+  StreamSubscription<bool>? _lockStateSub;
+  StreamSubscription<bool>? _sessionStateSub;
 
   @override
   void initState() {
@@ -81,7 +85,6 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     _appLockService = sl<IAppLockService>();
     _rootDetectionService = sl<IRootDetectionService>();
     _auditLogService = sl<IAuditLogService>();
-    _secureStorage = sl<ISecureStorage>();
 
     // Initialize secure application controller for background blur
     _secureController = SecureApplicationController(SecureApplicationState());
@@ -90,6 +93,8 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     // Initialize session manager with auto-logout callback
     _initializeSession();
 
+    _listenToAutoLock();
+    _listenToSession();
     _checkRootAndWarn();
 
     // Update activity timestamp on app launch
@@ -102,26 +107,41 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     // We just need to start monitoring session state if needed
   }
 
+  void _listenToAutoLock() {
+    _lockStateSub = _appLockService.lockStateStream.listen((locked) {
+      if (locked && mounted) {
+        appNavigatorKey.currentContext?.go(AppRoutes.appLock);
+      }
+    });
+  }
+
+  void _listenToSession() {
+    _sessionStateSub = _sessionManager.sessionStateStream.listen((active) {
+      if (!active && mounted) {
+        appNavigatorKey.currentContext?.go(AppRoutes.login);
+      }
+    });
+  }
+
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) async {
     if (state == AppLifecycleState.resumed) {
       // App returns to foreground
-      final tokenResult = await _secureStorage.read(key: StorageKeysConfig.authToken);
-      final token = tokenResult.fold((_) => null, (value) => value);
-
-      // Check if session is still valid
+      final sessionResult = await _sessionManager.getCurrentSession();
+      final session = sessionResult.fold((_) => null, (value) => value);
       final isValidResult = await _sessionManager.isSessionValid();
       final isValid = isValidResult.fold((_) => false, (valid) => valid);
 
-      // If session expired but a token existed, enforce app-lock
-      if (token != null && !isValid && mounted) {
+      // If session expired but data existed, enforce app-lock
+      if (session != null && !isValid && mounted) {
         appNavigatorKey.currentContext?.go('/app-lock');
         return;
       }
 
       // Respect inactivity timeout only (no immediate app-lock after login)
       final shouldLockResult = await _appLockService.isLocked();
-      final shouldLock = shouldLockResult.fold((_) => false, (locked) => locked);
+      final shouldLock =
+          shouldLockResult.fold((_) => false, (locked) => locked);
       if (shouldLock && mounted) {
         appNavigatorKey.currentContext?.go('/app-lock');
       }
@@ -136,21 +156,34 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   }
 
   Future<void> _checkRootAndWarn() async {
+    final secureStorage = sl<ISecureStorage>();
+
+    // 👉 STEP 1: If user already accepted risk → skip warning
+    final acceptedRiskResult =
+        await secureStorage.read(key: 'accepted_root_risk');
+    final acceptedRisk = acceptedRiskResult.fold((_) => null, (value) => value);
+
+    if (acceptedRisk == 'true') {
+      debugPrint('⚠️ User accepted risk before → skip root warning.');
+      return;
+    }
+
+    // 👉 STEP 2: Check root/jailbreak normally
     final result = await _rootDetectionService.performSecurityCheck();
 
     result.fold(
-      (failure) => debugPrint('Root detection check failed: ${failure.message}'),
+      (failure) => debugPrint('Root detection failed: ${failure.message}'),
       (securityCheck) async {
         if (!securityCheck.isSecure && mounted) {
           await _auditLogService.log(
             event: 'security_root_jailbreak_detected',
             metadata: {'message': 'Root/Jailbreak detected'},
           );
-          // Allow splash screen to display before showing the warning
+
           await Future.delayed(TimingConfig.splashRootWarningDelay);
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            appNavigatorKey.currentContext?.go('/root-warning');
+            appNavigatorKey.currentContext?.go(AppRoutes.rootWarning);
           });
         }
       },
@@ -160,6 +193,8 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
+    _lockStateSub?.cancel();
+    _sessionStateSub?.cancel();
     _sessionManager.dispose();
     _appLockService.dispose();
     super.dispose();
@@ -175,27 +210,30 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, __) {
-        return Listener(
-          behavior: HitTestBehavior.deferToChild,
-          onPointerDown: (_) {
-            // Track user activity for auto-lock and session management
-            _appLockService.updateActivity();
-            _sessionManager.updateActivity();
-          },
-          child: MaterialApp.router(
-            title: AppConstants.appTitle,
-            debugShowCheckedModeBanner: false,
+        return SecureApplication(
+          secureApplicationController: _secureController,
+          child: Listener(
+            behavior: HitTestBehavior.deferToChild,
+            onPointerDown: (_) {
+              // Track user activity for auto-lock and session management
+              _appLockService.updateActivity();
+              _sessionManager.updateActivity();
+            },
+            child: MaterialApp.router(
+              title: AppConstants.appTitle,
+              debugShowCheckedModeBanner: false,
 
-            // Themes
-            theme: AppTheme.lightTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.system,
+              // Themes
+              theme: AppTheme.lightTheme,
+              darkTheme: AppTheme.darkTheme,
+              themeMode: ThemeMode.system,
 
-            // Routing configuration
-            routerConfig: RouteGenerator.mainRoutingInOurApp,
+              // Routing configuration
+              routerConfig: RouteGenerator.mainRoutingInOurApp,
 
-            // Disable global SecureApplication blur; handled selectively via observer
-            builder: (context, child) => child ?? const SizedBox(),
+              // SecureApplication blur/screenshot handling routed via observer
+              builder: (context, child) => child ?? const SizedBox(),
+            ),
           ),
         );
       },

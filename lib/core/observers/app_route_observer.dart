@@ -21,58 +21,52 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   })  : _appLockService = appLockService,
         _screenshotService = screenshotService;
 
-  /// Sensitive screens that require blur and screenshot blocking
-  /// Only financial/sensitive data screens should have blur
+  /// Routes that MUST block screenshot + blur UI (financial data)
   final List<String> sensitiveRoutes = [
     AppRoutes.home,
     AppRoutes.portfolio,
+    AppRoutes.transactions,
     AppRoutes.coinDetails,
-    '/transactions',
     AppRoutes.buySell,
     AppRoutes.payment,
   ];
 
-  /// Screens that should NOT have blur
-  /// Includes ALL authentication screens (login, register, biometric)
-  /// and non-sensitive screens (settings, profile, onboarding)
+  /// Routes that must NEVER blur or block screenshots
   final List<String> nonBlurRoutes = [
-    // Splash and Onboarding
+    // Splash & Onboarding
     AppRoutes.splash,
     AppRoutes.onboarding,
 
-    // Authentication Screens
+    // Authentication
     AppRoutes.login,
     AppRoutes.register,
 
-    // Face ID Registration Screens
+    // Face ID register
     AppRoutes.setFaceIDRegister,
     AppRoutes.faceIdScanningRegister,
     AppRoutes.faceIdSuccessRegister,
 
-    // Fingerprint Registration Screens
+    // Fingerprint register
     AppRoutes.setFingerprintRegister,
     AppRoutes.fingerprintSuccessRegister,
 
-    // Face ID Login Screens
+    // Face ID login
     AppRoutes.faceIdScanningLogin,
     AppRoutes.faceIdVerifiedSuccessLogin,
 
-    // Fingerprint Login Screens
+    // Fingerprint login
     AppRoutes.verifyFingerprintLogin,
     AppRoutes.verifyFingerprintLoginSuccess,
 
-    // Security Screens (non-financial)
+    // Security screens
     AppRoutes.appLock,
     AppRoutes.lock,
     AppRoutes.biometric,
 
-    // Settings and Profile (non-financial data)
+    // Non-sensitive functional screens
+    AppRoutes.market,
     AppRoutes.settings,
     AppRoutes.profile,
-    '/account',
-
-    // Other non-sensitive screens
-    AppRoutes.market,
     AppRoutes.rootWarning,
     AppRoutes.biometricTest,
     AppRoutes.debugBiometrics,
@@ -80,40 +74,43 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
 
   void attachController(SecureApplicationController controller) {
     _controller = controller;
-    // Start with blur DISABLED by default
-    // Blur will only be enabled when navigating to sensitive routes
-    _controller?.open();
+    _controller?.open(); // Start with no blur
   }
 
-  bool _isSensitive(String? routeName) {
-    if (routeName == null) return false;
-    return sensitiveRoutes.any((r) => routeName.startsWith(r));
-  }
+  bool _isSensitive(String? name) =>
+      name != null && sensitiveRoutes.any((r) => name.startsWith(r));
 
-  bool _shouldDisableBlur(String? routeName) {
-    if (routeName == null) return false;
-    return nonBlurRoutes.any((r) => routeName.startsWith(r));
+  bool _isNonBlur(String? name) =>
+      name != null && nonBlurRoutes.any((r) => name.startsWith(r));
+
+  void _applySecurity(String? routeName) {
+    if (_controller == null) return;
+
+    if (_isNonBlur(routeName)) {
+      _controller!.open();
+      _screenshotService.disable();
+      return;
+    }
+
+    if (_isSensitive(routeName)) {
+      _controller!.secure();
+      _screenshotService.enable();
+      return;
+    }
+
+    // Default behavior
+    _controller!.open();
+    _screenshotService.disable();
   }
 
   void _handleSecurity(Route<dynamic>? route) {
     final name = route?.settings.name;
 
-    // Update last activity timestamp
+    // Always update activity (for lock timer)
     _appLockService.updateActivity();
 
-    if (_controller == null) return;
-
-    // Check if this is a biometric screen that should NOT have blur
-    if (_shouldDisableBlur(name)) {
-      _controller!.open(); // 🔓 NO blur for Face ID/fingerprint screens
-      _screenshotService.disable();
-    } else if (_isSensitive(name)) {
-      _controller!.secure(); // 🔒 blur + block screenshots (SecureApplication)
-      _screenshotService.enable();
-    } else {
-      _controller!.open(); // 🔓 remove blur for normal screens
-      _screenshotService.disable();
-    }
+    // Apply screenshot + blur logic
+    _applySecurity(name);
   }
 
   @override

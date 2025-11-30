@@ -35,14 +35,21 @@ class _FaceIDScanningLoginContent extends StatefulWidget {
 
 class _FaceIDScanningLoginContentState
     extends State<_FaceIDScanningLoginContent> {
+  bool _startedAuth = false;
+
   @override
   void initState() {
     super.initState();
-    // Automatically trigger Face ID verification when screen loads
-    Future.delayed(const Duration(milliseconds: 500), () {
-      if (mounted) {
-        context.read<BiometricVerifyCubit>().verify();
-      }
+    _startAuthOnce();
+  }
+
+  void _startAuthOnce() {
+    if (_startedAuth) return;
+    _startedAuth = true;
+    // Trigger Face ID exactly once when the screen loads
+    Future.microtask(() {
+      if (!mounted) return;
+      context.read<BiometricVerifyCubit>().verify();
     });
   }
 

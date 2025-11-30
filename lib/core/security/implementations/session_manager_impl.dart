@@ -4,6 +4,7 @@ import 'package:team_18_final_project/core/config/security_config.dart';
 import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_encryption_service.dart';
 import 'package:team_18_final_project/features/auth/data/mappers/session_mapper.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/failures/session_failure.dart';
@@ -11,13 +12,16 @@ import 'package:team_18_final_project/features/auth/domain/failures/session_fail
 /// Implementation of ISessionManager
 class SessionManagerImpl implements ISessionManager {
   final ISecureStorage _secureStorage;
+  final IEncryptionService _encryptionService;
   Timer? _sessionTimer;
   final StreamController<bool> _sessionStateController =
       StreamController<bool>.broadcast();
 
   SessionManagerImpl({
     required ISecureStorage secureStorage,
-  }) : _secureStorage = secureStorage;
+    required IEncryptionService encryptionService,
+  })  : _secureStorage = secureStorage,
+        _encryptionService = encryptionService;
 
   @override
   Future<Either<SessionFailure, void>> startSession({
@@ -40,9 +44,11 @@ class SessionManagerImpl implements ISessionManager {
 
       // Store session data
       final sessionData = SessionMapper.toJson(session);
+      final encrypted = await _encryptionService.encrypt(sessionData);
+      final payload = encrypted.getOrElse(() => sessionData);
       final writeResult = await _secureStorage.write(
         key: StorageKeysConfig.sessionId,
-        value: sessionData,
+        value: payload,
       );
 
       if (writeResult.isLeft()) {
@@ -84,6 +90,8 @@ class SessionManagerImpl implements ISessionManager {
       await _secureStorage.delete(key: StorageKeysConfig.sessionId);
       await _secureStorage.delete(key: StorageKeysConfig.sessionActive);
       await _secureStorage.delete(key: StorageKeysConfig.lastActivityTime);
+      await _secureStorage.delete(key: StorageKeysConfig.authToken);
+      await _secureStorage.delete(key: StorageKeysConfig.refreshToken);
 
       // Stop timer
       _sessionTimer?.cancel();
@@ -110,14 +118,16 @@ class SessionManagerImpl implements ISessionManager {
         key: StorageKeysConfig.sessionId,
       );
 
-      return sessionResult.fold(
-        (failure) => Left(SessionNotFoundFailure()),
-        (sessionData) {
+      return await sessionResult.fold(
+        (failure) async => Left(SessionNotFoundFailure()),
+        (sessionData) async {
           if (sessionData == null) {
             return const Right(null);
           }
 
-          final session = SessionMapper.fromJson(sessionData);
+          final decrypted = await _encryptionService.decrypt(sessionData);
+          final payload = decrypted.getOrElse(() => sessionData);
+          final session = SessionMapper.fromJson(payload);
           return Right(session);
         },
       );
@@ -146,6 +156,11 @@ class SessionManagerImpl implements ISessionManager {
           // Check if session is expired
           if (session.isExpired) {
             return const Right(false);
+          }
+
+          // Ensure monitoring keeps running after app relaunch
+          if (_sessionTimer == null) {
+            _startSessionMonitoring();
           }
 
           return const Right(true);
@@ -231,9 +246,11 @@ class SessionManagerImpl implements ISessionManager {
       );
 
       final sessionData = SessionMapper.toJson(updatedSession);
+      final encrypted = await _encryptionService.encrypt(sessionData);
+      final payload = encrypted.getOrElse(() => sessionData);
       final writeResult = await _secureStorage.write(
         key: StorageKeysConfig.sessionId,
-        value: sessionData,
+        value: payload,
       );
 
       return writeResult.fold(

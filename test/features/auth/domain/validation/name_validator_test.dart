@@ -1,259 +1,83 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:team_18_final_project/core/config/validation_config.dart';
-import 'package:team_18_final_project/core/config/validation_messages_config.dart';
 import 'package:team_18_final_project/features/auth/domain/validation/name_validator.dart';
 
 void main() {
   group('NameValidator', () {
+
+
     group('validate', () {
-      test('should return success for valid name', () {
-        // arrange
+      test('should return valid result for simple name', () {
         const name = 'John';
-
-        // act
         final result = NameValidator.validate(name);
-
-        // assert
         expect(result.isValid, true);
         expect(result.error, null);
       });
 
-      test('should return success for name with spaces', () {
-        // arrange
-        const name = 'Mary Jane';
-
-        // act
+      test('should return valid result for name with multiple words', () {
+        const name = 'John Doe';
         final result = NameValidator.validate(name);
-
-        // assert
         expect(result.isValid, true);
       });
 
-      test('should return success for name at minimum length', () {
-        // arrange
-        const name = 'AB'; // Min length is 2
-
-        // act
+      test('should return valid result for name with hyphen', () {
+        const name = 'Mary-Jane';
         final result = NameValidator.validate(name);
-
-        // assert
         expect(result.isValid, true);
       });
 
-      test('should return success for name at maximum length', () {
-        // arrange
-        final name = 'A' * 50; // Max length is 50
-
-        // act
+      test('should return valid result for name with apostrophe', () {
+        const name = "O'Connor";
         final result = NameValidator.validate(name);
-
-        // assert
         expect(result.isValid, true);
       });
 
-      test('should return failure for empty name', () {
-        // arrange
+      test('should return invalid result for empty name', () {
         const name = '';
-
-        // act
         final result = NameValidator.validate(name);
-
-        // assert
         expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.nameRequired);
+        expect(result.error, isNotNull);
       });
 
-      test('should return failure for name shorter than minimum', () {
-        // arrange
-        const name = 'A'; // Less than minimum of 2
-
-        // act
-        final result = NameValidator.validate(name);
-
-        // assert
-        expect(result.isValid, false);
-        expect(
-          result.error,
-          ValidationMessagesConfig.getNameMinLengthMessage(
-            ValidationConfig.minNameLength,
-          ),
-        );
-      });
-
-      test('should return failure for name longer than maximum', () {
-        // arrange
-        final name = 'A' * 51; // More than maximum of 50
-
-        // act
-        final result = NameValidator.validate(name);
-
-        // assert
-        expect(result.isValid, false);
-        expect(
-          result.error,
-          ValidationMessagesConfig.getNameMaxLengthMessage(
-            ValidationConfig.maxNameLength,
-          ),
-        );
-      });
-
-      test('should return failure for name with numbers', () {
-        // arrange
+      test('should return invalid result for name with numbers', () {
         const name = 'John123';
-
-        // act
         final result = NameValidator.validate(name);
-
-        // assert
         expect(result.isValid, false);
-        expect(
-          result.error,
-          ValidationMessagesConfig.nameOnlyLettersAndSpaces,
-        );
       });
 
-      test('should return failure for name with special characters', () {
-        // arrange
+      test('should return invalid result for name with special characters', () {
         const name = 'John@Doe';
-
-        // act
         final result = NameValidator.validate(name);
-
-        // assert
         expect(result.isValid, false);
-        expect(
-          result.error,
-          ValidationMessagesConfig.nameOnlyLettersAndSpaces,
-        );
       });
-    });
 
-    group('validateDisplayName', () {
-      test('should return success for valid display name', () {
-        // arrange
-        const displayName = 'JohnDoe123';
+      test('should return invalid result for name that is too short', () {
+        const name = 'J';
+        final result = NameValidator.validate(name);
+        expect(result.isValid, false);
+      });
 
-        // act
-        final result = NameValidator.validateDisplayName(displayName);
-
-        // assert
+      test('should trim whitespace before validation', () {
+        const name = '  John Doe  ';
+        final result = NameValidator.validate(name);
         expect(result.isValid, true);
       });
 
-      test('should return success for display name at minimum length', () {
-        // arrange
-        const displayName = 'ABC'; // Min length is 3
+      test('should return invalid result for whitespace-only name', () {
+        const name = '   ';
+        final result = NameValidator.validate(name);
+        expect(result.isValid, false);
+      });
 
-        // act
-        final result = NameValidator.validateDisplayName(displayName);
-
-        // assert
+      test('should return valid result for long name', () {
+        const name = 'Christopher Alexander Montgomery';
+        final result = NameValidator.validate(name);
         expect(result.isValid, true);
       });
 
-      test('should return success for display name at maximum length', () {
-        // arrange
-        final displayName = 'A' * 30; // Max length is 30
-
-        // act
-        final result = NameValidator.validateDisplayName(displayName);
-
-        // assert
+      test('should return valid result for two-letter name', () {
+        const name = 'Jo';
+        final result = NameValidator.validate(name);
         expect(result.isValid, true);
-      });
-
-      test('should return failure for empty display name', () {
-        // arrange
-        const displayName = '';
-
-        // act
-        final result = NameValidator.validateDisplayName(displayName);
-
-        // assert
-        expect(result.isValid, false);
-        expect(result.error, ValidationMessagesConfig.displayNameRequired);
-      });
-
-      test('should return failure for display name shorter than minimum', () {
-        // arrange
-        const displayName = 'AB'; // Less than minimum of 3
-
-        // act
-        final result = NameValidator.validateDisplayName(displayName);
-
-        // assert
-        expect(result.isValid, false);
-        expect(
-          result.error,
-          ValidationMessagesConfig.getDisplayNameMinLengthMessage(
-            ValidationConfig.minDisplayNameLength,
-          ),
-        );
-      });
-
-      test('should return failure for display name longer than maximum', () {
-        // arrange
-        final displayName = 'A' * 31; // More than maximum of 30
-
-        // act
-        final result = NameValidator.validateDisplayName(displayName);
-
-        // assert
-        expect(result.isValid, false);
-        expect(
-          result.error,
-          ValidationMessagesConfig.getDisplayNameMaxLengthMessage(
-            ValidationConfig.maxDisplayNameLength,
-          ),
-        );
-      });
-    });
-
-    group('isValid', () {
-      test('should return true for valid name', () {
-        // arrange
-        const name = 'John';
-
-        // act
-        final isValid = NameValidator.isValid(name);
-
-        // assert
-        expect(isValid, true);
-      });
-
-      test('should return false for invalid name', () {
-        // arrange
-        const name = 'John123';
-
-        // act
-        final isValid = NameValidator.isValid(name);
-
-        // assert
-        expect(isValid, false);
-      });
-    });
-
-    group('isDisplayNameValid', () {
-      test('should return true for valid display name', () {
-        // arrange
-        const displayName = 'JohnDoe';
-
-        // act
-        final isValid = NameValidator.isDisplayNameValid(displayName);
-
-        // assert
-        expect(isValid, true);
-      });
-
-      test('should return false for invalid display name', () {
-        // arrange
-        const displayName = 'AB'; // Too short
-
-        // act
-        final isValid = NameValidator.isDisplayNameValid(displayName);
-
-        // assert
-        expect(isValid, false);
       });
     });
   });

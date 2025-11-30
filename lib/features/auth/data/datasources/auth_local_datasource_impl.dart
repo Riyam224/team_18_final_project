@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_encryption_service.dart';
 import 'package:team_18_final_project/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:team_18_final_project/features/auth/data/mappers/session_mapper.dart';
 import 'package:team_18_final_project/features/auth/data/mappers/settings_mapper.dart';
@@ -12,17 +13,22 @@ import 'package:team_18_final_project/features/auth/domain/entities/user_setting
 /// Implementation of AuthLocalDataSource using secure storage
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final ISecureStorage _secureStorage;
+  final IEncryptionService _encryptionService;
 
   AuthLocalDataSourceImpl({
     required ISecureStorage secureStorage,
-  }) : _secureStorage = secureStorage;
+    required IEncryptionService encryptionService,
+  })  : _secureStorage = secureStorage,
+        _encryptionService = encryptionService;
 
   @override
   Future<void> cacheSession(AuthSessionEntity session) async {
     final sessionJson = SessionMapper.toJson(session);
+    final encryptedSession = await _encryptionService.encrypt(sessionJson);
+    final sessionPayload = encryptedSession.getOrElse(() => sessionJson);
     await _secureStorage.write(
       key: StorageKeysConfig.sessionId,
-      value: sessionJson,
+      value: sessionPayload,
     );
 
     // Also cache user ID separately for quick access
@@ -32,9 +38,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     );
 
     // Cache token
+    final encryptedToken = await _encryptionService.encrypt(session.token);
     await _secureStorage.write(
       key: StorageKeysConfig.authToken,
-      value: session.token,
+      value: encryptedToken.getOrElse(() => session.token),
     );
   }
 
@@ -44,11 +51,13 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       key: StorageKeysConfig.sessionId,
     );
 
-    return result.fold(
-      (failure) => null,
-      (sessionJson) {
+    return await result.fold(
+      (failure) async => null,
+      (sessionJson) async {
         if (sessionJson == null) return null;
-        return SessionMapper.fromJson(sessionJson);
+        final decryptedResult = await _encryptionService.decrypt(sessionJson);
+        final payload = decryptedResult.getOrElse(() => sessionJson);
+        return SessionMapper.fromJson(payload);
       },
     );
   }
@@ -65,14 +74,18 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<void> cacheBiometricCredentials(
     BiometricCredentialsEntity credentials,
   ) async {
+    final encryptedEmail = await _encryptionService.encrypt(credentials.email);
+    final encryptedPassword =
+        await _encryptionService.encrypt(credentials.encryptedPassword);
+
     await _secureStorage.write(
       key: StorageKeysConfig.biometricEmail,
-      value: credentials.email,
+      value: encryptedEmail.getOrElse(() => credentials.email),
     );
 
     await _secureStorage.write(
       key: StorageKeysConfig.biometricPassword,
-      value: credentials.encryptedPassword,
+      value: encryptedPassword.getOrElse(() => credentials.encryptedPassword),
     );
 
     await _secureStorage.write(
@@ -99,8 +112,22 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     );
 
     // Check if all required fields are present
-    final email = emailResult.fold((l) => null, (r) => r);
-    final password = passwordResult.fold((l) => null, (r) => r);
+    final email = await emailResult.fold(
+      (l) async => null,
+      (value) async {
+        if (value == null) return null;
+        final decrypted = await _encryptionService.decrypt(value);
+        return decrypted.fold((_) => value, (v) => v);
+      },
+    );
+    final password = await passwordResult.fold(
+      (l) async => null,
+      (value) async {
+        if (value == null) return null;
+        final decrypted = await _encryptionService.decrypt(value);
+        return decrypted.fold((_) => value, (v) => v);
+      },
+    );
     final typeStr = typeResult.fold((l) => null, (r) => r);
 
     if (email == null || password == null || typeStr == null) {

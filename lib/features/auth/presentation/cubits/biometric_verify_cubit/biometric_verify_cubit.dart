@@ -13,6 +13,7 @@ class BiometricVerifyCubit extends Cubit<BiometricVerifyState> {
   final AuthRepository repository;
   final IAppLockService _appLockService;
   final ISessionManager _sessionManager;
+  bool _hasStarted = false;
 
   BiometricVerifyCubit({
     required this.biometricLoginUseCase,
@@ -25,6 +26,15 @@ class BiometricVerifyCubit extends Cubit<BiometricVerifyState> {
         super(BiometricVerifyInitial());
 
   Future<void> verify() async {
+    if (_hasStarted) {
+      debugPrint('BiometricVerifyCubit.verify already started, skipping duplicate call');
+      return;
+    }
+    if (isClosed) return;
+    _hasStarted = true;
+    debugPrint('BiometricVerifyCubit.verify CALLED');
+
+    if (isClosed) return;
     emit(BiometricVerifyLoading());
 
     // Update activity timestamp BEFORE authentication to prevent app lock during biometric
@@ -35,6 +45,7 @@ class BiometricVerifyCubit extends Cubit<BiometricVerifyState> {
 
     result.fold(
       (failure) {
+        if (isClosed) return;
         emit(BiometricVerifyFailed(failure.message));
       },
       (session) async {
@@ -67,6 +78,7 @@ class BiometricVerifyCubit extends Cubit<BiometricVerifyState> {
           (value) => value ?? 'unknown',
         );
 
+        if (isClosed) return;
         emit(BiometricVerifySuccess(biometricType: biometricType));
       },
     );

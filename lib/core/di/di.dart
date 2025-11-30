@@ -6,6 +6,7 @@ import 'package:team_18_final_project/core/networking/dio_client.dart';
 import 'package:team_18_final_project/core/security/implementations/app_lock_service_impl.dart';
 import 'package:team_18_final_project/core/security/implementations/audit_log_service_impl.dart';
 import 'package:team_18_final_project/core/security/implementations/blur_service_impl.dart';
+import 'package:team_18_final_project/core/security/implementations/encryption_service_impl.dart';
 import 'package:team_18_final_project/core/security/implementations/flutter_secure_storage_impl.dart';
 import 'package:team_18_final_project/core/security/implementations/local_auth_biometric_impl.dart';
 import 'package:team_18_final_project/core/security/implementations/root_detection_service_impl.dart';
@@ -15,6 +16,7 @@ import 'package:team_18_final_project/core/security/interfaces/i_app_lock_servic
 import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_blur_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_encryption_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_root_detection_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_screenshot_prevention_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
@@ -73,6 +75,11 @@ Future<void> _setupSecurity() async {
     () => FlutterSecureStorageImpl(),
   );
 
+  // 2. Encryption Service
+  sl.registerLazySingleton<IEncryptionService>(
+    () => EncryptionServiceImpl(secureStorage: sl<ISecureStorage>()),
+  );
+
   // 2. Biometric Service
   sl.registerLazySingleton<IBiometricService>(
     () => LocalAuthBiometricImpl(),
@@ -82,6 +89,7 @@ Future<void> _setupSecurity() async {
   sl.registerLazySingleton<ISessionManager>(
     () => SessionManagerImpl(
       secureStorage: sl<ISecureStorage>(),
+      encryptionService: sl<IEncryptionService>(),
     ),
   );
 
@@ -131,6 +139,7 @@ Future<void> _setupAuth() async {
   sl.registerLazySingleton<AuthLocalDataSource>(
     () => AuthLocalDataSourceImpl(
       secureStorage: sl<ISecureStorage>(),
+      encryptionService: sl<IEncryptionService>(),
     ),
   );
 
@@ -220,6 +229,7 @@ Future<void> _setupTransactions() async {
   sl.registerLazySingleton<EncryptedTransactionDataSource>(
     () => EncryptedTransactionDataSource(
       secureStorage: sl<ISecureStorage>(),
+      encryptionService: sl<IEncryptionService>(),
     ),
   );
 

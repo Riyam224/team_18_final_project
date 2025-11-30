@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 
 class AppSvgWidget extends StatelessWidget {
   final String? assetsName;
@@ -27,7 +26,7 @@ class AppSvgWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final svgColor =
         color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null;
-    if (!networkName.isNullOrEmpty()) {
+    if (!_isNullOrEmpty(networkName)) {
       return SvgPicture.network(networkName!,
           alignment: alignment,
           fit: boxFit,
@@ -36,7 +35,7 @@ class AppSvgWidget extends StatelessWidget {
           colorFilter: svgColor);
     }
 
-    return (assetsName.isNullOrEmpty())
+    return (_isNullOrEmpty(assetsName))
         ? SvgPicture.asset(
             AppAssets.infoOutline,
             alignment: alignment,
@@ -54,4 +53,6 @@ class AppSvgWidget extends StatelessWidget {
             colorFilter: svgColor,
           );
   }
+
+  bool _isNullOrEmpty(String? value) => value == null || value.isEmpty;
 }

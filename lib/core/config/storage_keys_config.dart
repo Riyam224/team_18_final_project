@@ -65,8 +65,14 @@ class StorageKeysConfig {
   static const String deviceModel = 'device_model';
   static const String osVersion = 'os_version';
 
+  // Crypto Keys
+  static const String encryptionKey = 'encryption_key';
+
   // Profile Keys
   static const String avatarUrl = 'avatar_url';
   static const String userBio = 'user_bio';
   static const String userPreferences = 'user_preferences';
+
+  // Transaction Keys
+  static const String transactionHistory = 'transaction_history';
 }

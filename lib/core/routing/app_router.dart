@@ -1,3 +1,5 @@
+
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_nav_shell.dart';
@@ -33,7 +35,7 @@ import 'package:team_18_final_project/core/security/interfaces/i_session_manager
 
 import '../../features/auth/presentation/debug/biometric_test_screen.dart';
 
-// 📌 Add this for App-Lock navigation from main.dart
+// Needed for app-lock navigation
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 class RouteGenerator {
@@ -42,9 +44,18 @@ class RouteGenerator {
     observers: [appRouteObserver],
     errorBuilder: (context, state) =>
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
-    // Start from splash screen as per splash_onboarding feature
     initialLocation: AppRoutes.splash,
+
+    // ==============================
+    // 🔐 REDIRECT FIXED HERE
+    // ==============================
     redirect: (context, state) async {
+      // 1️⃣ Never block root warning
+      if (state.matchedLocation.startsWith(AppRoutes.rootWarning)) {
+        return null;
+      }
+
+      // 2️⃣ Protected routes require authentication
       final protected = <String>{
         AppRoutes.home,
         AppRoutes.market,
@@ -54,18 +65,22 @@ class RouteGenerator {
         AppRoutes.appLock,
       };
 
-      final isAuthPath =
-          protected.any((p) => state.matchedLocation.startsWith(p));
-      if (!isAuthPath) return null;
+      final isProtected = protected.any(
+        (p) => state.matchedLocation.startsWith(p),
+      );
 
-      // Use injected session manager to check authentication
+      if (!isProtected) return null;
+
+      // 3️⃣ Check session
       final sessionManager = sl<ISessionManager>();
       final isValidResult = await sessionManager.isSessionValid();
       final authed = isValidResult.fold((_) => false, (valid) => valid);
 
       if (!authed) return AppRoutes.login;
+
       return null;
     },
+
     routes: [
       // ==========================
       // SPLASH, ONBOARDING, AUTH
@@ -88,7 +103,7 @@ class RouteGenerator {
       ),
 
       // ==========================
-      // REGISTER BIOMETRIC FLOWS
+      // REGISTER BIOMETRIC
       // ==========================
       GoRoute(
         path: AppRoutes.setFingerprintRegister,
@@ -112,7 +127,7 @@ class RouteGenerator {
       ),
 
       // ==========================
-      // LOGIN BIOMETRIC FLOWS
+      // LOGIN BIOMETRIC
       // ==========================
       GoRoute(
         path: AppRoutes.verifyFingerprintLogin,
@@ -132,7 +147,7 @@ class RouteGenerator {
       ),
 
       // ==========================
-      // 🔒 APP LOCK SCREEN
+      // 🔒 APP LOCK
       // ==========================
       GoRoute(
         path: AppRoutes.appLock,
@@ -144,7 +159,7 @@ class RouteGenerator {
       ),
 
       // ==========================
-      // DEBUG ROUTES (for testing)
+      // DEBUG SCREENS
       // ==========================
       GoRoute(
         path: AppRoutes.biometricTest,
@@ -156,7 +171,7 @@ class RouteGenerator {
       ),
 
       // ==========================
-      // MAIN APP w/ BOTTOM NAV
+      // BOTTOM NAVIGATION
       // ==========================
       ShellRoute(
         builder: (context, state, child) => BottomNavShell(child: child),
@@ -187,7 +202,6 @@ class RouteGenerator {
       // ==========================
       // DETAILS (NO BOTTOM NAV)
       // ==========================
-      // todo. _______
       GoRoute(
         path: '${AppRoutes.coinDetails}/:id',
         builder: (_, state) {
@@ -195,14 +209,6 @@ class RouteGenerator {
           return CoinDetailsScreen(coinId: id);
         },
       ),
-      //  todo ___ fix this route
-      // GoRoute(
-      //   path: AppRoutes.coinDetails,
-      //   builder: (_, state) {
-      //     final id = state.uri.queryParameters['id']!;
-      //     return CoinDetailsScreen(coinId: id);
-      //   },
-      // ),
       GoRoute(
         path: '${AppRoutes.buySell}/:id',
         builder: (_, state) {

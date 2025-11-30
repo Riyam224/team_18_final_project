@@ -16,7 +16,11 @@ class LocalAuthBiometricImpl implements IBiometricService {
     try {
       final canCheckBiometrics = await _localAuth.canCheckBiometrics;
       final isDeviceSupported = await _localAuth.isDeviceSupported();
-      return Right(canCheckBiometrics && isDeviceSupported);
+      // On some Android devices `canCheckBiometrics` returns false when nothing
+      // is enrolled even though the device is capable. We treat the device as
+      // available if it supports biometrics and let enrollment checks handle
+      // the rest.
+      return Right(isDeviceSupported || canCheckBiometrics);
     } catch (e) {
       return Left(
         GenericBiometricFailure(
@@ -47,7 +51,10 @@ class LocalAuthBiometricImpl implements IBiometricService {
             break;
           case BiometricType.strong:
           case BiometricType.weak:
-            // These are Android-specific strength indicators, not types
+            // Android reports "strong"/"weak" instead of a concrete type.
+            // Treat both as fingerprint-capable so we don't incorrectly assume
+            // no biometrics are enrolled on Android devices.
+            types.add(AvailableBiometricType.fingerprint);
             break;
         }
       }

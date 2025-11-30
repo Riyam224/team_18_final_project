@@ -13,7 +13,6 @@ import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_cubit.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_state.dart';
@@ -49,13 +48,11 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
   bool _rememberMe = false;
 
   late final IAppLockService _appLockService;
-  late final ISessionManager _sessionManager;
 
   @override
   void initState() {
     super.initState();
     _appLockService = sl<IAppLockService>();
-    _sessionManager = sl<ISessionManager>();
   }
 
   @override

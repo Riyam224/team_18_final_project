@@ -1,7 +1,7 @@
 import 'package:dartz/dartz.dart';
-import 'package:team_18_final_project/features/auth/data/models/user_model.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/biometric_credentials_entity.dart';
+import 'package:team_18_final_project/features/auth/domain/entities/register_user_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/user_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/user_profile_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/user_settings_entity.dart';
@@ -17,7 +17,9 @@ abstract class AuthRepository {
     String password,
   );
 
-  Future<Either<AuthFailure, AuthSessionEntity>> register(UserModel user);
+  Future<Either<AuthFailure, AuthSessionEntity>> register(
+    RegisterUserEntity user,
+  );
 
   Future<Either<AuthFailure, void>> signOut();
 
@@ -67,5 +69,5 @@ abstract class AuthRepository {
 
   Future<Either<AuthFailure, String?>> getUserFirstName();
 
-  Future<Either<AuthFailure, void>> storeUserData(UserModel user);
+  Future<Either<AuthFailure, void>> storeUserData(RegisterUserEntity user);
 }

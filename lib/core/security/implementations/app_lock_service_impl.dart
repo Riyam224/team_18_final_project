@@ -20,21 +20,6 @@ class AppLockServiceImpl implements IAppLockService {
   @override
   Future<Either<Failure, bool>> isLocked() async {
     try {
-      // Check if biometric is enabled
-      final biometricResult = await _secureStorage.read(
-        key: StorageKeysConfig.biometricEnabled,
-      );
-
-      final biometricEnabled = biometricResult.fold(
-        (failure) => false,
-        (value) => value == 'true',
-      );
-
-      // If biometric is not set up, don't lock the app
-      if (!biometricEnabled) {
-        return const Right(false);
-      }
-
       // Check lock status
       final result = await _secureStorage.read(
         key: StorageKeysConfig.appLocked,

@@ -4,9 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart' as firebase_auth;
 import 'package:team_18_final_project/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:team_18_final_project/features/auth/data/datasources/auth_remote_datasource.dart';
 import 'package:team_18_final_project/features/auth/data/mappers/settings_mapper.dart';
-import 'package:team_18_final_project/features/auth/data/models/user_model.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/biometric_credentials_entity.dart';
+import 'package:team_18_final_project/features/auth/domain/entities/register_user_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/user_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/user_profile_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/user_settings_entity.dart';
@@ -74,16 +74,16 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   Future<Either<AuthFailure, AuthSessionEntity>> register(
-    UserModel userModel,
+    RegisterUserEntity registerUser,
   ) async {
     try {
       // Validate inputs
-      final emailValidation = EmailValidator.validate(userModel.email);
+      final emailValidation = EmailValidator.validate(registerUser.email);
       if (!emailValidation.isValid) {
         return Left(InvalidEmailFailure(message: emailValidation.error!));
       }
 
-      final passwordValidation = PasswordValidator.validate(userModel.password);
+      final passwordValidation = PasswordValidator.validate(registerUser.password);
       if (!passwordValidation.isValid) {
         return Left(
           WeakPasswordFailure(message: passwordValidation.error!),
@@ -91,12 +91,12 @@ class AuthRepositoryImpl implements AuthRepository {
       }
 
       // Register with Firebase
-      final displayName = '${userModel.firstName} ${userModel.lastName}'.trim();
+      final displayName = '${registerUser.firstName} ${registerUser.lastName}'.trim();
       final user = await _remoteDataSource.registerWithEmailAndPassword(
-        email: userModel.email,
-        password: userModel.password,
+        email: registerUser.email,
+        password: registerUser.password,
         displayName: displayName.isNotEmpty ? displayName : null,
-        phoneNumber: userModel.phone.isNotEmpty ? userModel.phone : null,
+        phoneNumber: registerUser.phone.isNotEmpty ? registerUser.phone : null,
       );
 
       // Create session entity
@@ -113,7 +113,7 @@ class AuthRepositoryImpl implements AuthRepository {
       // Cache user settings with biometric preference
       final settings = UserSettingsEntity(
         userId: user.id,
-        biometricEnabled: userModel.biometricEnabled,
+        biometricEnabled: registerUser.biometricEnabled,
       );
       await _localDataSource.cacheUserSettings(settings);
 
@@ -162,7 +162,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
       final credentials = BiometricCredentialsEntity(
         email: email,
-        encryptedPassword: password, // Should be encrypted in production
+        encryptedPassword: password,
         biometricType: type,
         storedAt: DateTime.now(),
       );
@@ -353,7 +353,9 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<AuthFailure, String?>> getStoredPassword() async {
     try {
       final credentials = await _localDataSource.getBiometricCredentials();
-      return Right(credentials?.encryptedPassword);
+      final encrypted = credentials?.encryptedPassword;
+      if (encrypted == null) return const Right(null);
+      return Right(encrypted);
     } catch (e) {
       return Left(GenericAuthFailure(details: e.toString()));
     }
@@ -376,21 +378,21 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<AuthFailure, void>> storeUserData(UserModel userModel) async {
+  Future<Either<AuthFailure, void>> storeUserData(RegisterUserEntity registerUser) async {
     try {
-      final displayName = '${userModel.firstName} ${userModel.lastName}'.trim();
+      final displayName = '${registerUser.firstName} ${registerUser.lastName}'.trim();
       final user = UserEntity(
         id: '', // Will be set after authentication
-        email: userModel.email,
+        email: registerUser.email,
         displayName: displayName.isNotEmpty ? displayName : null,
-        phoneNumber: userModel.phone.isNotEmpty ? userModel.phone : null,
+        phoneNumber: registerUser.phone.isNotEmpty ? registerUser.phone : null,
       );
 
       await _localDataSource.cacheUser(user);
       // Also persist basic profile fields to secure storage for UI reads
-      await _localDataSource.storeUserFirstName(userModel.firstName);
-      await _localDataSource.storeUserLastName(userModel.lastName);
-      await _localDataSource.storeUserPhone(userModel.phone);
+      await _localDataSource.storeUserFirstName(registerUser.firstName);
+      await _localDataSource.storeUserLastName(registerUser.lastName);
+      await _localDataSource.storeUserPhone(registerUser.phone);
       return const Right(null);
     } catch (e) {
       return Left(GenericAuthFailure(details: e.toString()));

@@ -9,6 +9,7 @@ class AppRoutes {
   static const home = '/home';
   static const market = '/market';
   static const portfolio = '/portfolio';
+  static const transactions = '/transactions';
   static const settings = '/settings';
   static const profile = '/profile';
 

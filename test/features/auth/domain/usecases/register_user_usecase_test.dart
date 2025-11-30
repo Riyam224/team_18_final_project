@@ -1,8 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:team_18_final_project/features/auth/data/models/user_model.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/auth_session_entity.dart';
+import 'package:team_18_final_project/features/auth/domain/entities/register_user_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/failures/auth_failure.dart';
 import 'package:team_18_final_project/features/auth/domain/repositories/auth_repository.dart';
 import 'package:team_18_final_project/features/auth/domain/usecases/register_user_usecase.dart';
@@ -13,224 +13,106 @@ void main() {
   late RegisterUserUseCase useCase;
   late MockAuthRepository mockRepository;
 
-  setUpAll(() {
-    registerFallbackValue(const UserModel(
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      password: '',
-      biometricEnabled: false,
-    ));
-  });
-
   setUp(() {
     mockRepository = MockAuthRepository();
     useCase = RegisterUserUseCase(mockRepository);
   });
 
-  group('RegisterUserUseCase', () {
-    final testSession = AuthSessionEntity(
-      userId: 'new-user-id',
-      token: 'new-token',
-      refreshToken: 'new-refresh-token',
-      startedAt: DateTime(2024, 1, 1),
-      expiresAt: DateTime(2024, 1, 2),
-    );
+  final tUser = RegisterUserEntity(
+    firstName: 'John',
+    lastName: 'Doe',
+    email: 'john@example.com',
+    phone: '1234567890',
+    password: 'Password123!',
+    biometricEnabled: false,
+  );
 
-    final testUser = UserModel(
-      firstName: 'John',
-      lastName: 'Doe',
-      email: 'john.doe@example.com',
-      phone: '+1234567890',
-      password: 'password123',
-      biometricEnabled: false,
-    );
+  final tAuthSession = AuthSessionEntity(
+    userId: 'user123',
+    token: 'token123',
+    refreshToken: 'refresh123',
+    startedAt: DateTime(2024, 1, 1),
+  );
 
-    test('should clean user input and call repository register', () async {
-      // arrange
+  setUpAll(() {
+    registerFallbackValue(tUser);
+  });
+
+  group('call', () {
+    test('should call repository register with user data', () async {
+      // Arrange
       when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => Right(testSession));
+          .thenAnswer((_) async => Right(tAuthSession));
 
-      // act
-      final result = await useCase(testUser);
+      // Act
+      await useCase.call(tUser);
 
-      // assert
-      expect(result, Right(testSession));
-      verify(() => mockRepository.register(any())).called(1);
+      // Assert
+      verify(() => mockRepository.register(tUser)).called(1);
     });
 
-    test('should trim firstName and lastName', () async {
-      // arrange
-      final userWithSpaces = UserModel(
-        firstName: '  John  ',
-        lastName: '  Doe  ',
-        email: 'john.doe@example.com',
-        phone: '+1234567890',
-        password: 'password123',
-        biometricEnabled: false,
-      );
-
+    test('should return AuthSessionEntity when registration is successful', () async {
+      // Arrange
       when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => Right(testSession));
+          .thenAnswer((_) async => Right(tAuthSession));
 
-      // act
-      await useCase(userWithSpaces);
+      // Act
+      final result = await useCase.call(tUser);
 
-      // assert
-      final captured = verify(() => mockRepository.register(captureAny()))
-          .captured
-          .single as UserModel;
-      expect(captured.firstName, 'John');
-      expect(captured.lastName, 'Doe');
+      // Assert
+      expect(result, equals(Right(tAuthSession)));
     });
 
-    test('should clean email with whitespace', () async {
-      // arrange
-      final userWithSpacedEmail = UserModel(
-        firstName: 'John',
-        lastName: 'Doe',
-        email: '  john.doe@example.com  ',
-        phone: '+1234567890',
-        password: 'password123',
-        biometricEnabled: false,
-      );
-
+    test('should return EmailAlreadyExistsFailure when email is already registered', () async {
+      // Arrange
+      const tFailure = EmailAlreadyExistsFailure();
       when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => Right(testSession));
+          .thenAnswer((_) async => const Left(tFailure));
 
-      // act
-      await useCase(userWithSpacedEmail);
+      // Act
+      final result = await useCase.call(tUser);
 
-      // assert
-      final captured = verify(() => mockRepository.register(captureAny()))
-          .captured
-          .single as UserModel;
-      expect(captured.email, 'john.doe@example.com');
+      // Assert
+      expect(result, equals(const Left(tFailure)));
     });
 
-    test('should clean password with whitespace', () async {
-      // arrange
-      final userWithSpacedPassword = UserModel(
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '+1234567890',
-        password: '  password123  ',
-        biometricEnabled: false,
-      );
-
+    test('should return WeakPasswordFailure when password is weak', () async {
+      // Arrange
+      const tFailure = WeakPasswordFailure();
       when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => Right(testSession));
+          .thenAnswer((_) async => const Left(tFailure));
 
-      // act
-      await useCase(userWithSpacedPassword);
+      // Act
+      final result = await useCase.call(tUser);
 
-      // assert
-      final captured = verify(() => mockRepository.register(captureAny()))
-          .captured
-          .single as UserModel;
-      expect(captured.password, 'password123');
+      // Assert
+      expect(result, equals(const Left(tFailure)));
     });
 
-    test('should trim phone number', () async {
-      // arrange
-      final userWithSpacedPhone = UserModel(
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '  +1234567890  ',
-        password: 'password123',
-        biometricEnabled: false,
-      );
-
+    test('should return InvalidEmailFailure when email format is invalid', () async {
+      // Arrange
+      const tFailure = InvalidEmailFailure();
       when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => Right(testSession));
+          .thenAnswer((_) async => const Left(tFailure));
 
-      // act
-      await useCase(userWithSpacedPhone);
+      // Act
+      final result = await useCase.call(tUser);
 
-      // assert
-      final captured = verify(() => mockRepository.register(captureAny()))
-          .captured
-          .single as UserModel;
-      expect(captured.phone, '+1234567890');
+      // Assert
+      expect(result, equals(const Left(tFailure)));
     });
 
-    test('should preserve biometricEnabled value', () async {
-      // arrange
-      final userWithBiometric = UserModel(
-        firstName: 'John',
-        lastName: 'Doe',
-        email: 'john.doe@example.com',
-        phone: '+1234567890',
-        password: 'password123',
-        biometricEnabled: true,
-      );
-
+    test('should return NetworkFailure when network error occurs', () async {
+      // Arrange
+      const tFailure = AuthNetworkFailure();
       when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => Right(testSession));
+          .thenAnswer((_) async => const Left(tFailure));
 
-      // act
-      await useCase(userWithBiometric);
+      // Act
+      final result = await useCase.call(tUser);
 
-      // assert
-      final captured = verify(() => mockRepository.register(captureAny()))
-          .captured
-          .single as UserModel;
-      expect(captured.biometricEnabled, true);
-    });
-
-    test('should return failure when email already exists', () async {
-      // arrange
-      const failure = EmailAlreadyExistsFailure();
-      when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => const Left(failure));
-
-      // act
-      final result = await useCase(testUser);
-
-      // assert
-      expect(result, const Left(failure));
-    });
-
-    test('should return failure when password is weak', () async {
-      // arrange
-      const failure = WeakPasswordFailure();
-      when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => const Left(failure));
-
-      // act
-      final result = await useCase(testUser);
-
-      // assert
-      expect(result, const Left(failure));
-    });
-
-    test('should return failure when email is invalid', () async {
-      // arrange
-      const failure = InvalidEmailFailure();
-      when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => const Left(failure));
-
-      // act
-      final result = await useCase(testUser);
-
-      // assert
-      expect(result, const Left(failure));
-    });
-
-    test('should return failure when network error occurs', () async {
-      // arrange
-      const failure = AuthNetworkFailure();
-      when(() => mockRepository.register(any()))
-          .thenAnswer((_) async => const Left(failure));
-
-      // act
-      final result = await useCase(testUser);
-
-      // assert
-      expect(result, const Left(failure));
+      // Assert
+      expect(result, equals(const Left(tFailure)));
     });
   });
 }

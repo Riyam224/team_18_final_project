@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 // Imports Dio HTTP client for making network requests
 import 'package:dio/dio.dart';
 // Imports foundation library to check if app is running in debug mode
@@ -63,22 +61,16 @@ class DioClient {
           // Retrieve API key from environment
           final apiKey = _apiKey;
 
-          // Check if API key is missing and warn developer
-          if (apiKey.isEmpty) {
-            // kDebugMode is true only in debug builds (not in release)
-            if (kDebugMode) {
-              print(NetworkConfig.apiKeyNotFoundWarning);
-            }
+          if (apiKey.isEmpty && kDebugMode) {
+            debugPrint(NetworkConfig.apiKeyNotFoundWarning);
           }
 
           // Inject API key into request headers
           // This ensures every request has the API key, even if config changes
           options.headers[NetworkConfig.apiKeyHeader] = apiKey;
 
-          // Log outgoing request details (only in debug mode)
           if (kDebugMode) {
-            // Print HTTP method (GET, POST, etc.) and full URL
-            print('${NetworkConfig.requestLogPrefix} ${options.method} ${options.uri}');
+            debugPrint('${NetworkConfig.requestLogPrefix} ${options.method} ${options.uri}');
           }
 
           // Pass request to next interceptor or send it
@@ -89,45 +81,32 @@ class DioClient {
         // onResponse: Called after receiving successful response (status 200-299)
         // Allows us to process or log the response before it reaches the caller
         onResponse: (response, handler) {
-          // Log successful response (only in debug mode)
           if (kDebugMode) {
-            // Print status code (e.g., 200, 201) and requested URL
-            print(
+            debugPrint(
                 '${NetworkConfig.responseLogPrefix} ${response.statusCode} ${response.requestOptions.uri}');
           }
-
-          // Pass response to next interceptor or return it to caller
           return handler.next(response);
         },
 
         // onError: Called when request fails or server returns error (status 400+)
         // Allows us to handle errors globally before they reach individual API calls
         onError: (error, handler) {
-          // Log error details (only in debug mode)
           if (kDebugMode) {
-            // Print HTTP error code (e.g., 404, 500) and URL that failed
-            print(
+            debugPrint(
                 '${NetworkConfig.errorLogPrefix} ${error.response?.statusCode} ${error.requestOptions.uri}');
-            // Print error message from Dio
-            print('${NetworkConfig.messageLogPrefix} ${error.message}');
+            debugPrint('${NetworkConfig.messageLogPrefix} ${error.message}');
           }
 
-          // Handle specific CoinGecko API errors with user-friendly messages
-
-          // 429 = Too Many Requests (rate limit exceeded)
           if (error.response?.statusCode == NetworkConfig.statusTooManyRequests) {
             if (kDebugMode) {
-              print('${NetworkConfig.warningLogPrefix} ${NetworkConfig.rateLimitExceeded}');
+              debugPrint('${NetworkConfig.warningLogPrefix} ${NetworkConfig.rateLimitExceeded}');
             }
-          }
-          // 401 = Unauthorized (invalid or missing API key)
-          else if (error.response?.statusCode == NetworkConfig.statusUnauthorized) {
+          } else if (error.response?.statusCode == NetworkConfig.statusUnauthorized) {
             if (kDebugMode) {
-              print('${NetworkConfig.unauthorizedLogPrefix} ${NetworkConfig.unauthorizedRequest}');
+              debugPrint('${NetworkConfig.unauthorizedLogPrefix} ${NetworkConfig.unauthorizedRequest}');
             }
           }
 
-          // Pass error to next interceptor or throw it to caller
           return handler.next(error);
         },
       ),
@@ -161,9 +140,7 @@ class DioClient {
           // Log error details when requests fail
           error: true,
 
-          // Custom log print function (adds emoji for easy identification)
-          // obj is the log message (string) to be printed
-          logPrint: (obj) => print('${NetworkConfig.detailsLogPrefix} $obj'),
+          logPrint: (obj) => debugPrint('${NetworkConfig.detailsLogPrefix} $obj'),
         ),
       );
     }

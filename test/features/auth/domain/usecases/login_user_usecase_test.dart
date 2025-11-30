@@ -17,122 +17,103 @@ void main() {
     useCase = LoginUserUseCase(mockRepository);
   });
 
-  group('LoginUserUseCase', () {
-    final testSession = AuthSessionEntity(
-      userId: 'test-user-id',
-      token: 'test-token',
-      refreshToken: 'test-refresh-token',
-      startedAt: DateTime(2024, 1, 1),
-      expiresAt: DateTime(2024, 1, 2),
-    );
+  const tEmail = 'test@example.com';
+  const tPassword = 'password123';
+  final tAuthSession = AuthSessionEntity(
+    userId: 'user123',
+    token: 'token123',
+    refreshToken: 'refresh123',
+    startedAt: DateTime(2024, 1, 1),
+  );
 
-    test('should clean input and call repository login', () async {
-      // arrange
-      const email = 'test@example.com';
-      const password = 'password123';
+  group('call', () {
+    test('should call repository login with cleaned email and password', () async {
+      // Arrange
       when(() => mockRepository.login(any(), any()))
-          .thenAnswer((_) async => Right(testSession));
+          .thenAnswer((_) async => Right(tAuthSession));
 
-      // act
-      final result = await useCase(email, password);
+      // Act
+      await useCase.call(tEmail, tPassword);
 
-      // assert
-      expect(result, Right(testSession));
-      verify(() => mockRepository.login(email, password)).called(1);
+      // Assert
+      verify(() => mockRepository.login(tEmail, tPassword)).called(1);
     });
 
-    test('should clean email with leading/trailing whitespace', () async {
-      // arrange
-      const emailWithSpaces = '  test@example.com  ';
-      const cleanedEmail = 'test@example.com';
-      const password = 'password123';
+    test('should return AuthSessionEntity when login is successful', () async {
+      // Arrange
       when(() => mockRepository.login(any(), any()))
-          .thenAnswer((_) async => Right(testSession));
+          .thenAnswer((_) async => Right(tAuthSession));
 
-      // act
-      await useCase(emailWithSpaces, password);
+      // Act
+      final result = await useCase.call(tEmail, tPassword);
 
-      // assert
-      verify(() => mockRepository.login(cleanedEmail, password)).called(1);
+      // Assert
+      expect(result, equals(Right(tAuthSession)));
     });
 
-    test('should clean password with leading/trailing whitespace', () async {
-      // arrange
-      const email = 'test@example.com';
-      const passwordWithSpaces = '  password123  ';
-      const cleanedPassword = 'password123';
+    test('should return AuthFailure when login fails', () async {
+      // Arrange
+      const tFailure = InvalidCredentialsFailure();
       when(() => mockRepository.login(any(), any()))
-          .thenAnswer((_) async => Right(testSession));
+          .thenAnswer((_) async => const Left(tFailure));
 
-      // act
-      await useCase(email, passwordWithSpaces);
+      // Act
+      final result = await useCase.call(tEmail, tPassword);
 
-      // assert
-      verify(() => mockRepository.login(email, cleanedPassword)).called(1);
+      // Assert
+      expect(result, equals(const Left(tFailure)));
     });
 
-    test('should return failure when repository returns UserNotFoundFailure',
-        () async {
-      // arrange
-      const email = 'test@example.com';
-      const password = 'password123';
-      const failure = UserNotFoundFailure();
+    test('should clean email input by trimming whitespace', () async {
+      // Arrange
+      const tEmailWithSpaces = '  test@example.com  ';
       when(() => mockRepository.login(any(), any()))
-          .thenAnswer((_) async => const Left(failure));
+          .thenAnswer((_) async => Right(tAuthSession));
 
-      // act
-      final result = await useCase(email, password);
+      // Act
+      await useCase.call(tEmailWithSpaces, tPassword);
 
-      // assert
-      expect(result, const Left(failure));
+      // Assert
+      verify(() => mockRepository.login(tEmail, tPassword)).called(1);
     });
 
-    test(
-        'should return failure when repository returns InvalidCredentialsFailure',
-        () async {
-      // arrange
-      const email = 'test@example.com';
-      const password = 'wrongpassword';
-      const failure = InvalidCredentialsFailure();
+    test('should clean password input by trimming whitespace', () async {
+      // Arrange
+      const tPasswordWithSpaces = '  password123  ';
       when(() => mockRepository.login(any(), any()))
-          .thenAnswer((_) async => const Left(failure));
+          .thenAnswer((_) async => Right(tAuthSession));
 
-      // act
-      final result = await useCase(email, password);
+      // Act
+      await useCase.call(tEmail, tPasswordWithSpaces);
 
-      // assert
-      expect(result, const Left(failure));
+      // Assert
+      verify(() => mockRepository.login(tEmail, 'password123')).called(1);
     });
 
-    test('should return failure when repository returns AuthNetworkFailure',
-        () async {
-      // arrange
-      const email = 'test@example.com';
-      const password = 'password123';
-      const failure = AuthNetworkFailure();
+    test('should return UserNotFoundFailure when user does not exist', () async {
+      // Arrange
+      const tFailure = UserNotFoundFailure();
       when(() => mockRepository.login(any(), any()))
-          .thenAnswer((_) async => const Left(failure));
+          .thenAnswer((_) async => const Left(tFailure));
 
-      // act
-      final result = await useCase(email, password);
+      // Act
+      final result = await useCase.call(tEmail, tPassword);
 
-      // assert
-      expect(result, const Left(failure));
+      // Assert
+      expect(result, equals(const Left(tFailure)));
     });
 
-    test('should handle empty email and password', () async {
-      // arrange
-      const email = '';
-      const password = '';
-      const failure = InvalidEmailFailure();
+    test('should return NetworkFailure when network error occurs', () async {
+      // Arrange
+      const tFailure = AuthNetworkFailure();
       when(() => mockRepository.login(any(), any()))
-          .thenAnswer((_) async => const Left(failure));
+          .thenAnswer((_) async => const Left(tFailure));
 
-      // act
-      await useCase(email, password);
+      // Act
+      final result = await useCase.call(tEmail, tPassword);
 
-      // assert
-      verify(() => mockRepository.login(email, password)).called(1);
+      // Assert
+      expect(result, equals(const Left(tFailure)));
     });
   });
 }

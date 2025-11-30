@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/primary_appBar.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/buy_crypto_widget/confirm_buy_button.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/buy_crypto_widget/crypto_conversion_card.dart';
@@ -19,6 +18,7 @@ class BuySellScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
         appBar: PrimaryAppBar(
           centerTitle: true,
@@ -27,16 +27,14 @@ class BuySellScreen extends StatelessWidget {
             onTap: () {},
             child: Icon(
               Icons.arrow_back_rounded,
-              color: context.isDark() ? AppColors.textWhite : AppColors.primary,
+              color: isDark ? AppColors.textWhite : AppColors.primary,
               size: 23,
             ),
           ),
           title: Text(AppStrings.buyCrypto,
               style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                     fontSize: 22.sp,
-                    color: context.isDark()
-                        ? AppColors.textWhite
-                        : AppColors.primary,
+                    color: isDark ? AppColors.textWhite : AppColors.primary,
                   )),
         ),
         body: Padding(

@@ -1,12 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
+import '../../../data/models/user_model.dart';
+import '../../../domain/entities/register_user_entity.dart';
+import '../../../domain/failures/auth_failure.dart';
+import '../../../domain/repositories/auth_repository.dart';
+import '../../../domain/usecases/biometric_login_usecase.dart';
 import '../../../domain/usecases/login_user_usecase.dart';
 import '../../../domain/usecases/register_user_usecase.dart';
 import '../../../domain/usecases/store_user_credentials_usecase.dart';
-import '../../../domain/usecases/biometric_login_usecase.dart';
-import '../../../domain/repositories/auth_repository.dart';
-import '../../../domain/failures/auth_failure.dart';
-import '../../../data/models/user_model.dart';
 import 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
@@ -59,15 +60,9 @@ class AuthCubit extends Cubit<AuthState> {
 
         // If no user data exists (first time login), extract name from email
         if (existingFirstName == null || existingFirstName.isEmpty) {
-          // Extract username from email (before @)
-          final username = email.split('@').first;
-          // Capitalize first letter
-          final firstName = username.isNotEmpty
-              ? username[0].toUpperCase() + username.substring(1)
-              : 'User';
+          final firstName = _extractFirstNameFromEmail(email);
 
-          // Store minimal user data from login
-          final loginUser = UserModel(
+          final loginUser = RegisterUserEntity(
             firstName: firstName,
             lastName: '',
             email: email,
@@ -93,10 +88,20 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  Future<void> register(UserModel user) async {
+  /// Register a new user - accepts UserModel from UI and converts to domain entity
+  Future<void> register(UserModel userModel) async {
     emit(AuthLoading());
 
     try {
+      final user = RegisterUserEntity(
+        firstName: userModel.firstName,
+        lastName: userModel.lastName,
+        email: userModel.email,
+        phone: userModel.phone,
+        password: userModel.password,
+        biometricEnabled: userModel.biometricEnabled,
+      );
+
       final result = await registerUseCase(user);
 
       await result.fold(
@@ -107,7 +112,6 @@ class AuthCubit extends Cubit<AuthState> {
             token: session.token,
           );
 
-          // Store user data
           await repository.storeUserData(user);
           await repository.storeCredentialsForBiometric(
             email: user.email,
@@ -159,6 +163,15 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
+  /// Extracts first name from email by taking username part and capitalizing
+  String _extractFirstNameFromEmail(String email) {
+    final username = email.split('@').first;
+    return username.isNotEmpty
+        ? username[0].toUpperCase() + username.substring(1)
+        : 'User';
+  }
+
+  /// Maps domain failures to user-friendly error messages
   String _mapFailureToMessage(AuthFailure failure) {
     if (failure is UserNotFoundFailure) {
       return 'No account found with this email. Please check your credentials.';

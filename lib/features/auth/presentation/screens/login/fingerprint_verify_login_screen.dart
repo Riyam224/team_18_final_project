@@ -35,14 +35,21 @@ class _VerifyFingerprintLoginContent extends StatefulWidget {
 
 class _VerifyFingerprintLoginContentState
     extends State<_VerifyFingerprintLoginContent> {
+  bool _startedAuth = false;
+
   @override
   void initState() {
     super.initState();
-    // Automatically trigger fingerprint verification when screen loads
-    Future.delayed(TimingConfig.biometricScanDelay, () {
-      if (mounted) {
-        context.read<BiometricVerifyCubit>().verify();
-      }
+    _startAuthOnce();
+  }
+
+  void _startAuthOnce() {
+    if (_startedAuth) return;
+    _startedAuth = true;
+    // Trigger fingerprint verification exactly once when the screen loads
+    Future.microtask(() {
+      if (!mounted) return;
+      context.read<BiometricVerifyCubit>().verify();
     });
   }
 
