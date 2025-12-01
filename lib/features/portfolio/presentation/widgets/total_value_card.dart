@@ -20,13 +20,11 @@ class TotalValueCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Use primary color for both light and dark themes
-    const bgColor = AppColors.primary;
     return Container(
       width: double.infinity,
       padding: AppSpacing.paddingAll20,
       decoration: BoxDecoration(
-        color: bgColor,
+        color: AppColors.primary,
         borderRadius: BorderRadius.circular(AppSizing.radius20),
       ),
       child: Column(
@@ -35,14 +33,14 @@ class TotalValueCard extends StatelessWidget {
           Text(
             title,
             style: AppTextStyles.bodyMedium.copyWith(
-              color: Colors.white.withOpacity(0.7),
+              color: AppColors.textWhite.withOpacity(0.7),
             ),
           ),
           AppSpacing.gapH8,
           Text(
             value,
             style: AppTextStyles.headlineMedium.copyWith(
-              color: Colors.white,
+              color: AppColors.textWhite,
             ),
           ),
           AppSpacing.gapH8,

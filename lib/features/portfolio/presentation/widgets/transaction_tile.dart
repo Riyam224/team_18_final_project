@@ -56,7 +56,11 @@ class TransactionTile extends StatelessWidget {
               shape: BoxShape.circle,
               border: Border.all(color: iconColor.withOpacity(0.4)),
             ),
-            child: Icon(icon, color: iconColor, size: 18),
+            child: Icon(
+              icon,
+              color: iconColor,
+              size: AppSizing.iconXSmall,
+            ),
           ),
           AppSpacing.gapW12,
           Expanded(

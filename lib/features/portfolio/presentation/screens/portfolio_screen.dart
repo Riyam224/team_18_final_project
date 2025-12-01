@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
-import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/section_title.dart';
@@ -50,7 +50,7 @@ class PortfolioScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Portfolio',
+                      AppStrings.portfolioTitle,
                       style: AppTextStyles.headlineLarge.copyWith(
                         fontWeight: FontWeight.w700,
                         color: isDark ? AppColors.textWhite : AppColors.primary,
@@ -58,13 +58,13 @@ class PortfolioScreen extends StatelessWidget {
                     ),
                     AppSpacing.gapH27,
                     TotalValueCard(
-                      title: 'Total Value',
+                      title: AppStrings.totalValue,
                       value: state.totalValue,
                       changeLabel: state.changeLabel,
                     ),
                     AppSpacing.gapH27,
                     MonthSelector(
-                      months: const ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
+                      months: AppStrings.monthsShort,
                       initialIndex: 1,
                     ),
                     AppSpacing.gapH27,
@@ -73,7 +73,7 @@ class PortfolioScreen extends StatelessWidget {
                       centerLabel: state.totalValue,
                     ),
                     AppSpacing.gapH33,
-                    const SectionTitle(title: 'My Holdings'),
+                    const SectionTitle(title: AppStrings.myHoldings),
                     AppSpacing.gapH12,
                     ...state.holdings.map(
                       (h) => HoldingCard(
@@ -89,7 +89,7 @@ class PortfolioScreen extends StatelessWidget {
                       ),
                     ),
                     AppSpacing.gapH20,
-                    const SectionTitle(title: 'Recent Transactions'),
+                    const SectionTitle(title: AppStrings.recentTransactions),
                     AppSpacing.gapH12,
                     ..._transactions.map(
                       (t) => TransactionTile(
@@ -100,7 +100,7 @@ class PortfolioScreen extends StatelessWidget {
                         isBuy: t.isBuy,
                       ),
                     ),
-                    SizedBox(height: AppSizing.h24),
+                    AppSpacing.gapH24,
                   ],
                 ),
               );

@@ -34,22 +34,21 @@ class HoldingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final cardColor =
-        isDark ? const Color(0xFF0D0D0D) : Colors.white;
+    final cardColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
     final titleColor = isDark ? AppColors.textWhite : AppColors.textGray;
     final subtitleColor = isDark ? AppColors.textGrayLight : AppColors.gray3;
-    final shadowColor = isDark
-        ? Colors.black.withOpacity(0.25)
-        : Colors.black.withOpacity(0.04);
+
     return Container(
-      margin: AppSpacing.marginB14,
+      margin: AppSpacing.marginOnly(bottom: 14),
       padding: AppSpacing.paddingAll16,
       decoration: BoxDecoration(
         color: cardColor,
         borderRadius: BorderRadius.circular(AppSizing.radius16),
         boxShadow: [
           BoxShadow(
-            color: shadowColor,
+            color: isDark
+                ? Colors.black.withOpacity(0.25)
+                : Colors.black.withOpacity(0.04),
             blurRadius: AppSizing.shadowBlurLarge,
             offset: Offset(0, AppSizing.shadowOffsetLarge),
           ),

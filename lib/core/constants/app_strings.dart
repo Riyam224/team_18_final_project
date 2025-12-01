@@ -68,4 +68,18 @@ class AppStrings {
     'ALGO',
     'FTT',
   ];
+
+  // Portfolio
+  static const String portfolioTitle = 'Portfolio';
+  static const String totalValue = 'Total Value';
+  static const String myHoldings = 'My Holdings';
+  static const String recentTransactions = 'Recent Transactions';
+  static const String buyBitcoin = 'Buy Bitcoin';
+  static const String sellEthereum = 'Sell Ethereum';
+  static const String hoursAgo = 'hours ago';
+  static const String dayAgo = 'day ago';
+  static const String daysAgo = 'days ago';
+
+  // Month names for portfolio
+  static const List<String> monthsShort = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
 }
