@@ -10,6 +10,8 @@ class AppAssets {
 
   static const settings = 'assets/icons/settings.svg';
   static const settingsFilled = 'assets/icons/settings_filled.svg';
+  static const settingsOutline = 'assets/icons/settings_outline.svg';
+  static const settingsSolid = 'assets/icons/settings_solid.svg';
 
   //Svg
   static const String infoOutline = "assets/icons/info_outline.svg";

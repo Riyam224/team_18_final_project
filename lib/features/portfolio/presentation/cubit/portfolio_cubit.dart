@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/portfolio/domain/entities/portfolio_holding.dart';
 import 'package:team_18_final_project/features/portfolio/domain/entities/portfolio_overview.dart';
 import 'package:team_18_final_project/features/portfolio/domain/usecases/get_portfolio_overview_usecase.dart';
