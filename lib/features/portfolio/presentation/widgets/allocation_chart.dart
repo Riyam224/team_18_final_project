@@ -1,6 +1,9 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class AllocationSegment {
@@ -29,19 +32,19 @@ class AllocationChart extends StatelessWidget {
   Widget build(BuildContext context) {
     final total = segments.fold<double>(0, (sum, seg) => sum + seg.value);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final cardColor = isDark ? const Color(0xFF0D0D0D) : Colors.white;
+    final cardColor = isDark ? AppColors.darkBackground : Colors.white;
     final shadowColor =
         isDark ? Colors.black.withOpacity(0.25) : Colors.black.withOpacity(0.06);
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: AppSpacing.paddingAll16,
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSizing.radius16),
         boxShadow: [
           BoxShadow(
             color: shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, 6),
+            blurRadius: AppSizing.shadowBlurMedium,
+            offset: Offset(0, AppSizing.shadowOffsetMedium),
           ),
         ],
       ),
@@ -51,8 +54,8 @@ class AllocationChart extends StatelessWidget {
           Row(
             children: [
               SizedBox(
-                height: 160,
-                width: 160,
+                height: AppSizing.h160,
+                width: AppSizing.w160,
                 child: CustomPaint(
                   painter: _DonutPainter(
                     segments: segments,
@@ -63,34 +66,33 @@ class AllocationChart extends StatelessWidget {
                     child: Text(
                       centerLabel,
                       textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color:
-                                isDark ? AppColors.textWhite : AppColors.textGray,
-                          ),
+                      style: AppTextStyles.titleMedium.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: isDark ? AppColors.textWhite : AppColors.textGray,
+                      ),
                     ),
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
+              AppSpacing.gapW16,
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: segments
                       .map(
                         (seg) => Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
+                          padding: AppSpacing.paddingOnly(top: 6, bottom: 6),
                           child: Row(
                             children: [
                               Container(
-                                height: 12,
-                                width: 12,
+                                height: AppSizing.w12,
+                                width: AppSizing.w12,
                                 decoration: BoxDecoration(
                                   color: seg.color,
                                   shape: BoxShape.circle,
                                 ),
                               ),
-                              const SizedBox(width: 8),
+                              AppSpacing.gapW8,
                               Expanded(
                                 child: Text(
                                   seg.label,
@@ -134,7 +136,7 @@ class _DonutPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
-    final strokeWidth = 18.0;
+    final strokeWidth = AppSizing.borderDonut;
     final rect = Rect.fromCircle(center: center, radius: radius - strokeWidth);
     var startAngle = -math.pi / 2;
 

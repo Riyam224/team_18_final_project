@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class HoldingCard extends StatelessWidget {
@@ -11,6 +14,7 @@ class HoldingCard extends StatelessWidget {
   final String changePercent;
   final IconData icon;
   final Color iconColor;
+  final String? iconAsset;
 
   const HoldingCard({
     super.key,
@@ -23,6 +27,7 @@ class HoldingCard extends StatelessWidget {
     required this.changePercent,
     required this.icon,
     required this.iconColor,
+    this.iconAsset,
   });
 
   @override
@@ -37,16 +42,16 @@ class HoldingCard extends StatelessWidget {
         ? Colors.black.withOpacity(0.25)
         : Colors.black.withOpacity(0.04);
     return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
+      margin: AppSpacing.marginB14,
+      padding: AppSpacing.paddingAll16,
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(AppSizing.radius16),
         boxShadow: [
           BoxShadow(
             color: shadowColor,
-            blurRadius: 12,
-            offset: const Offset(0, 8),
+            blurRadius: AppSizing.shadowBlurLarge,
+            offset: Offset(0, AppSizing.shadowOffsetLarge),
           ),
         ],
       ),
@@ -55,32 +60,42 @@ class HoldingCard extends StatelessWidget {
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Row(
                 children: [
                   Container(
-                    height: 38,
-                    width: 38,
+                    height: AppSizing.h38,
+                    width: AppSizing.w38,
                     decoration: BoxDecoration(
                       color: iconColor.withOpacity(0.15),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(icon, color: iconColor),
+                    child: Center(
+                      child: iconAsset != null
+                          ? Image.asset(
+                              iconAsset!,
+                              height: AppSizing.h20,
+                              width: AppSizing.w20,
+                              fit: BoxFit.contain,
+                            )
+                          : Icon(icon, color: iconColor),
+                    ),
                   ),
-                  const SizedBox(width: 10),
+                  AppSpacing.gapW10,
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         name,
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          color: isDark ? titleColor : AppColors.primary,
+                        style: AppTextStyles.headlineSmall.copyWith(
+                          color: isDark ? titleColor : AppColors.textGray,
                           fontWeight: FontWeight.w700,
                         ),
                       ),
                       Text(
                         symbol,
-                        style: theme.textTheme.bodySmall?.copyWith(
+                        style: AppTextStyles.bodySmall.copyWith(
                           color: subtitleColor,
                         ),
                       ),
@@ -90,14 +105,14 @@ class HoldingCard extends StatelessWidget {
               ),
               Text(
                 '${percentage.toStringAsFixed(0)}%',
-                style: theme.textTheme.titleMedium?.copyWith(
+                style: AppTextStyles.headlineSmall.copyWith(
                   fontWeight: FontWeight.w700,
-                  color: AppColors.textGray,
+                  color: isDark ? AppColors.textWhite : AppColors.primary,
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 12),
+          AppSpacing.gapH12,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -106,13 +121,14 @@ class HoldingCard extends StatelessWidget {
                 children: [
                   Text(
                     amount,
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      color: titleColor,
+                    style: AppTextStyles.titleLarge.copyWith(
+                      color: isDark ? AppColors.textWhite : titleColor,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
                     value,
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                    style: AppTextStyles.bodyMedium.copyWith(
                       color: AppColors.secondary,
                       fontWeight: FontWeight.w600,
                     ),
@@ -124,14 +140,14 @@ class HoldingCard extends StatelessWidget {
                 children: [
                   Text(
                     change,
-                    style: theme.textTheme.titleMedium?.copyWith(
+                    style: AppTextStyles.titleMedium.copyWith(
                       color: AppColors.priceUp,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   Text(
                     changePercent,
-                    style: theme.textTheme.bodyMedium?.copyWith(
+                    style: AppTextStyles.bodyMedium.copyWith(
                       color: AppColors.priceUp,
                       fontWeight: FontWeight.w600,
                     ),

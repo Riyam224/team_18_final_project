@@ -34,6 +34,24 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
+  // Section title (e.g., Recent Transactions)
+  static const TextStyle sectionTitle = TextStyle(
+    fontFamily: AppStrings.appFontNameLato,
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+    height: 1.78,
+    letterSpacing: 0.5,
+  );
+
+  // Smaller section title (e.g., recent transactions)
+  static const TextStyle sectionTitleSmall = TextStyle(
+    fontFamily: AppStrings.appFontNameLato,
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    height: 1.5,
+    letterSpacing: 0.4,
+  );
+
   // ========= TITLES =========
   static const TextStyle titleLarge = TextStyle(
     fontFamily: AppStrings.appFontNameLato,

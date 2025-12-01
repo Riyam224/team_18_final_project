@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
 
 class MonthSelector extends StatefulWidget {
   final List<String> months;
@@ -69,15 +72,15 @@ class _MonthChip extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        padding: AppSpacing.paddingH12V8,
         decoration: BoxDecoration(
           color: isSelected ? selectedBg : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(AppSizing.radius12),
           border: Border.all(color: borderColor),
         ),
         child: Text(
           label,
-          style: theme.textTheme.bodyMedium?.copyWith(
+          style: AppTextStyles.bodyMedium.copyWith(
             color: textColor,
             fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
           ),

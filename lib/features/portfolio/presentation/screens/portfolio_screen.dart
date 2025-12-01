@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/section_title.dart';
@@ -24,42 +26,42 @@ class PortfolioScreen extends StatelessWidget {
         .toList();
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final backgroundColor =
-        isDark ? const Color(0xFF121212) : AppColors.lightBackground;
+        isDark ? AppColors.darkBackground2 : AppColors.lightBackground;
 
     return Scaffold(
       backgroundColor: backgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+          padding: AppSpacing.paddingH20V16,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 'Portfolio',
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: AppColors.textGray,
-                    ),
+                style: AppTextStyles.headlineLarge.copyWith(
+                  fontWeight: FontWeight.w700,
+                  color: isDark ? AppColors.textWhite : AppColors.primary,
+                ),
               ),
-              AppSpacing.vertical(16),
+              AppSpacing.gapH27,
               const TotalValueCard(
                 title: 'Total Value',
                 value: '\$143,421.20',
                 changeLabel: '+2.5% (\$305.20) Today',
               ),
-              AppSpacing.vertical(16),
+              AppSpacing.gapH27,
               MonthSelector(
                 months: const ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
                 initialIndex: 1,
               ),
-              AppSpacing.vertical(20),
+              AppSpacing.gapH27,
               AllocationChart(
                 segments: allocationSegments,
                 centerLabel: '\$143,421.20',
               ),
-              AppSpacing.vertical(20),
+              AppSpacing.gapH33,
               const SectionTitle(title: 'My Holdings'),
-              AppSpacing.vertical(12),
+              AppSpacing.gapH12,
               ...holdings.map((h) => HoldingCard(
                     name: h.name,
                     symbol: h.symbol,
@@ -71,13 +73,13 @@ class PortfolioScreen extends StatelessWidget {
                     icon: h.icon,
                     iconColor: h.iconColor,
                   )),
-              AppSpacing.vertical(8),
+              AppSpacing.gapH20,
               SectionTitle(
                 title: 'Recent Transactions',
                 actionText: null,
                 onActionTap: null,
               ),
-              AppSpacing.vertical(12),
+              AppSpacing.gapH12,
               ...transactions.map(
                 (t) => TransactionTile(
                   title: t.title,
@@ -87,7 +89,7 @@ class PortfolioScreen extends StatelessWidget {
                   isBuy: t.isBuy,
                 ),
               ),
-              AppSpacing.vertical(24),
+              SizedBox(height: AppSizing.h24),
             ],
           ),
         ),
@@ -137,7 +139,11 @@ class _TransactionModel {
 }
 
 final _mockAllocations = [
-  {'label': '\$54,382.64 BTC', 'value': 54382.64, 'color': AppColors.accentPurple},
+  {
+    'label': '\$54,382.64 BTC',
+    'value': 54382.64,
+    'color': AppColors.accentPurple
+  },
   {'label': '\$4,145.61 ETH', 'value': 4145.61, 'color': AppColors.accentBlue},
   {'label': '\$64,20.5 LTC', 'value': 6420.5, 'color': AppColors.secondary},
 ];

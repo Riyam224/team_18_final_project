@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class TransactionTile extends StatelessWidget {
@@ -23,7 +26,7 @@ class TransactionTile extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
     final iconColor = isBuy ? AppColors.priceUp : AppColors.alertRed;
     final icon = isBuy ? Icons.arrow_upward : Icons.arrow_downward;
-    final cardColor = isDark ? const Color(0xFF0D0D0D) : Colors.white;
+    final cardColor = isDark ? AppColors.darkBackground : Colors.white;
     final textColor = isDark ? AppColors.textWhite : AppColors.textGray;
     final subColor = isDark ? AppColors.textGrayLight : AppColors.gray3;
     final shadowColor = isDark
@@ -31,45 +34,45 @@ class TransactionTile extends StatelessWidget {
         : Colors.black.withOpacity(0.04);
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 10),
-      padding: const EdgeInsets.all(14),
+      margin: AppSpacing.marginB10,
+      padding: AppSpacing.paddingAll14,
       decoration: BoxDecoration(
         color: cardColor,
-        borderRadius: BorderRadius.circular(14),
+        borderRadius: BorderRadius.circular(AppSizing.radius14),
         boxShadow: [
           BoxShadow(
             color: shadowColor,
-            blurRadius: 10,
-            offset: const Offset(0, 6),
+            blurRadius: AppSizing.shadowBlurMedium,
+            offset: Offset(0, AppSizing.shadowOffsetMedium),
           ),
         ],
       ),
       child: Row(
         children: [
           Container(
-            height: 36,
-            width: 36,
+            height: AppSizing.h36,
+            width: AppSizing.w36,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: iconColor.withOpacity(0.4)),
             ),
             child: Icon(icon, color: iconColor, size: 18),
           ),
-          const SizedBox(width: 12),
+          AppSpacing.gapW12,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   title,
-                  style: theme.textTheme.titleMedium?.copyWith(
+                  style: AppTextStyles.titleMedium.copyWith(
                     color: isDark ? textColor : AppColors.primary,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
                   subtitle,
-                  style: theme.textTheme.bodySmall?.copyWith(
+                  style: AppTextStyles.bodySmall.copyWith(
                     color: subColor,
                   ),
                 ),
@@ -81,13 +84,13 @@ class TransactionTile extends StatelessWidget {
             children: [
               Text(
                 amount,
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: AppColors.textGray,
+                style: AppTextStyles.titleMedium.copyWith(
+                  color: textColor,
                 ),
               ),
               Text(
                 valueChange,
-                style: theme.textTheme.bodySmall?.copyWith(
+                style: AppTextStyles.bodySmall.copyWith(
                   color: isBuy ? AppColors.priceUp : AppColors.alertRed,
                   fontWeight: FontWeight.w700,
                 ),

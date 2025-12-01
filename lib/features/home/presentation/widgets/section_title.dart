@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class SectionTitle extends StatelessWidget {
@@ -23,8 +24,7 @@ class SectionTitle extends StatelessWidget {
       children: [
         Text(
           title,
-          style: theme.textTheme.headlineSmall!.copyWith(
-            fontWeight: FontWeight.w600,
+          style: AppTextStyles.sectionTitle.copyWith(
             color: isDark ? AppColors.textWhite : AppColors.primary,
           ),
         ),
@@ -35,7 +35,7 @@ class SectionTitle extends StatelessWidget {
             onTap: onActionTap,
             child: Text(
               actionText!,
-              style: theme.textTheme.bodyMedium!.copyWith(
+              style: AppTextStyles.bodyMedium.copyWith(
                 color: theme.brightness == Brightness.dark
                     ? AppColors.accentBlue2
                     : AppColors.primary,
