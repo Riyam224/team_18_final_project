@@ -112,7 +112,7 @@ class HoldingCard extends StatelessWidget {
               ),
             ],
           ),
-          AppSpacing.gapH12,
+          AppSpacing.gapH20,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -126,6 +126,7 @@ class HoldingCard extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                  AppSpacing.gapH8,
                   Text(
                     value,
                     style: AppTextStyles.bodyMedium.copyWith(
@@ -145,6 +146,7 @@ class HoldingCard extends StatelessWidget {
                       fontWeight: FontWeight.w700,
                     ),
                   ),
+                  AppSpacing.gapH8,
                   Text(
                     changePercent,
                     style: AppTextStyles.bodyMedium.copyWith(
