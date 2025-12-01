@@ -16,6 +16,7 @@ class SectionTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -24,6 +25,7 @@ class SectionTitle extends StatelessWidget {
           title,
           style: theme.textTheme.headlineSmall!.copyWith(
             fontWeight: FontWeight.w600,
+            color: isDark ? AppColors.textWhite : AppColors.primary,
           ),
         ),
 
