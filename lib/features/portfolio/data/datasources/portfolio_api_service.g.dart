@@ -35,7 +35,7 @@ class _PortfolioApiService implements PortfolioApiService {
     };
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<Map<String, dynamic>>(
+    final _options = _setStreamType<Map<String, SimplePriceModel>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -49,11 +49,43 @@ class _PortfolioApiService implements PortfolioApiService {
     late Map<String, SimplePriceModel> _value;
     try {
       _value = _result.data!.map(
-        (k, dynamic v) => MapEntry(
-          k,
-          SimplePriceModel.fromJson(v as Map<String, dynamic>),
-        ),
+        (k, dynamic v) =>
+            MapEntry(k, SimplePriceModel.fromJson(v as Map<String, dynamic>)),
       );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<MarketChartModel> getMarketChart({
+    required String coinId,
+    String vsCurrency = 'usd',
+    required int days,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'vs_currency': vsCurrency,
+      r'days': days,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<MarketChartModel>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/coins/${coinId}/market_chart',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late MarketChartModel _value;
+    try {
+      _value = MarketChartModel.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, _result);
       rethrow;

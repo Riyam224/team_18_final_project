@@ -18,9 +18,15 @@ class PortfolioRepositoryImpl implements PortfolioRepository {
   });
 
   @override
-  Future<Either<Failure, PortfolioOverview>> fetchPortfolio() async {
+  Future<Either<Failure, PortfolioOverview>> fetchPortfolio({int? days}) async {
     final seeds = local.getInitialHoldings();
     try {
+      // If days is provided, use historical data
+      if (days != null) {
+        return _fetchHistoricalPortfolio(seeds, days);
+      }
+
+      // Otherwise use current prices
       final prices = await remote.fetchPrices(seeds.map((e) => e.id).toList());
 
       final holdings = seeds.map((seed) {
@@ -48,6 +54,37 @@ class PortfolioRepositoryImpl implements PortfolioRepository {
       if (_cache != null) {
         return Right(_cache!);
       }
+      return Left(ServerFailure(message: message));
+    }
+  }
+
+  Future<Either<Failure, PortfolioOverview>> _fetchHistoricalPortfolio(
+    List<dynamic> seeds,
+    int days,
+  ) async {
+    try {
+      final holdings = <PortfolioHolding>[];
+
+      for (final seed in seeds) {
+        final chart = await remote.fetchMarketChart(seed.id, days);
+        holdings.add(
+          PortfolioHolding(
+            id: seed.id,
+            name: seed.name,
+            symbol: seed.symbol,
+            amount: seed.amount,
+            priceUsd: chart.latestPrice,
+            changePercent24h: chart.priceChangePercent,
+            icon: seed.icon,
+            iconColor: seed.iconColor,
+          ),
+        );
+      }
+
+      final overview = PortfolioOverview(holdings: holdings);
+      return Right(overview);
+    } catch (error) {
+      final message = ApiErrorHandler.handleError(error);
       return Left(ServerFailure(message: message));
     }
   }

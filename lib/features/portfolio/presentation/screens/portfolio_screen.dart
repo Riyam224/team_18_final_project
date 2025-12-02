@@ -66,6 +66,9 @@ class PortfolioScreen extends StatelessWidget {
                     MonthSelector(
                       months: AppStrings.monthsShort,
                       initialIndex: 1,
+                      onChanged: (index) {
+                        context.read<PortfolioCubit>().loadForMonth(index);
+                      },
                     ),
                     AppSpacing.gapH27,
                     AllocationChart(

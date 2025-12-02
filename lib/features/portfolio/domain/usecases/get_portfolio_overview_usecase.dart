@@ -8,7 +8,7 @@ class GetPortfolioOverviewUseCase {
 
   GetPortfolioOverviewUseCase({required this.repository});
 
-  Future<Either<Failure, PortfolioOverview>> call() {
-    return repository.fetchPortfolio();
+  Future<Either<Failure, PortfolioOverview>> call({int? days}) {
+    return repository.fetchPortfolio(days: days);
   }
 }

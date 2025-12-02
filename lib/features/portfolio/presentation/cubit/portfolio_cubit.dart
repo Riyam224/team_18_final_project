@@ -26,6 +26,17 @@ class PortfolioCubit extends Cubit<PortfolioState> {
     );
   }
 
+  Future<void> loadForMonth(int monthIndex) async {
+    emit(PortfolioState.loading());
+    // Map month index to days: 0 = 30 days, 1 = 60 days, 2 = 90 days
+    final days = (monthIndex + 1) * 30;
+    final result = await getPortfolioOverview(days: days);
+    result.fold(
+      (failure) => emit(PortfolioState.error(failure.message)),
+      (overview) => emit(_mapToState(overview)),
+    );
+  }
+
   PortfolioState _mapToState(PortfolioOverview overview) {
     final holdings = overview.holdings;
     final totalValue = overview.totalValue;
