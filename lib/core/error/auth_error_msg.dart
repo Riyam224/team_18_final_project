@@ -72,11 +72,8 @@ class ErrorMessages {
       return emptyFields;
     }
 
-    final nameParts = username
-        .trim()
-        .split(' ')
-        .where((part) => part.isNotEmpty)
-        .toList();
+    final nameParts =
+        username.trim().split(' ').where((part) => part.isNotEmpty).toList();
 
     if (nameParts.length < 2) {
       return invalidUsername;

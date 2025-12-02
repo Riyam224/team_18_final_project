@@ -4,7 +4,6 @@ import 'package:team_18_final_project/core/common_ui/widgets/bottom_action_butto
 import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class CurrencySelectorWithPrice extends StatefulWidget {
@@ -30,6 +29,8 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
   String currency = "USD";
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -39,18 +40,17 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
           children: [
             Text(
               widget.paymentTitle,
-              style: context.appTheme.textTheme.titleMedium
+              style: theme.textTheme.titleMedium
                   ?.copyWith(fontSize: 11.sp, color: AppColors.gray3),
             ),
             Text(widget.paymentPrice ?? AppStrings.paymentPriceYouPay,
-                style: context.appTheme.textTheme.headlineLarge),
+                style: theme.textTheme.headlineLarge),
           ],
         ),
         Row(
           children: [
             BottomActionButton(
-              backgroundColor:
-                  context.islight() ? AppColors.gray6 : AppColors.gray9,
+              backgroundColor: isDark ? AppColors.gray9 : AppColors.gray6,
               borderRadiusGeometry: BorderRadius.circular(20),
               width: 31.w,
               height: 31.h,
@@ -67,7 +67,7 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
             const SizedBox(width: 6),
             DropdownButton<String>(
               icon: AppSvgWidget(
-                color: context.islight() ? AppColors.gray4 : AppColors.gray2,
+                color: isDark ? AppColors.gray2 : AppColors.gray4,
                 assetsName: AppAssets.keyboardArrowDown,
               ),
               value: currency,
@@ -79,10 +79,8 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
                   value: currency,
                   child: Text(
                     currency,
-                    style: context.appTheme.textTheme.titleSmall?.copyWith(
-                        color: context.islight()
-                            ? AppColors.primary
-                            : AppColors.textWhite,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                        color: isDark ? AppColors.textWhite : AppColors.primary,
                         fontSize: 13.sp),
                   ),
                 );

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class SectionTitle extends StatelessWidget {
   final String title;
-  final String? actionText;
-  final VoidCallback? onActionTap;
 
   const SectionTitle({
     super.key,
     required this.title,
-    this.actionText,
-    this.onActionTap,
   });
 
   @override
@@ -24,23 +21,12 @@ class SectionTitle extends StatelessWidget {
           title,
           style: theme.textTheme.headlineSmall!.copyWith(
             fontWeight: FontWeight.w600,
+            fontSize: 20.sp,
+            color: theme.brightness == Brightness.dark
+                ? AppColors.textWhite
+                : AppColors.primary,
           ),
         ),
-
-        // If action text exists → show it
-        if (actionText != null)
-          GestureDetector(
-            onTap: onActionTap,
-            child: Text(
-              actionText!,
-              style: theme.textTheme.bodyMedium!.copyWith(
-                color: theme.brightness == Brightness.dark
-                    ? AppColors.accentBlue2
-                    : AppColors.primary,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ),
       ],
     );
   }

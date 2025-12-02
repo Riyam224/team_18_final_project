@@ -5,7 +5,6 @@ import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/buy_crypto_widget/currency_selector_with_price.dart';
 
@@ -14,13 +13,13 @@ class CryptoConversionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
     return Container(
       padding:
           const EdgeInsets.only(left: 14, right: 14, top: 18, bottom: 18).r,
       decoration: BoxDecoration(
-        color: context.isDark()
-            ? AppColors.darkBackground
-            : AppColors.lightSurface,
+        color: isDark ? AppColors.darkBackground : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(16),
       ),
       child: Column(
@@ -29,9 +28,8 @@ class CryptoConversionCard extends StatelessWidget {
           CurrencySelectorWithPrice(
             paymentTitle: AppStrings.paymentTitleYouPay,
             iconData: Icons.attach_money,
-            iconDataColor: context.isDark()
-                ? AppColors.lightSurface
-                : AppColors.darkBackground,
+            iconDataColor:
+                isDark ? AppColors.lightSurface : AppColors.darkBackground,
           ),
           AppSpacing.vertical(20),
           Row(
@@ -54,8 +52,7 @@ class CryptoConversionCard extends StatelessWidget {
           AppSpacing.vertical(20),
           CurrencySelectorWithPrice(
             paymentIcon: AppSvgWidget(
-              assetsName:
-                  context.islight() ? AppAssets.ethLight : AppAssets.ethDark,
+              assetsName: isDark ? AppAssets.ethDark : AppAssets.ethLight,
             ),
             paymentPrice: AppStrings.paymentPriceYouReceive,
             paymentTitle: AppStrings.paymentTitleYouReceive,
@@ -65,9 +62,9 @@ class CryptoConversionCard extends StatelessWidget {
               child: AppRichText(
                   horizontal: 5,
                   firstText: AppStrings.cryptoExchangeRate,
-                  firstStyle: context.appTheme.textTheme.titleMedium
+                  firstStyle: theme.textTheme.titleMedium
                       ?.copyWith(fontSize: 14.sp, color: AppColors.gray3),
-                  lastStyle: context.appTheme.textTheme.titleMedium
+                  lastStyle: theme.textTheme.titleMedium
                       ?.copyWith(fontSize: 14.sp, color: AppColors.secondary),
                   lastText: AppStrings.circle))
         ],

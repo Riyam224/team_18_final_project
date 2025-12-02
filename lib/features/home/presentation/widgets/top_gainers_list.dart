@@ -1,34 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:team_18_final_project/features/home/presentation/widgets/crypto_item_tile.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/features/home/domain/entities/top_gainer.dart';
+import 'package:team_18_final_project/features/home/presentation/widgets/top_gainer_tile.dart';
 
 class TopGainersList extends StatelessWidget {
-  const TopGainersList({super.key});
+  final List<TopGainerEntity> topGainers;
+
+  const TopGainersList({super.key, required this.topGainers});
+
+  String _formatPrice(double price) {
+    if (price >= 1) {
+      return "\$${price.toStringAsFixed(2)}";
+    } else {
+      return "\$${price.toStringAsFixed(6)}";
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (topGainers.isEmpty) {
+      return const Center(
+        child: Text(AppStrings.noTopGainersAvailable),
+      );
+    }
+
     return Column(
-      children: [
-        CryptoItemTile(
-          name: "Ethereum",
-          symbol: "ETH",
-          price: "\$20,788",
-          percentage: "+0.25%",
-        ),
-        const SizedBox(height: 12),
-        CryptoItemTile(
-          name: "Binance Coin",
-          symbol: "BNB",
-          price: "\$20,788",
-          percentage: "+1.15%",
-        ),
-        const SizedBox(height: 12),
-        CryptoItemTile(
-          name: "Litecoin",
-          symbol: "LTC",
-          price: "\$20,788",
-          percentage: "+1.15%",
-        ),
-      ],
+      children: topGainers.asMap().entries.map((entry) {
+        final index = entry.key;
+        final gainer = entry.value;
+
+        return Column(
+          children: [
+            if (index > 0) AppSpacing.gapH12,
+            TopGainerTile(
+              name: gainer.name,
+              symbol: gainer.symbol,
+              price: _formatPrice(gainer.currentPrice),
+              percentage:
+                  "${gainer.priceChangePercentage24h >= 0 ? '+' : ''}${gainer.priceChangePercentage24h.toStringAsFixed(2)}%",
+              imageUrl: gainer.imageUrl,
+            ),
+          ],
+        );
+      }).toList(),
     );
   }
 }
