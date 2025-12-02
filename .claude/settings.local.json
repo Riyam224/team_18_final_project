@@ -3,7 +3,10 @@
     "allow": [
       "Bash(flutter analyze:*)",
       "Bash(flutter build:*)",
-      "Bash(flutter pub get:*)"
+      "Bash(flutter pub get:*)",
+      "Bash(xargs:*)",
+      "Bash(flutter test:*)",
+      "Bash(mkdir:*)"
     ],
     "deny": [],
     "ask": []

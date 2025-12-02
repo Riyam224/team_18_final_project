@@ -1,8 +1,8 @@
 class Endpoints {
   // Home
   static const global = "/global";
-  static const trending = "/search/trending";
-  static const topMarkets =
+  static const trendingCoinsList = "/search/trending";
+  static const topGainers =
       "/coins/markets?vs_currency=usd&order=market_cap_desc";
 
   // Market
