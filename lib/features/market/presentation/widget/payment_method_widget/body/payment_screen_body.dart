@@ -38,16 +38,7 @@ class PaymentScreenBody extends StatelessWidget {
           child: Column(
             children: [
               const CustomExpansionTitle(
-                  title: AppStrings.mobileBanking,
-                  children: [
-                    Text('googlePay'),
-                    Text('mobileBanking'),
-                    Text('creditCard'),
-                    Text('applePay'),
-                    Text('paypal'),
-                    Text('bankTransfer'),
-                    Text('bankTransfer'),
-                  ]),
+                  title: AppStrings.mobileBanking, children: []),
               ReceiptEmailSwitch()
             ],
           ),
