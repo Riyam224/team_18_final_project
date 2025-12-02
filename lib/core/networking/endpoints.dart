@@ -17,6 +17,12 @@ class Endpoints {
       "/coins/$id/market_chart?vs_currency=usd&days=$days";
 
   // Portfolio
-  static String simplePrice(String ids) =>
-      "/simple/price?ids=$ids&vs_currencies=usd&include_24hr_change=true";
+
+  // Rahma
+  
+  static const String livePrices = "/simple/price";
+  // deleted that and use this to apply separation of concerns and make it more clean
+  // static String simplePrice(String ids) =>
+  //     "/simple/price?ids=$ids&vs_currencies=usd&include_24hr_change=true";
+
 }

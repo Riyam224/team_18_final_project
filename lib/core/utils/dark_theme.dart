@@ -7,12 +7,17 @@ ThemeData buildDarkTheme() {
 
   return base.copyWith(
     brightness: Brightness.dark,
-    scaffoldBackgroundColor: AppColors.darkBackground,
+    scaffoldBackgroundColor: AppColors.darkBackground2,
     primaryColor: AppColors.primary,
-    cardColor: AppColors.darkCard,
+    // rahma
+    //cardColor: AppColors.darkCard,
+    cardColor: AppColors.darkBackground,
+
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primary,
-      secondary: AppColors.secondary,
+      //rahma 
+      secondary: AppColors.orangeDark,
+      //secondary: AppColors.secondary,
       background: AppColors.darkBackground,
       surface: AppColors.darkSurface,
       onBackground: AppColors.textWhite,
@@ -24,8 +29,14 @@ ThemeData buildDarkTheme() {
       headlineLarge: AppTextStyles.headlineLarge.copyWith(color: Colors.white),
       headlineMedium:
           AppTextStyles.headlineMedium.copyWith(color: Colors.white),
+      //rahma
+      headlineSmall: AppTextStyles.headlineSmallBold.copyWith(color: AppColors.textWhite),
+      titleLarge: AppTextStyles.titleLarge.copyWith(color: AppColors.textWhite),
+
       titleMedium:
           AppTextStyles.titleMedium.copyWith(color: AppColors.textWhiteSoft),
+      titleSmall:
+          AppTextStyles.titleSmall.copyWith(color: AppColors.textWhite),
       bodySmall:
           AppTextStyles.bodySmall.copyWith(color: AppColors.textGrayDark),
       bodyMedium:
@@ -34,7 +45,8 @@ ThemeData buildDarkTheme() {
       labelLarge: AppTextStyles.labelLarge.copyWith(color: AppColors.primary),
     ),
     appBarTheme: const AppBarTheme(
-      backgroundColor: AppColors.darkBackground,
+      //rahma
+      backgroundColor: AppColors.darkBackground2,
       elevation: 0,
       foregroundColor: Colors.white,
     ),

@@ -49,4 +49,21 @@ class AppColors {
   static const Color success = Color(0xFF69D895);
   static const Color warning = Color(0xFFF7931A);
   static const Color error = Color(0xFFF47E7E);
+
+
+
+  //rahma
+  // Chart Colors
+  static const Color chartPurple = Color(0xFF8979FF);
+  static const Color chartCyan = Color(0xFF3CC3DF);
+  static const Color chartCyanDark = Color(0xFF51CAE2);
+  static const Color chartRed = Color(0xFFFF928A);
+  // amount color
+  static const Color amount = Color(0xFF1E1F4B);
+
+  static const Color orangeDark = Color(0xFFF67E42);
+
+  static const Color darkgreen = Color(0xFF7DDDA4);
+
+
 }
