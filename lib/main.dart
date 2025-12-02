@@ -6,13 +6,8 @@ import 'package:team_18_final_project/core/utils/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize dependencies
   await setupDependencies();
-
-  // Set initial system UI overlay style
   AppTheme.setSystemUIOverlayStyle(ThemeMode.system);
-
   runApp(const FintechApp());
 }
 
@@ -29,12 +24,9 @@ class FintechApp extends StatelessWidget {
         return MaterialApp.router(
           title: 'Team 18 Project',
           debugShowCheckedModeBanner: false,
-
-          // FULL NEW THEMES
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: ThemeMode.system,
-
           routerConfig: RouteGenerator.mainRoutingInOurApp,
         );
       },

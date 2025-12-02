@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/section_title.dart';
+import 'package:team_18_final_project/features/portfolio/data/datasources/transaction_local_data_source.dart';
+import 'package:team_18_final_project/features/portfolio/domain/entities/transaction.dart';
+import 'package:team_18_final_project/features/portfolio/presentation/portfolio_utils/app_portfolio_constants.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/widgets/allocation_chart.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/cubit/portfolio_cubit.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/widgets/holding_card.dart';
@@ -65,7 +69,7 @@ class PortfolioScreen extends StatelessWidget {
                     AppSpacing.gapH27,
                     MonthSelector(
                       months: AppStrings.monthsShort,
-                      initialIndex: 1,
+                      initialIndex: AppPortfolioConstants.defaultMonthIndex,
                       onChanged: (index) {
                         context.read<PortfolioCubit>().loadForMonth(index);
                       },
@@ -94,15 +98,7 @@ class PortfolioScreen extends StatelessWidget {
                     AppSpacing.gapH20,
                     const SectionTitle(title: AppStrings.recentTransactions),
                     AppSpacing.gapH12,
-                    ..._transactions.map(
-                      (t) => TransactionTile(
-                        title: t.title,
-                        subtitle: t.subtitle,
-                        amount: t.amount,
-                        valueChange: t.valueChange,
-                        isBuy: t.isBuy,
-                      ),
-                    ),
+                    ..._buildTransactions(),
                     AppSpacing.gapH24,
                   ],
                 ),
@@ -113,37 +109,46 @@ class PortfolioScreen extends StatelessWidget {
       ),
     );
   }
+
+  List<Widget> _buildTransactions() {
+    final dataSource = TransactionLocalDataSource();
+    final transactions = dataSource.getRecentTransactions();
+    final currencyFormat = NumberFormat.simpleCurrency(
+      decimalDigits: AppPortfolioConstants.decimalDigitsForCurrency,
+    );
+
+    return transactions.map((t) {
+      final transactionType = t.type == TransactionType.buy
+          ? AppStrings.buyTransaction
+          : AppStrings.sellTransaction;
+      final title = '$transactionType ${t.cryptoName}';
+      final subtitle = _formatTimestamp(t.timestamp);
+      final amount = '${t.amount} ${t.cryptoSymbol}';
+      final valueChange = '${t.type == TransactionType.buy ? '+' : '-'}${currencyFormat.format(t.valueUsd)}';
+      final isBuy = t.type == TransactionType.buy;
+
+      return TransactionTile(
+        title: title,
+        subtitle: subtitle,
+        amount: amount,
+        valueChange: valueChange,
+        isBuy: isBuy,
+      );
+    }).toList();
+  }
+
+  String _formatTimestamp(DateTime timestamp) {
+    final now = DateTime.now();
+    final difference = now.difference(timestamp);
+
+    if (difference.inHours < AppPortfolioConstants.hoursInDay) {
+      final hourLabel = difference.inHours == 1 ? AppStrings.hour : AppStrings.hours;
+      return '${difference.inHours} $hourLabel ${AppStrings.ago}';
+    } else if (difference.inDays < AppPortfolioConstants.daysInWeek) {
+      final dayLabel = difference.inDays == 1 ? AppStrings.day : AppStrings.days;
+      return '${difference.inDays} $dayLabel ${AppStrings.ago}';
+    } else {
+      return DateFormat(AppPortfolioConstants.dateFormat).format(timestamp);
+    }
+  }
 }
-
-class _TransactionModel {
-  final String title;
-  final String subtitle;
-  final String amount;
-  final String valueChange;
-  final bool isBuy;
-
-  _TransactionModel({
-    required this.title,
-    required this.subtitle,
-    required this.amount,
-    required this.valueChange,
-    required this.isBuy,
-  });
-}
-
-final _transactions = <_TransactionModel>[
-  _TransactionModel(
-    title: 'Buy Bitcoin',
-    subtitle: '2 hours ago',
-    amount: '0.01 BTC',
-    valueChange: '+\$452.50',
-    isBuy: true,
-  ),
-  _TransactionModel(
-    title: 'Sell Ethereum',
-    subtitle: '1 day ago',
-    amount: '0.5 ETH',
-    valueChange: '+\$1,050.25',
-    isBuy: true,
-  ),
-];

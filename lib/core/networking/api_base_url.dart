@@ -1,3 +1,5 @@
+import 'package:team_18_final_project/core/config/api_config.dart';
+
 class ApiConstants {
-  static const baseUrl = "https://api.coingecko.com/api/v3";
+  static const baseUrl = ApiConfig.baseUrl;
 }

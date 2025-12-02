@@ -9,6 +9,18 @@ class AppColors {
   static const Color accentBlue = Color(0xFF4766F9);
   static const Color accentBlue2 = Color(0xFF6079FA);
   static const Color accentPurple = Color(0xFF8979FF);
+  static const Color accentCyan = Color(0xFF4DD0E1);
+  static const Color accentCoral = Color(0xFFFF8A80);
+
+  // ===== Crypto Colors =====
+  static const Color cryptoCardano = Color(0xFF0033AD);
+  static const Color cryptoRipple = Color(0xFF23292F);
+  static const Color cryptoPolkadot = Color(0xFFE6007A);
+  static const Color cryptoBinance = Color(0xFFF3BA2F);
+  static const Color cryptoSolana = Color(0xFF14F195);
+  static const Color cryptoDogecoin = Color(0xFFC3A634);
+  static const Color cryptoPolygon = Color(0xFF8247E5);
+  static const Color cryptoDefault = Color(0xFF757575);
 
   // ===== Light Mode =====
   static const Color lightBackground = Color(0xFFF5F8FE);

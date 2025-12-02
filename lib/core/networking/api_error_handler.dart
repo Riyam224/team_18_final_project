@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:team_18_final_project/core/error/auth_error_msg.dart';
 
 class ApiErrorHandler {
-  /// Converts Dio errors or generic exceptions into readable messages
+  /// Converts Dio errors or  generic exceptions into readable messages
   static String handleError(dynamic error) {
     if (error is DioException) {
       switch (error.type) {

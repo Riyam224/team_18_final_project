@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// AppSpacing - all padding, margin, and gap values used throughout the app
 class AppSpacing {
-  // ========= PADDING - ALL SIDES =========
-
   static EdgeInsets get paddingAll4 => EdgeInsets.all(4.w);
   static EdgeInsets get paddingAll8 => EdgeInsets.all(8.w);
   static EdgeInsets get paddingAll12 => EdgeInsets.all(12.w);
@@ -12,8 +9,6 @@ class AppSpacing {
   static EdgeInsets get paddingAll16 => EdgeInsets.all(16.w);
   static EdgeInsets get paddingAll20 => EdgeInsets.all(20.w);
   static EdgeInsets get paddingAll24 => EdgeInsets.all(24.w);
-
-  // ========= PADDING - HORIZONTAL =========
 
   static EdgeInsets get paddingH8 => EdgeInsets.symmetric(horizontal: 8.w);
   static EdgeInsets get paddingH10 => EdgeInsets.symmetric(horizontal: 10.w);
@@ -24,16 +19,12 @@ class AppSpacing {
   static EdgeInsets get paddingH28 => EdgeInsets.symmetric(horizontal: 28.w);
   static EdgeInsets get paddingH40 => EdgeInsets.symmetric(horizontal: 40.w);
 
-  // ========= PADDING - VERTICAL =========
-
   static EdgeInsets get paddingV4 => EdgeInsets.symmetric(vertical: 4.h);
   static EdgeInsets get paddingV8 => EdgeInsets.symmetric(vertical: 8.h);
   static EdgeInsets get paddingV10 => EdgeInsets.symmetric(vertical: 10.h);
   static EdgeInsets get paddingV12 => EdgeInsets.symmetric(vertical: 12.h);
   static EdgeInsets get paddingV16 => EdgeInsets.symmetric(vertical: 16.h);
   static EdgeInsets get paddingV20 => EdgeInsets.symmetric(vertical: 20.h);
-
-  // ========= PADDING - COMBINED HORIZONTAL & VERTICAL =========
 
   static EdgeInsets paddingHV({
     required double horizontal,
@@ -65,8 +56,6 @@ class AppSpacing {
       EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h);
   static EdgeInsets get paddingH12V8 =>
       EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h);
-
-  // ========= PADDING - CUSTOM SIDES =========
 
   static EdgeInsets paddingOnly({
     double left = 0,

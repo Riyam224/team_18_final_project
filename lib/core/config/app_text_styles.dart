@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 
 class AppTextStyles {
-  // ========= DISPLAY (big numbers, portfolio balance) =========
   static const TextStyle displayLarge = TextStyle(
     fontFamily: AppStrings.appFontNameLato,
     fontSize: 32,
@@ -15,7 +14,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w700,
   );
 
-  // ========= HEADLINES (screen titles) =========
   static const TextStyle headlineLarge = TextStyle(
     fontFamily: AppStrings.appFontNameLato,
     fontSize: 24,
@@ -34,7 +32,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
-  // Section title (e.g., Recent Transactions)
   static const TextStyle sectionTitle = TextStyle(
     fontFamily: AppStrings.appFontNameLato,
     fontSize: 18,
@@ -43,7 +40,6 @@ class AppTextStyles {
     letterSpacing: 0.5,
   );
 
-  // Smaller section title (e.g., recent transactions)
   static const TextStyle sectionTitleSmall = TextStyle(
     fontFamily: AppStrings.appFontNameLato,
     fontSize: 16,
@@ -52,7 +48,6 @@ class AppTextStyles {
     letterSpacing: 0.4,
   );
 
-  // ========= TITLES =========
   static const TextStyle titleLarge = TextStyle(
     fontFamily: AppStrings.appFontNameLato,
     fontSize: 16,
@@ -71,7 +66,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
-  // ========= BODY =========
   static const TextStyle bodyLarge = TextStyle(
     fontFamily: AppStrings.appFontNameLato,
     fontSize: 16,
@@ -90,7 +84,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w300,
   );
 
-  // ========= BUTTON LABELS =========
   static const TextStyle labelLarge = TextStyle(
     fontFamily: AppStrings.appFontNameLato,
     fontSize: 14,
@@ -109,7 +102,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w300,
   );
 
-  // ========= PRICE COLORS =========
   static const TextStyle priceUp = TextStyle(
     fontFamily: AppStrings.appFontNameLato,
     fontSize: 14,
@@ -124,9 +116,6 @@ class AppTextStyles {
     color: Color(0xFFF26666),
   );
 
-  // ------------------------------------------------------
-//               ONBOARDING
-// ------------------------------------------------------
   static const TextStyle onboardingTitle = TextStyle(
     fontFamily: 'Lato',
     fontSize: 30,
@@ -140,7 +129,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w400,
   );
 
-  // ========= AUTH SCREENS =========
   static const TextStyle authTitle = TextStyle(
     fontFamily: 'Lato',
     fontSize: 28,
@@ -198,7 +186,6 @@ class AppTextStyles {
     height: 1.5,
   );
 
-  // Auth - Biometric Setup Screens (Face ID / Fingerprint)
   static const TextStyle authBiometricTitle = TextStyle(
     fontFamily: 'Lato',
     fontSize: 26,
@@ -218,7 +205,6 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
-  // Auth - Biometric Scanning Screens (Face ID / Fingerprint scanning)
   static const TextStyle authBiometricScanInstruction = TextStyle(
     fontFamily: 'Lato',
     fontSize: 18,
@@ -232,14 +218,12 @@ class AppTextStyles {
     fontWeight: FontWeight.w600,
   );
 
-  // Auth - Biometric Success Screen Title
   static const TextStyle authBiometricSuccessTitle = TextStyle(
     fontFamily: 'Lato',
     fontSize: 26,
     fontWeight: FontWeight.w700,
   );
 
-  // Auth - Biometric Illustration Description
   static const TextStyle authBiometricIllustrationDescription = TextStyle(
     fontFamily: 'Lato',
     fontSize: 16,
@@ -247,28 +231,24 @@ class AppTextStyles {
     height: 1.5,
   );
 
-  // Auth - Success Section Title (for success widgets)
   static const TextStyle authSuccessSectionTitle = TextStyle(
     fontFamily: 'Lato',
     fontSize: 22,
     fontWeight: FontWeight.w600,
   );
 
-  // Auth - Success Section Subtitle (for success widgets)
   static const TextStyle authSuccessSectionSubtitle = TextStyle(
     fontFamily: 'Lato',
     fontSize: 16,
     fontWeight: FontWeight.w400,
   );
 
-  // Auth - Header Title (26sp)
   static const TextStyle authHeaderTitle = TextStyle(
     fontFamily: 'Lato',
     fontSize: 26,
     fontWeight: FontWeight.w700,
   );
 
-  // Auth - Header Subtitle (18sp)
   static const TextStyle authHeaderSubtitle = TextStyle(
     fontFamily: 'Lato',
     fontSize: 18,
@@ -276,14 +256,12 @@ class AppTextStyles {
     height: 1.33,
   );
 
-  // Auth - Text Field Input Style
   static const TextStyle authTextFieldInput = TextStyle(
     fontFamily: 'Lato',
     fontSize: 14,
     fontWeight: FontWeight.w400,
   );
 
-  // Auth - Text Field Hint Style
   static const TextStyle authTextFieldHint = TextStyle(
     fontFamily: 'Lato',
     fontSize: 14,

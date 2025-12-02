@@ -21,12 +21,10 @@ class PortfolioRepositoryImpl implements PortfolioRepository {
   Future<Either<Failure, PortfolioOverview>> fetchPortfolio({int? days}) async {
     final seeds = local.getInitialHoldings();
     try {
-      // If days is provided, use historical data
       if (days != null) {
         return _fetchHistoricalPortfolio(seeds, days);
       }
 
-      // Otherwise use current prices
       final prices = await remote.fetchPrices(seeds.map((e) => e.id).toList());
 
       final holdings = seeds.map((seed) {
@@ -40,8 +38,6 @@ class PortfolioRepositoryImpl implements PortfolioRepository {
           amount: seed.amount,
           priceUsd: price,
           changePercent24h: change,
-          icon: seed.icon,
-          iconColor: seed.iconColor,
         );
       }).toList();
 
@@ -50,7 +46,6 @@ class PortfolioRepositoryImpl implements PortfolioRepository {
       return Right(overview);
     } catch (error) {
       final message = ApiErrorHandler.handleError(error);
-      // Fallback to last known good data if available
       if (_cache != null) {
         return Right(_cache!);
       }
@@ -75,8 +70,6 @@ class PortfolioRepositoryImpl implements PortfolioRepository {
             amount: seed.amount,
             priceUsd: chart.latestPrice,
             changePercent24h: chart.priceChangePercent,
-            icon: seed.icon,
-            iconColor: seed.iconColor,
           ),
         );
       }

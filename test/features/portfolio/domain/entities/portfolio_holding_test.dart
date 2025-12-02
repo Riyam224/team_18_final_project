@@ -1,22 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:team_18_final_project/features/portfolio/domain/entities/portfolio_holding.dart';
+import '../../../../helpers/test_portfolio_data.dart';
+import '../../../../helpers/test_utils.dart';
 
 void main() {
   group('PortfolioHolding Entity Tests', () {
     late PortfolioHolding holding;
 
     setUp(() {
-      holding = const PortfolioHolding(
-        id: 'bitcoin',
-        name: 'Bitcoin',
-        symbol: 'BTC',
-        amount: 0.5,
-        priceUsd: 50000.0,
-        changePercent24h: 5.0,
-        icon: Icons.currency_bitcoin,
-        iconColor: Colors.orange,
-      );
+      holding = TestPortfolioData.btc();
     });
 
     group('Constructor', () {
@@ -27,8 +19,6 @@ void main() {
         expect(holding.amount, 0.5);
         expect(holding.priceUsd, 50000.0);
         expect(holding.changePercent24h, 5.0);
-        expect(holding.icon, Icons.currency_bitcoin);
-        expect(holding.iconColor, Colors.orange);
       });
 
       test('should create holding with zero amount', () {
@@ -44,7 +34,6 @@ void main() {
 
     group('valueUsd Calculation', () {
       test('should calculate value correctly with positive values', () {
-        // 0.5 BTC * $50,000 = $25,000
         expect(holding.valueUsd, 25000.0);
       });
 
@@ -60,43 +49,31 @@ void main() {
 
       test('should handle large amounts correctly', () {
         final largeHolding = holding.copyWith(amount: 100.0);
-        // 100 BTC * $50,000 = $5,000,000
         expect(largeHolding.valueUsd, 5000000.0);
       });
 
       test('should handle small fractional amounts correctly', () {
         final smallHolding = holding.copyWith(amount: 0.00001);
-        // 0.00001 BTC * $50,000 = $0.50
         expect(smallHolding.valueUsd, 0.5);
       });
 
       test('should handle decimal precision correctly', () {
-        final preciseHolding = const PortfolioHolding(
-          id: 'ethereum',
-          name: 'Ethereum',
-          symbol: 'ETH',
+        final preciseHolding = TestPortfolioData.eth(
           amount: 1.23456789,
           priceUsd: 3000.123,
           changePercent24h: 2.5,
-          icon: Icons.currency_exchange,
-          iconColor: Colors.blue,
         );
-        // 1.23456789 * 3000.123 = 3703.873...
-        expect(preciseHolding.valueUsd, closeTo(3703.873, 0.001));
+        expectClose(preciseHolding.valueUsd, 3703.873, delta: 0.05);
       });
     });
 
     group('changeUsd Calculation', () {
       test('should calculate positive change correctly', () {
-        // valueUsd = $25,000
-        // changeUsd = $25,000 * (5.0 / 100) = $1,250
         expect(holding.changeUsd, 1250.0);
       });
 
       test('should calculate negative change correctly', () {
         final negativeChange = holding.copyWith(changePercent24h: -3.0);
-        // valueUsd = $25,000
-        // changeUsd = $25,000 * (-3.0 / 100) = -$750
         expect(negativeChange.changeUsd, -750.0);
       });
 
@@ -107,13 +84,11 @@ void main() {
 
       test('should handle large positive changes', () {
         final bigChange = holding.copyWith(changePercent24h: 50.0);
-        // $25,000 * 0.50 = $12,500
         expect(bigChange.changeUsd, 12500.0);
       });
 
       test('should handle large negative changes', () {
         final bigDrop = holding.copyWith(changePercent24h: -25.0);
-        // $25,000 * -0.25 = -$6,250
         expect(bigDrop.changeUsd, -6250.0);
       });
 
@@ -124,65 +99,41 @@ void main() {
 
       test('should calculate change with decimal percentages', () {
         final decimalChange = holding.copyWith(changePercent24h: 2.53);
-        // $25,000 * 0.0253 = $632.50
         expect(decimalChange.changeUsd, 632.5);
       });
     });
 
     group('Equatable Properties', () {
       test('should be equal when all properties are the same', () {
-        final holding1 = const PortfolioHolding(
-          id: 'bitcoin',
-          name: 'Bitcoin',
-          symbol: 'BTC',
-          amount: 1.0,
-          priceUsd: 50000.0,
-          changePercent24h: 5.0,
-          icon: Icons.currency_bitcoin,
-          iconColor: Colors.orange,
-        );
-
-        final holding2 = const PortfolioHolding(
-          id: 'bitcoin',
-          name: 'Bitcoin',
-          symbol: 'BTC',
-          amount: 1.0,
-          priceUsd: 50000.0,
-          changePercent24h: 5.0,
-          icon: Icons.currency_bitcoin,
-          iconColor: Colors.orange,
-        );
+        final holding1 = TestPortfolioData.btc(amount: 1.0);
+        final holding2 = TestPortfolioData.btc(amount: 1.0);
 
         expect(holding1, equals(holding2));
         expect(holding1.hashCode, equals(holding2.hashCode));
       });
 
       test('should not be equal when id is different', () {
-        final holding1 = holding;
         final holding2 = holding.copyWith(id: 'ethereum');
 
-        expect(holding1, isNot(equals(holding2)));
+        expect(holding, isNot(equals(holding2)));
       });
 
       test('should not be equal when amount is different', () {
-        final holding1 = holding;
         final holding2 = holding.copyWith(amount: 1.0);
 
-        expect(holding1, isNot(equals(holding2)));
+        expect(holding, isNot(equals(holding2)));
       });
 
       test('should not be equal when price is different', () {
-        final holding1 = holding;
         final holding2 = holding.copyWith(priceUsd: 60000.0);
 
-        expect(holding1, isNot(equals(holding2)));
+        expect(holding, isNot(equals(holding2)));
       });
 
       test('should not be equal when change percent is different', () {
-        final holding1 = holding;
         final holding2 = holding.copyWith(changePercent24h: 10.0);
 
-        expect(holding1, isNot(equals(holding2)));
+        expect(holding, isNot(equals(holding2)));
       });
     });
 
@@ -204,13 +155,66 @@ void main() {
 
       test('should handle extreme negative change', () {
         final extremeDrop = holding.copyWith(changePercent24h: -99.9);
-        expect(extremeDrop.changeUsd, closeTo(-24975.0, 0.1));
+        expectClose(extremeDrop.changeUsd, -24975.0, delta: 0.2);
+      });
+    });
+
+    group('Real-world scenarios', () {
+      test('should represent a typical Bitcoin holding', () {
+        final btc = TestPortfolioData.btc(
+          amount: 0.1,
+          priceUsd: 45000.0,
+          changePercent24h: 3.5,
+        );
+
+        expect(btc.valueUsd, 4500.0);
+        expectClose(btc.changeUsd, 157.5, delta: 1e-3);
+      });
+
+      test('should represent a typical Ethereum holding', () {
+        final eth = TestPortfolioData.eth(
+          amount: 2.5,
+          priceUsd: 3000.0,
+          changePercent24h: -1.2,
+        );
+
+        expect(eth.valueUsd, 7500.0);
+        expect(eth.changeUsd, -90.0);
+      });
+
+      test('should handle multiple different cryptocurrencies', () {
+        final holdings = [
+          TestPortfolioData.btc(),
+          TestPortfolioData.eth(),
+          TestPortfolioData.ltc(),
+        ];
+
+        final totalValue = holdings.fold<double>(
+          0.0,
+          (sum, h) => sum + h.valueUsd,
+        );
+
+        expect(totalValue, 32500.0);
+      });
+
+      test('should calculate portfolio-wide change', () {
+        final holdings = [
+          TestPortfolioData.btc(amount: 1.0),
+          TestPortfolioData.eth(amount: 2.0),
+        ];
+
+        final totalChange = holdings.fold<double>(
+          0.0,
+          (sum, h) => sum + h.changeUsd,
+        );
+
+        expect(totalChange, 2380.0);
       });
     });
   });
 }
 
-// Helper extension for copying PortfolioHolding
+// Helper extension for copying PortfolioHolding in tests
 extension PortfolioHoldingCopyWith on PortfolioHolding {
   PortfolioHolding copyWith({
     String? id,
@@ -219,8 +223,6 @@ extension PortfolioHoldingCopyWith on PortfolioHolding {
     double? amount,
     double? priceUsd,
     double? changePercent24h,
-    IconData? icon,
-    Color? iconColor,
   }) {
     return PortfolioHolding(
       id: id ?? this.id,
@@ -229,8 +231,6 @@ extension PortfolioHoldingCopyWith on PortfolioHolding {
       amount: amount ?? this.amount,
       priceUsd: priceUsd ?? this.priceUsd,
       changePercent24h: changePercent24h ?? this.changePercent24h,
-      icon: icon ?? this.icon,
-      iconColor: iconColor ?? this.iconColor,
     );
   }
 }

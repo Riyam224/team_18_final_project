@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 
 class PortfolioHolding extends Equatable {
   final String id;
@@ -8,8 +7,6 @@ class PortfolioHolding extends Equatable {
   final double amount;
   final double priceUsd;
   final double changePercent24h;
-  final IconData icon;
-  final Color iconColor;
 
   const PortfolioHolding({
     required this.id,
@@ -18,8 +15,6 @@ class PortfolioHolding extends Equatable {
     required this.amount,
     required this.priceUsd,
     required this.changePercent24h,
-    required this.icon,
-    required this.iconColor,
   });
 
   double get valueUsd => amount * priceUsd;
@@ -34,7 +29,5 @@ class PortfolioHolding extends Equatable {
         amount,
         priceUsd,
         changePercent24h,
-        icon,
-        iconColor,
       ];
 }

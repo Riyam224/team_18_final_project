@@ -24,7 +24,7 @@ class _PortfolioApiService implements PortfolioApiService {
   @override
   Future<Map<String, SimplePriceModel>> getSimplePrice({
     required String ids,
-    String vsCurrencies = 'usd',
+    String vsCurrencies = ApiConfig.defaultCurrency,
     bool include24hChange = true,
   }) async {
     final _extra = <String, dynamic>{};
@@ -62,7 +62,7 @@ class _PortfolioApiService implements PortfolioApiService {
   @override
   Future<MarketChartModel> getMarketChart({
     required String coinId,
-    String vsCurrency = 'usd',
+    String vsCurrency = ApiConfig.defaultCurrency,
     required int days,
   }) async {
     final _extra = <String, dynamic>{};

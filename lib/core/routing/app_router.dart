@@ -56,8 +56,7 @@ class RouteGenerator {
       ),
 
       // ==================================================
-      // MAIN APP WITH BOTTOM NAVIGATION
-      // Everything inside this ShellRoute shows the bottom nav
+      // Bottom Navigation Shell
       // ==================================================
       ShellRoute(
         builder: (context, state, child) => BottomNavShell(child: child),
