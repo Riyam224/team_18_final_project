@@ -4,7 +4,6 @@ import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class GoogleCardData extends StatelessWidget {
@@ -12,6 +11,8 @@ class GoogleCardData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,7 +23,7 @@ class GoogleCardData extends StatelessWidget {
             ),
             AppSpacing.horizontal(2),
             Text(AppStrings.play,
-                style: context.appTheme.textTheme.headlineLarge
+                style: _theme.textTheme.headlineLarge
                     ?.copyWith(color: AppColors.gray2, fontSize: 22.sp))
           ],
         ),
@@ -35,7 +36,7 @@ class GoogleCardData extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 22, bottom: 5).r,
                   child: Text(AppStrings.dEBIT,
-                      style: context.appTheme.textTheme.labelLarge
+                      style: _theme.textTheme.labelLarge
                           ?.copyWith(color: AppColors.gray2)),
                 ),
                 AppSvgWidget(

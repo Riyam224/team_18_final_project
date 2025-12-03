@@ -4,7 +4,6 @@ import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class VisaCardData extends StatelessWidget {
@@ -12,6 +11,10 @@ class VisaCardData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    final _isDark = _theme.brightness == Brightness.dark;
+    Color _backgroundColor =
+        _isDark ? AppColors.lightSurface : AppColors.lightSurface2;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -39,12 +42,10 @@ class VisaCardData extends StatelessWidget {
         ),
         AppSpacing.vertical(5),
         Text(AppStrings.cardNumber,
-            style: context.appTheme.textTheme.titleLarge?.copyWith(
+            style: _theme.textTheme.titleLarge?.copyWith(
                 letterSpacing: 2,
                 fontSize: 16.sp,
-                color: context.islight()
-                    ? AppColors.lightSurface2
-                    : AppColors.lightSurface,
+                color: _backgroundColor,
                 fontWeight: FontWeight.w700)),
         AppSpacing.vertical(8),
         Row(
@@ -55,18 +56,14 @@ class VisaCardData extends StatelessWidget {
               children: [
                 Text(
                   AppStrings.validTill,
-                  style: context.appTheme.textTheme.titleMedium?.copyWith(
-                      color:
-                          context.isDark() ? AppColors.gray0 : AppColors.gray5,
+                  style: _theme.textTheme.titleMedium?.copyWith(
+                      color: _isDark ? AppColors.gray0 : AppColors.gray5,
                       fontSize: 8.sp),
                 ),
                 AppSpacing.vertical(2),
                 Text(AppStrings.cardExpiry,
-                    style: context.appTheme.textTheme.titleLarge?.copyWith(
-                        fontSize: 10.sp,
-                        color: context.islight()
-                            ? AppColors.lightSurface2
-                            : AppColors.lightSurface)),
+                    style: _theme.textTheme.titleLarge
+                        ?.copyWith(fontSize: 10.sp, color: _backgroundColor)),
               ],
             ),
           ],

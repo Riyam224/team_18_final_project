@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class ReceiptEmailSwitch extends StatefulWidget {
@@ -13,8 +12,12 @@ class ReceiptEmailSwitch extends StatefulWidget {
 
 class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
   bool vlaue = false;
+
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    final _isDark = _theme.brightness == Brightness.dark;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 45).r,
       child: Row(
@@ -22,21 +25,18 @@ class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
         children: [
           Text(
             AppStrings.sendReceiptToYourEmail,
-            style: context.appTheme.textTheme.headlineSmall!.copyWith(
+            style: _theme.textTheme.headlineSmall!.copyWith(
                 fontSize: 12.sp,
-                color: context.islight()
-                    ? AppColors.primary
-                    : AppColors.textWhite),
+                color: _isDark ? AppColors.textWhite : AppColors.primary),
           ),
           Switch(
             focusColor: Colors.amber,
             inactiveTrackColor: AppColors.gray3,
-
             inactiveThumbColor: AppColors.darkBackground,
             activeThumbColor:
-                context.isDark() ? AppColors.darkBackground : AppColors.primary,
+                _isDark ? AppColors.darkBackground : AppColors.primary,
             activeTrackColor:
-                context.isDark() ? AppColors.lightSurface : AppColors.primary,
+                _isDark ? AppColors.lightSurface : AppColors.primary,
             value: vlaue,
             onChanged: (value) {
               setState(() {
@@ -47,26 +47,23 @@ class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
             trackOutlineColor: MaterialStateProperty.resolveWith<Color?>(
               (states) {
                 if (states.contains(MaterialState.selected)) {
-                  return Colors.transparent; // or your ON state color
+                  return Colors.transparent;
                 }
-                return Colors.transparent; // or your OFF state color
+                return Colors.transparent;
               },
             ),
-            //  trackRadius: BorderRadius.circular(24),
             thumbIcon: MaterialStateProperty.resolveWith<Icon>(
               (states) {
                 if (states.contains(MaterialState.selected)) {
-                  print("object");
-                  // ON state icon
                   return Icon(Icons.circle,
-                      color: context.isDark()
+                      color: _isDark
                           ? AppColors.darkBackground
                           : AppColors.lightSurface,
                       size: 30);
                 }
-                // OFF state icon
+
                 return Icon(Icons.circle,
-                    color: context.isDark()
+                    color: _isDark
                         ? AppColors.darkBackground
                         : AppColors.lightSurface,
                     size: 30);

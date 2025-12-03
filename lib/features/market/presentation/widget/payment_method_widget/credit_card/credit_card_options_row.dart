@@ -5,7 +5,6 @@ import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
 import 'package:team_18_final_project/core/config/check_credit_card_state.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class CreditCardOptionsRow extends StatefulWidget {
@@ -19,6 +18,9 @@ class CreditCardOptionsRow extends StatefulWidget {
 class _CreditCardOptionsRowState extends State<CreditCardOptionsRow> {
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    final _isDark = _theme.brightness == Brightness.dark;
+
     return Column(
       children: [
         AppSpacing.vertical(14),
@@ -28,12 +30,10 @@ class _CreditCardOptionsRowState extends State<CreditCardOptionsRow> {
             return BottomActionButton(
                 backgroundColor:
                     (index == widget.checkCreditCardState.getSelectedCardIndex)
-                        ? (context.isDark()
-                            ? AppColors.primary
-                            : AppColors.darkSurface)
-                        : context.islight()
-                            ? AppColors.primary
-                            : AppColors.lightSurface,
+                        ? (_isDark ? AppColors.primary : AppColors.darkSurface)
+                        : _isDark
+                            ? AppColors.lightSurface
+                            : AppColors.primary,
                 borderRadiusGeometry: BorderRadius.circular(12).r,
                 onPressed: () {
                   setState(() {
@@ -47,12 +47,12 @@ class _CreditCardOptionsRowState extends State<CreditCardOptionsRow> {
                       ? null
                       : (index ==
                               widget.checkCreditCardState.getSelectedCardIndex)
-                          ? (context.isDark()
+                          ? (_isDark
                               ? AppColors.textWhite
                               : AppColors.textWhite)
-                          : context.islight()
-                              ? AppColors.textWhite
-                              : AppColors.textDark,
+                          : _isDark
+                              ? AppColors.textDark
+                              : AppColors.textWhite,
                   assetsName: AppStrings.cards[index],
                 ));
           }),

@@ -8,7 +8,6 @@ class AppStrings {
   static const market = 'Market';
   static const portfolio = 'Portfolio';
   static const settings = 'Settings';
-<<<<<<< HEAD
   static const creditCard = 'Credit Card';
   static const googlePay = 'Google Pay';
   static const mobileBanking = 'Mobile Banking';
@@ -16,7 +15,6 @@ class AppStrings {
   static const play = 'Play';
   static const dEBIT = 'DEBIT';
   static const paymentMethod = 'Payment method';
-=======
 
   // Onboarding
   // ---------- Special split title (Screen 1) ----------
@@ -135,7 +133,8 @@ class AppStrings {
   static const faceIDAuthFailed = 'Face ID authentication failed';
 
   // Auth - Biometric Setup Localized Reasons
-  static const authenticateSetupFingerprint = 'Authenticate to set up fingerprint';
+  static const authenticateSetupFingerprint =
+      'Authenticate to set up fingerprint';
   static const authenticateSetupFaceID = 'Authenticate to set up Face ID';
 
   // Error Template
@@ -159,7 +158,6 @@ class AppStrings {
   static const authenticateToUnlock = 'Authenticate to unlock the app';
 
   // Market Strings
->>>>>>> 53a0946c25b0286d6a7831a3ecbb05b6d9deadc9
   static const String bitcoin = 'Bitcoin';
   static const String buttonBuyCrypto = 'Continue';
   static const String buyCrypto = 'Buy Crypto';

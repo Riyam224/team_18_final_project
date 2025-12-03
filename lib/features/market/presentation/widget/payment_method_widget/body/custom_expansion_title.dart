@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class CustomExpansionTitle extends StatefulWidget {
@@ -31,10 +30,12 @@ class _CustomExpansionTitleState extends State<CustomExpansionTitle> {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    final _isDark = _theme.brightness == Brightness.dark;
     Color _backgroundColor =
-        context.islight() ? AppColors.lightSurface : AppColors.darkBackground;
+        _isDark ? AppColors.lightSurface : AppColors.darkBackground;
     return Theme(
-        data: context.appTheme.copyWith(
+        data: _theme.copyWith(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           hoverColor: Colors.transparent,
@@ -74,9 +75,7 @@ class _CustomExpansionTitleState extends State<CustomExpansionTitle> {
               style: widget.style ??
                   AppTextStyles.headlineMedium.copyWith(
                     color: widget.colorText ??
-                        (context.isDark()
-                            ? AppColors.textWhite
-                            : AppColors.primary),
+                        (_isDark ? AppColors.textWhite : AppColors.primary),
                     fontSize: widget.fontSize ?? 16.sp,
                   ),
             ),

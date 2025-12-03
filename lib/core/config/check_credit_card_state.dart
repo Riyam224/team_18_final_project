@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/payment_method_widget/card_data/master_card_data.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/payment_method_widget/card_data/visa_card_data.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/payment_method_widget/card_shape/master_card_background.dart';
@@ -14,13 +13,15 @@ abstract class CardType {
 class VisaCard implements CardType {
   @override
   Widget buildCardWidget({required BuildContext context}) {
+    final _theme = Theme.of(context);
+    final _isDark = _theme.brightness == Brightness.dark;
     return CreditCardWidget(
       creditCardBackground: VisaCardBackground(
         creditCardContent: VisaCardData(),
       ),
-      colorBegin: context.islight()
-          ? Color.fromARGB(234, 2, 34, 151)
-          : Color.fromARGB(255, 4, 39, 166),
+      colorBegin: _isDark
+          ? Color.fromARGB(255, 4, 39, 166)
+          : Color.fromARGB(234, 2, 34, 151),
       colorEnd: Color(0xFF7919B4),
       onTap: () {},
     );
@@ -30,13 +31,14 @@ class VisaCard implements CardType {
 class MasterCard implements CardType {
   @override
   Widget buildCardWidget({required BuildContext context}) {
+    final _theme = Theme.of(context);
+    final _isDark = _theme.brightness == Brightness.dark;
     return CreditCardWidget(
       creditCardBackground: MasterCardBackground(
         creditCardContent: MasterCardData(),
       ),
-      colorBegin: context.islight()
-          ? Color.fromARGB(255, 187, 186, 186)
-          : Color(0xFF2A2A2A),
+      colorBegin:
+          _isDark ? Color(0xFF2A2A2A) : Color.fromARGB(255, 187, 186, 186),
       colorEnd: Color(0xFF2A2A2A),
       onTap: () {},
     );

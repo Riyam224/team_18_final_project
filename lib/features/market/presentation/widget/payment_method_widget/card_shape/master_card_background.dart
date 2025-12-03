@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 
 class MasterCardBackground extends StatelessWidget {
   final Widget creditCardContent;
@@ -8,6 +7,9 @@ class MasterCardBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    final _isDark = _theme.brightness == Brightness.dark;
+
     return Stack(
       children: [
         Positioned(
@@ -16,9 +18,9 @@ class MasterCardBackground extends StatelessWidget {
           child: CustomPaint(
             size: Size(300.w, 250.h),
             painter: ArcPainter(
-              color: context.islight()
-                  ? Color.fromARGB(255, 200, 200, 200).withOpacity(0.15)
-                  : Color.fromARGB(255, 180, 180, 180).withOpacity(0.2),
+              color: _isDark
+                  ? Color.fromARGB(255, 180, 180, 180).withOpacity(0.2)
+                  : Color.fromARGB(255, 200, 200, 200).withOpacity(0.15),
             ),
           ),
         ),
@@ -28,18 +30,18 @@ class MasterCardBackground extends StatelessWidget {
           child: CustomPaint(
             size: Size(280.w, 220.h),
             painter: ArcPainter(
-              color: context.islight()
-                  ? Color.fromARGB(255, 220, 220, 220).withOpacity(0.12)
-                  : Color.fromARGB(255, 200, 200, 200).withOpacity(0.18),
+              color: _isDark
+                  ? Color.fromARGB(255, 200, 200, 200).withOpacity(0.18)
+                  : Color.fromARGB(255, 220, 220, 220).withOpacity(0.12),
             ),
           ),
         ),
         Positioned.fill(
           child: CustomPaint(
             painter: HexagonalDotPatternPainter(
-              color: context.islight()
-                  ? Color.fromARGB(255, 150, 150, 150).withOpacity(0.05)
-                  : Color.fromARGB(255, 200, 200, 200).withOpacity(0.08),
+              color: _isDark
+                  ? Color.fromARGB(255, 200, 200, 200).withOpacity(0.08)
+                  : Color.fromARGB(255, 150, 150, 150).withOpacity(0.05),
             ),
           ),
         ),
