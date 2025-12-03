@@ -9,7 +9,9 @@ class AppRoutes {
   static const home = '/home';
   static const market = '/market';
   static const portfolio = '/portfolio';
+  static const transactions = '/transactions';
   static const settings = '/settings';
+  static const profile = '/profile';
 
   // Other Routes (outside bottom nav)
   static const coinDetails = '/coinDetails';
@@ -18,5 +20,26 @@ class AppRoutes {
 
   // Security
   static const lock = '/lock';
+  static const appLock = '/app-lock';
   static const biometric = '/biometric';
+  // register
+  static const setFingerprintRegister = '/setFingerprintRegister';
+  static const fingerprintSuccessRegister = '/fingerprintSuccessRegister';
+  static const setFaceIDRegister = '/setFaceIDRegister';
+  static const faceIdScanningRegister = '/faceIdScanningRegister';
+
+  static const faceIdSuccessRegister = '/faceIdSuccessRegister';
+
+  static const verifyFingerprintLogin = '/verifyFingerprintLogin';
+  static const verifyFingerprintLoginSuccess = '/verifyFingerprintLoginSuccess';
+  // static const verifyFaceIDLogin = '/verifyFaceIDLogin';
+  static const faceIdScanningLogin = '/faceIdScanningLogin';
+  static const faceIdVerifiedSuccessLogin = '/faceIdVerifiedSuccessLogin';
+
+  // Debug Routes
+  static const biometricTest = '/biometric-test';
+  static const debugBiometrics = '/debug-biometrics';
+
+  // Root warning
+  static const rootWarning = '/root-warning';
 }

@@ -1,19 +1,17 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-/// Save the access token (just the token string, not the whole response)
-Future<void> saveToken(String token) async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('access_token', token);
-}
+class AppPrefs {
+  static const String _onboardingKey = 'onboarding_completed';
 
-/// Retrieve the saved token later
-Future<String?> getToken() async {
-  final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('access_token');
-}
+  /// Save onboarding completion
+  static Future<void> setOnboardingCompleted() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(_onboardingKey, true);
+  }
 
-/// Remove the token (for logout)
-Future<void> clearToken() async {
-  final prefs = await SharedPreferences.getInstance();
-  await prefs.remove('access_token');
+  /// Check if onboarding was completed before
+  static Future<bool> isOnboardingCompleted() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getBool(_onboardingKey) ?? false;
+  }
 }
