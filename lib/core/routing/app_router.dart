@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_nav_shell.dart';
@@ -44,18 +42,20 @@ class RouteGenerator {
     observers: [appRouteObserver],
     errorBuilder: (context, state) =>
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
+
+    // INITIAL ROUTE
     initialLocation: AppRoutes.splash,
 
     // ==============================
-    // 🔐 REDIRECT FIXED HERE
+    // 🔐 REDIRECT LOGIC
     // ==============================
     redirect: (context, state) async {
-      // 1️⃣ Never block root warning
+      // Never block root-warning
       if (state.matchedLocation.startsWith(AppRoutes.rootWarning)) {
         return null;
       }
 
-      // 2️⃣ Protected routes require authentication
+      // Protected routes
       final protected = <String>{
         AppRoutes.home,
         AppRoutes.market,
@@ -71,7 +71,7 @@ class RouteGenerator {
 
       if (!isProtected) return null;
 
-      // 3️⃣ Check session
+      // Check session
       final sessionManager = sl<ISessionManager>();
       final isValidResult = await sessionManager.isSessionValid();
       final authed = isValidResult.fold((_) => false, (valid) => valid);
@@ -102,9 +102,7 @@ class RouteGenerator {
         builder: (_, __) => RegisterScreen(),
       ),
 
-      // ==========================
-      // REGISTER BIOMETRIC
-      // ==========================
+      // REGISTER BIOMETRICS
       GoRoute(
         path: AppRoutes.setFingerprintRegister,
         builder: (_, __) => const SetFingerprintRegisterScreen(),
@@ -126,9 +124,7 @@ class RouteGenerator {
         builder: (_, __) => const FaceidSuccessRegisterScreen(),
       ),
 
-      // ==========================
-      // LOGIN BIOMETRIC
-      // ==========================
+      // LOGIN BIOMETRICS
       GoRoute(
         path: AppRoutes.verifyFingerprintLogin,
         builder: (_, __) => const VerifyFingerprintLoginScreen(),
@@ -146,9 +142,7 @@ class RouteGenerator {
         builder: (_, __) => const FaceIDVerifySuccessLoginScreen(),
       ),
 
-      // ==========================
-      // 🔒 APP LOCK
-      // ==========================
+      // SECURITY
       GoRoute(
         path: AppRoutes.appLock,
         builder: (_, __) => const AppLockScreen(),
@@ -158,9 +152,7 @@ class RouteGenerator {
         builder: (_, __) => const RootWarningScreen(),
       ),
 
-      // ==========================
-      // DEBUG SCREENS
-      // ==========================
+      // DEBUG
       GoRoute(
         path: AppRoutes.biometricTest,
         builder: (_, __) => const BiometricTestScreen(),
@@ -171,7 +163,7 @@ class RouteGenerator {
       ),
 
       // ==========================
-      // BOTTOM NAVIGATION
+      // BOTTOM NAVIGATION (SHELL)
       // ==========================
       ShellRoute(
         builder: (context, state, child) => BottomNavShell(child: child),
@@ -200,7 +192,7 @@ class RouteGenerator {
       ),
 
       // ==========================
-      // DETAILS (NO BOTTOM NAV)
+      // NO-NAV SCREENS
       // ==========================
       GoRoute(
         path: '${AppRoutes.coinDetails}/:id',
