@@ -43,12 +43,20 @@ class RouteGenerator {
     observers: [appRouteObserver],
     errorBuilder: (context, state) =>
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
+
+    // INITIAL ROUTE
     initialLocation: AppRoutes.splash,
+
+    // ==============================
+    // 🔐 REDIRECT LOGIC
+    // ==============================
     redirect: (context, state) async {
+      // Never block root-warning
       if (state.matchedLocation.startsWith(AppRoutes.rootWarning)) {
         return null;
       }
 
+      // Protected routes
       final protected = <String>{
         AppRoutes.home,
         AppRoutes.market,
@@ -64,6 +72,7 @@ class RouteGenerator {
 
       if (!isProtected) return null;
 
+      // Check session
       final sessionManager = sl<ISessionManager>();
       final isValidResult = await sessionManager.isSessionValid();
       final authed = isValidResult.fold((_) => false, (valid) => valid);
@@ -89,6 +98,8 @@ class RouteGenerator {
         path: AppRoutes.register,
         builder: (_, __) => RegisterScreen(),
       ),
+
+      // REGISTER BIOMETRICS
       GoRoute(
         path: AppRoutes.setFingerprintRegister,
         builder: (_, __) => const SetFingerprintRegisterScreen(),
@@ -109,6 +120,8 @@ class RouteGenerator {
         path: AppRoutes.faceIdSuccessRegister,
         builder: (_, __) => const FaceidSuccessRegisterScreen(),
       ),
+
+      // LOGIN BIOMETRICS
       GoRoute(
         path: AppRoutes.verifyFingerprintLogin,
         builder: (_, __) => const VerifyFingerprintLoginScreen(),
@@ -125,6 +138,8 @@ class RouteGenerator {
         path: AppRoutes.faceIdVerifiedSuccessLogin,
         builder: (_, __) => const FaceIDVerifySuccessLoginScreen(),
       ),
+
+      // SECURITY
       GoRoute(
         path: AppRoutes.appLock,
         builder: (_, __) => const AppLockScreen(),
@@ -133,6 +148,8 @@ class RouteGenerator {
         path: AppRoutes.rootWarning,
         builder: (_, __) => const RootWarningScreen(),
       ),
+
+      // DEBUG
       GoRoute(
         path: AppRoutes.biometricTest,
         builder: (_, __) => const BiometricTestScreen(),
@@ -141,6 +158,10 @@ class RouteGenerator {
         path: AppRoutes.debugBiometrics,
         builder: (_, __) => BiometricDebugScreen(),
       ),
+
+      // ==========================
+      // BOTTOM NAVIGATION (SHELL)
+      // ==========================
       ShellRoute(
         builder: (context, state, child) => BlocProvider(
           create: (_) => sl<HomeCubit>()..loadHomeData(),
@@ -169,6 +190,10 @@ class RouteGenerator {
           ),
         ],
       ),
+
+      // ==========================
+      // NO-NAV SCREENS
+      // ==========================
       GoRoute(
         path: '${AppRoutes.coinDetails}/:id',
         builder: (_, state) {
