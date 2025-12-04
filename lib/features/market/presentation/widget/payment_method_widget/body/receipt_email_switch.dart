@@ -12,7 +12,7 @@ class ReceiptEmailSwitch extends StatefulWidget {
 }
 
 class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
-  bool vlaue = false;
+  bool isSendReceiptEnabled = false;
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +38,10 @@ class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
                 _isDark ? AppColors.darkBackground : AppColors.primary,
             activeTrackColor:
                 _isDark ? AppColors.lightSurface : AppColors.primary,
-            value: vlaue,
+            value: isSendReceiptEnabled,
             onChanged: (value) {
               setState(() {
-                this.vlaue = value;
+                isSendReceiptEnabled = value;
               });
             },
             mouseCursor: SystemMouseCursors.click,
