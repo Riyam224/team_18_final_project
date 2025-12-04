@@ -18,7 +18,9 @@ class PaymentScreen extends StatelessWidget {
           centerTitle: true,
           surfaceTintColor: Colors.transparent,
           leading: GestureDetector(
-            onTap: () {},
+            onTap: () {
+              Navigator.pop(context);
+            },
             child: Icon(
               Icons.arrow_back_rounded,
               color: _isDark ? AppColors.textWhite : AppColors.primary,

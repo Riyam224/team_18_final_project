@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 
 class GoogleCardBackground extends StatelessWidget {
   final Widget creditCardContent;
@@ -21,9 +23,7 @@ class GoogleCardBackground extends StatelessWidget {
         ),
       ),
       Padding(
-          padding:
-              const EdgeInsets.only(left: 23, right: 23, top: 15, bottom: 15).r,
-          child: creditCardContent),
+          padding: AppSpacing.paddingL23R23T15B15, child: creditCardContent),
     ]);
   }
 }

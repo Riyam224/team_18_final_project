@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
@@ -19,7 +20,8 @@ class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
     final _isDark = _theme.brightness == Brightness.dark;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 45).r,
+      padding: AppSpacing.paddingH16V45,
+      // const EdgeInsets.symmetric(horizontal: 16, vertical: 45).r,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

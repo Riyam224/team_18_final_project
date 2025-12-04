@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 
 class CreditCardWidget extends StatelessWidget {
   final Widget creditCardBackground;
@@ -18,8 +19,7 @@ class CreditCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:
-          const EdgeInsets.only(top: 24, left: 19, right: 19, bottom: 19).r,
+      padding: AppSpacing.paddingT24L19R19B19,
       child: Column(
         children: [
           GestureDetector(

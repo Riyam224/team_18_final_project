@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class CustomExpansionTitle extends StatefulWidget {
@@ -33,7 +34,7 @@ class _CustomExpansionTitleState extends State<CustomExpansionTitle> {
     final _theme = Theme.of(context);
     final _isDark = _theme.brightness == Brightness.dark;
     Color _backgroundColor =
-        _isDark ? AppColors.lightSurface : AppColors.darkBackground;
+        _isDark ? AppColors.darkBackground : AppColors.lightSurface;
     return Theme(
         data: _theme.copyWith(
           splashColor: Colors.transparent,
@@ -41,7 +42,7 @@ class _CustomExpansionTitleState extends State<CustomExpansionTitle> {
           hoverColor: Colors.transparent,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10).r,
+          padding: AppSpacing.paddingH16V10,
           child: ExpansionTile(
             enableFeedback: true,
             onExpansionChanged: (value) {
@@ -51,7 +52,7 @@ class _CustomExpansionTitleState extends State<CustomExpansionTitle> {
             },
             dense: true,
             minTileHeight: 56.h,
-            tilePadding: EdgeInsets.symmetric(horizontal: 19).r,
+            tilePadding: AppSpacing.paddingH19,
             trailing: AnimatedRotation(
                 turns: _isExpanded ? 0.5 : 0,
                 duration: Duration(milliseconds: 200),

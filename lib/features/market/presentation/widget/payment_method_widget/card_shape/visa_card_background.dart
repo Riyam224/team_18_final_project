@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 
 class VisaCardBackground extends StatelessWidget {
   final Widget creditCardContent;
@@ -70,10 +71,7 @@ class VisaCardBackground extends StatelessWidget {
         ),
         // Card content
         Padding(
-            padding:
-                const EdgeInsets.only(left: 23, right: 23, top: 22, bottom: 15)
-                    .r,
-            child: creditCardContent),
+            padding: AppSpacing.paddingL23R23T15B15, child: creditCardContent),
       ],
     );
   }

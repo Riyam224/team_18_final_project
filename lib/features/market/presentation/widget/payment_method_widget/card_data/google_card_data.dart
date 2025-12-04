@@ -34,7 +34,7 @@ class GoogleCardData extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 22, bottom: 5).r,
+                  padding: AppSpacing.paddingL22B5,
                   child: Text(AppStrings.dEBIT,
                       style: _theme.textTheme.labelLarge
                           ?.copyWith(color: AppColors.gray2)),

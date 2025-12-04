@@ -42,7 +42,7 @@ class RouteGenerator {
     observers: [appRouteObserver],
     errorBuilder: (context, state) =>
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
-    initialLocation: AppRoutes.splash,
+    initialLocation: AppRoutes.payment,
 
     // ==============================
     // 🔐 REDIRECT FIXED HERE
