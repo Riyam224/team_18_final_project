@@ -84,4 +84,18 @@ class AppColors {
 
   // ===== Shadows =====
   static const Color shadowLight = Color(0x0C000000); // 5% black
+
+  //=========== Card Shape Colors ===========//
+  // The names clearly describe their colors and the usage context (arc, hex dot, light/dark).
+
+  static const Color creditCardArcPrimary = Color.fromARGB(255, 200, 200, 200);
+  static const Color creditCardArcSecondary =
+      Color.fromARGB(255, 220, 220, 220);
+  static const Color creditCardArcTertiary = Color.fromARGB(255, 180, 180, 180);
+  static const Color creditCardArcQuaternary =
+      Color.fromARGB(255, 200, 200, 200);
+  static const Color creditCardHexDotPrimary =
+      Color.fromARGB(255, 150, 150, 150);
+  static const Color creditCardHexDotSecondary =
+      Color.fromARGB(255, 200, 200, 200);
 }

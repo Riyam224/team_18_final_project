@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class MasterCardBackground extends StatelessWidget {
   final Widget creditCardContent;
@@ -20,8 +21,8 @@ class MasterCardBackground extends StatelessWidget {
             size: Size(300.w, 250.h),
             painter: ArcPainter(
               color: _isDark
-                  ? Color.fromARGB(255, 180, 180, 180).withOpacity(0.2)
-                  : Color.fromARGB(255, 200, 200, 200).withOpacity(0.15),
+                  ? AppColors.creditCardArcTertiary.withOpacity(0.2)
+                  : AppColors.creditCardArcQuaternary.withOpacity(0.15),
             ),
           ),
         ),
@@ -32,8 +33,8 @@ class MasterCardBackground extends StatelessWidget {
             size: Size(280.w, 220.h),
             painter: ArcPainter(
               color: _isDark
-                  ? Color.fromARGB(255, 200, 200, 200).withOpacity(0.18)
-                  : Color.fromARGB(255, 220, 220, 220).withOpacity(0.12),
+                  ? AppColors.creditCardArcQuaternary.withOpacity(0.18)
+                  : AppColors.creditCardArcSecondary.withOpacity(0.12),
             ),
           ),
         ),
@@ -41,8 +42,8 @@ class MasterCardBackground extends StatelessWidget {
           child: CustomPaint(
             painter: HexagonalDotPatternPainter(
               color: _isDark
-                  ? Color.fromARGB(255, 200, 200, 200).withOpacity(0.08)
-                  : Color.fromARGB(255, 150, 150, 150).withOpacity(0.05),
+                  ? AppColors.creditCardArcQuaternary.withOpacity(0.08)
+                  : AppColors.creditCardHexDotPrimary.withOpacity(0.05),
             ),
           ),
         ),
