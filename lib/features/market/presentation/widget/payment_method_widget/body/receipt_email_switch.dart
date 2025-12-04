@@ -21,7 +21,6 @@ class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
 
     return Padding(
       padding: AppSpacing.paddingH16V45,
-      // const EdgeInsets.symmetric(horizontal: 16, vertical: 45).r,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [

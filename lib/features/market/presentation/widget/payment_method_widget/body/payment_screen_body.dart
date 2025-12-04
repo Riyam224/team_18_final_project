@@ -35,14 +35,10 @@ class PaymentScreenBody extends StatelessWidget {
           ]),
         ),
         SliverToBoxAdapter(
-          child: Column(
-            children: [
-              const CustomExpansionTitle(
-                  title: AppStrings.mobileBanking, children: []),
-              ReceiptEmailSwitch()
-            ],
-          ),
+          child: const CustomExpansionTitle(
+              title: AppStrings.mobileBanking, children: []),
         ),
+        SliverToBoxAdapter(child: ReceiptEmailSwitch())
       ],
     );
   }
