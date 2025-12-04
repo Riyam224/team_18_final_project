@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_nav_shell.dart';
@@ -44,7 +42,7 @@ class RouteGenerator {
     observers: [appRouteObserver],
     errorBuilder: (context, state) =>
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
-    initialLocation: AppRoutes.splash,
+    initialLocation: AppRoutes.payment,
 
     // ==============================
     // 🔐 REDIRECT FIXED HERE

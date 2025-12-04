@@ -1,0 +1,99 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
+import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/utils/app_colors.dart';
+
+class MasterCardData extends StatelessWidget {
+  const MasterCardData({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final _theme = Theme.of(context);
+    final _isDark = _theme.brightness == Brightness.dark;
+    Color _backgroundColor =
+        _isDark ? AppColors.lightSurface : AppColors.lightSurface2;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              AppStrings.professional,
+              style: TextStyle(
+                fontSize: 11.sp,
+                fontWeight: FontWeight.w600,
+                color: _isDark ? AppColors.textWhiteSoft : AppColors.textGray,
+                letterSpacing: 0.5,
+              ),
+            ),
+            AppSvgWidget(
+              assetsName: AppAssets.contactless,
+              width: 17.w,
+              height: 17.h,
+            )
+          ],
+        ),
+        const Spacer(),
+        Image.asset(
+          AppAssets.eMVChip,
+          width: 40.w,
+          height: 35.h,
+          color: AppColors.textWhiteSoft,
+        ),
+        AppSpacing.vertical(5),
+        Text(AppStrings.cardNumber,
+            style: _theme.textTheme.titleLarge?.copyWith(
+                letterSpacing: 2,
+                fontSize: 16.sp,
+                color: _backgroundColor,
+                fontWeight: FontWeight.w700)),
+        AppSpacing.vertical(8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  AppStrings.validTill,
+                  style: _theme.textTheme.titleMedium?.copyWith(
+                      color:
+                          _isDark ? AppColors.textGrayDark : AppColors.textGray,
+                      fontSize: 8.sp),
+                ),
+                AppSpacing.vertical(2),
+                Text(
+                  AppStrings.cardExpiry,
+                  style: _theme.textTheme.titleLarge
+                      ?.copyWith(fontSize: 10.sp, color: _backgroundColor),
+                ),
+              ],
+            ),
+          ],
+        ),
+        AppSpacing.vertical(11),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text(
+              AppStrings.cardHolderName,
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            AppSvgWidget(
+              assetsName: AppAssets.mastercardLogo,
+              width: 20.w,
+              height: 20.h,
+            )
+          ],
+        ),
+      ],
+    );
+  }
+}
