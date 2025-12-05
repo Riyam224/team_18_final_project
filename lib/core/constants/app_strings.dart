@@ -86,4 +86,19 @@ class AppStrings {
   static const String dayAgo = 'day ago';
   static const String daysAgo = 'days ago';
   static const List<String> monthsShort = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
+
+  static const String currentBalance = 'Current Balance';
+  static const String weeklyProfit = 'Weekly Profit';
+  static const String greeting = 'Hi, riyam 👋';
+  static const String marketCap = 'Market Cap';
+  static const String volume24h = '24h Volume';
+  static const String btcDominance = 'BTC Dominance';
+  static const String activeCoins = 'Active Coins';
+  static const String ethereum = 'Ethereum';
+  static const String binanceCoin = 'Binance Coin';
+  static const String litecoin = 'Litecoin';
+  static const String marketOverview = 'Market Overview';
+  static const String trendingNow = 'Trending Now';
+  static const String topGainers = 'Top Gainers';
+  static const String viewAll = 'View all';
 }

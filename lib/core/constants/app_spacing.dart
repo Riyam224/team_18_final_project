@@ -73,7 +73,6 @@ class AppSpacing {
   static EdgeInsets get paddingL28R24 =>
       EdgeInsets.only(left: 28.w, right: 24.w);
 
-  // ========= MARGIN - ALL SIDES =========
 
   static EdgeInsets get marginAll4 => EdgeInsets.all(4.w);
   static EdgeInsets get marginAll8 => EdgeInsets.all(8.w);
@@ -84,7 +83,6 @@ class AppSpacing {
   static EdgeInsets get marginB10 => EdgeInsets.only(bottom: 10.h);
   static EdgeInsets get marginB14 => EdgeInsets.only(bottom: 14.h);
 
-  // ========= MARGIN - HORIZONTAL =========
 
   static EdgeInsets get marginH8 => EdgeInsets.symmetric(horizontal: 8.w);
   static EdgeInsets get marginH12 => EdgeInsets.symmetric(horizontal: 12.w);
@@ -92,7 +90,6 @@ class AppSpacing {
   static EdgeInsets get marginH20 => EdgeInsets.symmetric(horizontal: 20.w);
   static EdgeInsets get marginH24 => EdgeInsets.symmetric(horizontal: 24.w);
 
-  // ========= MARGIN - VERTICAL =========
 
   static EdgeInsets get marginV4 => EdgeInsets.symmetric(vertical: 4.h);
   static EdgeInsets get marginV8 => EdgeInsets.symmetric(vertical: 8.h);
@@ -100,7 +97,6 @@ class AppSpacing {
   static EdgeInsets get marginV16 => EdgeInsets.symmetric(vertical: 16.h);
   static EdgeInsets get marginV20 => EdgeInsets.symmetric(vertical: 20.h);
 
-  // ========= MARGIN - CUSTOM SIDES =========
 
   static EdgeInsets marginOnly({
     double left = 0,
@@ -117,7 +113,6 @@ class AppSpacing {
 
   static EdgeInsets get marginR8 => EdgeInsets.only(right: 8.w);
 
-  // ========= VERTICAL GAPS (SizedBox heights) =========
 
   static SizedBox get gapH2 => SizedBox(height: 2.h);
   static SizedBox get gapH4 => SizedBox(height: 4.h);
@@ -140,7 +135,6 @@ class AppSpacing {
   static SizedBox get gapH88 => SizedBox(height: 88.h);
   static SizedBox get gapH100 => SizedBox(height: 100.h);
 
-  // ========= HORIZONTAL GAPS (SizedBox widths) =========
 
   static SizedBox get gapW4 => SizedBox(width: 4.w);
   static SizedBox get gapW10 => SizedBox(width: 10.w);
@@ -151,18 +145,15 @@ class AppSpacing {
   static SizedBox get gapW24 => SizedBox(width: 24.w);
   static SizedBox get gapW48 => SizedBox(width: 48.w);
 
-  // ========= GRID SPACING =========
 
   static double get gridCrossSpacing => 12.w;
   static double get gridMainSpacing => 12.h;
   static double get gridMainExtent => 110.h;
 
-  // ========= CUSTOM GAPS =========
 
   static SizedBox customGapH(double height) => SizedBox(height: height.h);
   static SizedBox customGapW(double width) => SizedBox(width: width.w);
 
-  // ========= HELPER METHODS (Factory methods) =========
 
   static SizedBox horizontal(double horizontal, {Widget? child}) =>
       SizedBox(width: horizontal.w, child: child);
@@ -190,7 +181,6 @@ class AppSpacing {
         bottom: (bottom ?? 0).h,
       );
 
-  // ========= LEGACY ALIASES (for backward compatibility) =========
 
   static SizedBox get vSpaceXSmall => gapH8;
 

@@ -13,6 +13,8 @@ class AppColors {
   static const Color accentCoral = Color(0xFFFF8A80);
 
   // ===== Crypto Colors =====
+  static const Color bitcoin = Color(0xFFF7931A);
+  static const Color ethereum = Color(0xFF627EEA);
   static const Color cryptoCardano = Color(0xFF0033AD);
   static const Color cryptoRipple = Color(0xFF23292F);
   static const Color cryptoPolkadot = Color(0xFFE6007A);
@@ -49,6 +51,9 @@ class AppColors {
   static const Color darkBackground2 = Color(0xFF121212);
   static const Color darkSurface = Color(0xFF1B1B1B);
   static const Color darkCard = Color(0xFF27292A);
+  static const Color balanceCardDark = Color(0xFF0F1C38);
+  static const Color balanceCardLight = Color(0xFF1D3A70);
+  static const Color chartBackground = Color(0xFF001133);
 
   // Dark Text
   static const Color textWhite = Color(0xFFFFFFFF);

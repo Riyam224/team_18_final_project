@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:team_18_final_project/core/config/api_config.dart';
 import 'package:team_18_final_project/core/config/env_config.dart';
-import 'api_base_url.dart';
+import 'package:team_18_final_project/core/constants/api_constants.dart';
 
 class DioClient {
   static String get _apiKey => EnvConfig.coinGeckoApiKey;
@@ -10,11 +10,11 @@ class DioClient {
   static Dio createDio() {
     final dio = Dio(
       BaseOptions(
-        baseUrl: ApiConstants.baseUrl,
+        baseUrl: ApiBaseUrl.coingecko,
         connectTimeout: ApiConfig.connectTimeout,
         receiveTimeout: ApiConfig.receiveTimeout,
         headers: {
-          ApiConfig.headerAccept: ApiConfig.headerContentType,
+          ApiHeaders.contentType: ApiHeaders.applicationJson,
           ApiConfig.headerApiKey: _apiKey,
         },
       ),

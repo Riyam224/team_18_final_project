@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -14,17 +15,16 @@ class HomeHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            CircleAvatar(
+            const CircleAvatar(
               radius: 22,
               backgroundImage: AssetImage("assets/images/profile.png"),
             ),
             const SizedBox(width: 12),
             Text(
-              "Hi, riyam 👋",
+              AppStrings.greeting,
               style: theme.textTheme.titleMedium!.copyWith(
                 color: isDark ? AppColors.textWhiteSoft : AppColors.textBlack,
-                inherit:
-                    false, // This makes your color override theme completely
+                inherit: false,
               ),
             )
           ],

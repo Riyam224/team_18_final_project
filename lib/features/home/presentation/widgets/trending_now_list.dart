@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/crypto_item_tile.dart';
 
 class TrendingNowList extends StatelessWidget {
@@ -10,21 +12,21 @@ class TrendingNowList extends StatelessWidget {
       children: [
         Expanded(
           child: CryptoItemTile(
-            name: "Bitcoin",
+            name: AppStrings.bitcoin,
             symbol: "BTC",
             price: "1,132,151",
             percentage: "2.35%",
-            iconColor: const Color(0xFFF7931A), // Bitcoin orange
+            iconColor: AppColors.bitcoin, // Bitcoin orange
           ),
         ),
         const SizedBox(width: 12),
         Expanded(
           child: CryptoItemTile(
-            name: "Ethereum",
+            name: AppStrings.ethereum,
             symbol: "ETH",
             price: "1,132,151",
             percentage: "2.35%",
-            iconColor: const Color(0xFF627EEA), // Ethereum blue
+            iconColor: AppColors.ethereum, // Ethereum blue
           ),
         ),
       ],

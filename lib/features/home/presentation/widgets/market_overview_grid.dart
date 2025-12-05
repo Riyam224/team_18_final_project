@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 
 class MarketOverviewGrid extends StatelessWidget {
   const MarketOverviewGrid({super.key});
@@ -8,10 +9,10 @@ class MarketOverviewGrid extends StatelessWidget {
     final theme = Theme.of(context);
 
     final List<Map<String, String>> items = [
-      {"title": "Market Cap", "value": "\$2.1T"},
-      {"title": "24h Volume", "value": "\$85.5B"},
-      {"title": "BTC Dominance", "value": "48.5%"},
-      {"title": "Active Coins", "value": "19,417"},
+      {"title": AppStrings.marketCap, "value": "\$2.1T"},
+      {"title": AppStrings.volume24h, "value": "\$85.5B"},
+      {"title": AppStrings.btcDominance, "value": "48.5%"},
+      {"title": AppStrings.activeCoins, "value": "19,417"},
     ];
 
     return GridView.builder(

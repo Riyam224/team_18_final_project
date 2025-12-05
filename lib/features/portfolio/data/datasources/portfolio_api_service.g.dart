@@ -1,5 +1,3 @@
-// GENERATED CODE - DO NOT MODIFY BY HAND
-
 part of 'portfolio_api_service.dart';
 
 class _PortfolioApiService implements PortfolioApiService {

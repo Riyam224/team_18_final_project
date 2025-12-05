@@ -13,7 +13,6 @@ class AppAssets {
   static const settingsOutline = 'assets/icons/settings_outline.svg';
   static const settingsSolid = 'assets/icons/settings_solid.svg';
 
-  //Svg
   static const String infoOutline = "assets/icons/info_outline.svg";
   static const String bitcoinIcon = 'assets/icons/bitcoin.svg';
   static const String ethLight = 'assets/icons/eth_light.svg';

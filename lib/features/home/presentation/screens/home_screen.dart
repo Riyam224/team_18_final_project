@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import '../widgets/balance_card.dart';
 import '../widgets/home_header.dart';
 import '../widgets/market_overview_grid.dart';
@@ -27,22 +28,22 @@ class HomeScreen extends StatelessWidget {
               const BalanceCard(),
               const SizedBox(height: 24),
 
-              const SectionTitle(title: "Market Overview"),
+              const SectionTitle(title: AppStrings.marketOverview),
               const SizedBox(height: 12),
 
               const MarketOverviewGrid(),
               const SizedBox(height: 24),
 
               const SectionTitle(
-                title: "Trending Now",
-                actionText: "View all",
+                title: AppStrings.trendingNow,
+                actionText: AppStrings.viewAll,
               ),
               const SizedBox(height: 12),
 
               const TrendingNowList(),
               const SizedBox(height: 24),
 
-              const SectionTitle(title: "Top Gainers"),
+              const SectionTitle(title: AppStrings.topGainers),
               const SizedBox(height: 12),
 
               const TopGainersList(),

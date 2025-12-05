@@ -25,7 +25,6 @@ class ApiErrorHandler {
           return ErrorMessages.unexpectedError;
       }
     } else {
-      // Handle non-Dio exceptions (logic, parsing, etc.)
       return ErrorMessages.getErrorMessage(error);
     }
   }
@@ -58,7 +57,6 @@ class ApiErrorHandler {
       }
     }
 
-    // ✅ Handle based on status code
     switch (response?.statusCode) {
       case 400:
         return ErrorMessages.badRequest;

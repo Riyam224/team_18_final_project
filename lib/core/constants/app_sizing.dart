@@ -1,8 +1,6 @@
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// AppSizing - widget sizes, heights, widths, icons, radii, shadows, positions
 class AppSizing {
-  // ========= HEIGHTS =========
 
   static double get h4 => 4.h;
   static double get h6 => 6.h;
@@ -60,7 +58,6 @@ class AppSizing {
   static double get h671 => 671.h;
   static double get h812 => 812.h;
 
-  // ========= WIDTHS =========
 
   static double get w8 => 8.w;
   static double get w12 => 12.w;
@@ -95,7 +92,6 @@ class AppSizing {
   static double get w375 => 375.w;
   static double get w638 => 638.w;
 
-  // ========= ICON SIZES =========
 
   static double get iconXSmall => 20.w;
   static double get iconSmall => 22.sp;
@@ -103,13 +99,11 @@ class AppSizing {
   static double get iconLarge => 28.w;
   static double get iconXLarge => 32.w;
 
-  // Biometric icons (auth feature specific)
   static double get biometricIconSmall => 45.0;
   static double get biometricIconMedium => 75.w;
   static double get biometricIconLarge => 80.w;
   static double get biometricIconXLarge => 140.w;
 
-  // ========= BORDER RADIUS =========
 
   static double get radiusXSmall => 4.r;
   static double get radiusSmall => 10.r;
@@ -124,7 +118,6 @@ class AppSizing {
   static double get radiusXXLarge => 25.r;
   static double get radiusButton => 32.r;
 
-  // ========= CONTAINER & COMPONENT SIZES =========
 
   static double get buttonHeight => 56.h;
   static double get buttonHeightLarge => 75.h;
@@ -136,7 +129,6 @@ class AppSizing {
 
   static double get bottomNavHeight => 70.h;
 
-  // Biometric/Auth specific sizes
   static double get faceIDContainerWidth => 155.w;
   static double get faceIDContainerHeight => 180.h;
   static double get faceIDIconContainerSize => 180.w;
@@ -145,7 +137,6 @@ class AppSizing {
   static double get screenWidth => 375.w;
   static double get screenHeight => 812.h;
 
-  // ========= BORDERS & DIVIDERS =========
 
   static double get borderThin => 1.w;
   static double get borderMedium => 1.6.w;
@@ -153,7 +144,6 @@ class AppSizing {
   static double get borderDonut => 18.w;
   static double get dividerThickness => 1.h;
 
-  // ========= SHADOWS =========
 
   static double get shadowBlurRadius => 2.r;
   static double get shadowOffsetY => 1.h;
@@ -162,7 +152,6 @@ class AppSizing {
   static double get shadowOffsetMedium => 6.h;
   static double get shadowOffsetLarge => 8.h;
 
-  // ========= SPECIAL POSITIONS (Auth feature specific) =========
 
   static double get eclipseRight => -66.w;
   static double get eclipseTop => -90.h;

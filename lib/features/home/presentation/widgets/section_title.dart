@@ -29,7 +29,6 @@ class SectionTitle extends StatelessWidget {
           ),
         ),
 
-        // If action text exists → show it
         if (actionText != null)
           GestureDetector(
             onTap: onActionTap,

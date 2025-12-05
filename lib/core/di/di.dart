@@ -16,7 +16,6 @@ Future<void> setupDependencies() async {
 }
 
 Future<void> _setupCore() async {
-  // Networking
   sl.registerLazySingleton<Dio>(() => DioClient.createDio());
   sl.registerLazySingleton<PortfolioApiService>(
     () => PortfolioApiService(sl<Dio>()),
@@ -25,12 +24,10 @@ Future<void> _setupCore() async {
     () => PortfolioLocalDataSource(),
   );
 
-  // Data sources
   sl.registerLazySingleton<PortfolioRemoteDataSource>(
     () => PortfolioRemoteDataSource(api: sl()),
   );
 
-  // Repositories
   sl.registerLazySingleton<PortfolioRepository>(
     () => PortfolioRepositoryImpl(
       remote: sl(),
@@ -38,12 +35,10 @@ Future<void> _setupCore() async {
     ),
   );
 
-  // Use cases
   sl.registerFactory<GetPortfolioOverviewUseCase>(
     () => GetPortfolioOverviewUseCase(repository: sl()),
   );
 
-  // Cubits
   sl.registerFactory<PortfolioCubit>(
     () => PortfolioCubit(getPortfolioOverview: sl()),
   );

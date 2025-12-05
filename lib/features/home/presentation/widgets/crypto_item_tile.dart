@@ -31,10 +31,8 @@ class CryptoItemTile extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          /// Title + Icon Row
           Row(
             children: [
-              /// Crypto icon circle
               Container(
                 height: 32,
                 width: 32,
@@ -57,7 +55,6 @@ class CryptoItemTile extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          /// Price + Percentage Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
