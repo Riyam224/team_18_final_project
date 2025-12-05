@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:team_18_final_project/features/portfolio/presentation/cubit/portfolio_state.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/portfolio_utils/app_portfolio_colors.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/portfolio_utils/app_portfolio_constants.dart';
 import 'package:team_18_final_project/features/portfolio/domain/entities/portfolio_holding.dart';
@@ -8,12 +9,11 @@ import 'package:team_18_final_project/features/portfolio/domain/entities/portfol
 import 'package:team_18_final_project/features/portfolio/domain/usecases/get_portfolio_overview_usecase.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/widgets/allocation_chart.dart';
 
-part 'portfolio_state.dart';
-
 class PortfolioCubit extends Cubit<PortfolioState> {
   final GetPortfolioOverviewUseCase getPortfolioOverview;
-  final NumberFormat _currencyFormat =
-      NumberFormat.simpleCurrency(decimalDigits: 2);
+  final NumberFormat _currencyFormat = NumberFormat.simpleCurrency(
+    decimalDigits: AppPortfolioConstants.decimalDigitsForCurrency,
+  );
 
   PortfolioCubit({
     required this.getPortfolioOverview,
@@ -30,7 +30,8 @@ class PortfolioCubit extends Cubit<PortfolioState> {
 
   Future<void> loadForMonth(int monthIndex) async {
     emit(PortfolioState.loading());
-    final days = AppPortfolioConstants.monthIndexToDays[monthIndex] ?? 30;
+    final days = AppPortfolioConstants.monthIndexToDays[monthIndex] ??
+        AppPortfolioConstants.defaultDays;
     final result = await getPortfolioOverview(days: days);
     result.fold(
       (failure) => emit(PortfolioState.error(failure.message)),
@@ -42,8 +43,9 @@ class PortfolioCubit extends Cubit<PortfolioState> {
     final holdings = overview.holdings;
     final totalValue = overview.totalValue;
     final totalChange = overview.totalChangeUsd;
-    final changePercent =
-        totalValue == 0 ? 0 : (totalChange / totalValue) * 100;
+    final changePercent = totalValue == AppPortfolioConstants.zeroValue
+        ? AppPortfolioConstants.zeroValue.toDouble()
+        : (totalChange / totalValue) * AppPortfolioConstants.percentageMultiplier;
 
     final allocations = holdings
         .map((h) => AllocationSegment(
@@ -63,7 +65,7 @@ class PortfolioCubit extends Cubit<PortfolioState> {
             value: _currencyFormat.format(h.valueUsd),
             change: _currencyFormat.format(h.changeUsd),
             changePercent:
-                '${h.changePercent24h >= 0 ? AppPortfolioConstants.positivePrefix : ''}${h.changePercent24h.toStringAsFixed(2)}${AppPortfolioConstants.percentSuffix}',
+                '${h.changePercent24h >= AppPortfolioConstants.zeroValue ? AppPortfolioConstants.positivePrefix : ''}${h.changePercent24h.toStringAsFixed(AppPortfolioConstants.decimalDigitsForPercent)}${AppPortfolioConstants.percentSuffix}',
             icon: AppPortfolioColors.getCryptoIcon(h.id),
             iconColor: AppPortfolioColors.getCryptoColor(h.id),
           ),
@@ -71,7 +73,7 @@ class PortfolioCubit extends Cubit<PortfolioState> {
         .toList();
 
     final changeLabel =
-        '${changePercent >= 0 ? AppPortfolioConstants.positivePrefix : ''}${changePercent.toStringAsFixed(1)}${AppPortfolioConstants.percentSuffix} (${_currencyFormat.format(totalChange)}) ${AppPortfolioConstants.changeLabelSuffix}';
+        '${changePercent >= AppPortfolioConstants.zeroValue ? AppPortfolioConstants.positivePrefix : ''}${changePercent.toStringAsFixed(AppPortfolioConstants.decimalDigitsForChangePercent)}${AppPortfolioConstants.percentSuffix} (${_currencyFormat.format(totalChange)}) ${AppPortfolioConstants.changeLabelSuffix}';
 
     return PortfolioState.loaded(
       totalValue: _currencyFormat.format(totalValue),
@@ -85,9 +87,14 @@ class PortfolioCubit extends Cubit<PortfolioState> {
     PortfolioHolding holding,
     List<PortfolioHolding> holdings,
   ) {
-    final total = holdings.fold<double>(0, (sum, h) => sum + h.valueUsd);
-    if (total == 0) return 0;
-    return (holding.valueUsd / total) * 100;
+    final total = holdings.fold<double>(
+      AppPortfolioConstants.zeroValue.toDouble(),
+      (sum, h) => sum + h.valueUsd,
+    );
+    if (total == AppPortfolioConstants.zeroValue) {
+      return AppPortfolioConstants.zeroValue.toDouble();
+    }
+    return (holding.valueUsd / total) * AppPortfolioConstants.percentageMultiplier;
   }
 
   String _formatAllocationLabel(PortfolioHolding holding) {

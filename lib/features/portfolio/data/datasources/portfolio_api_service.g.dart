@@ -2,14 +2,6 @@
 
 part of 'portfolio_api_service.dart';
 
-// dart format off
-
-// **************************************************************************
-// RetrofitGenerator
-// **************************************************************************
-
-// ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations,unused_element_parameter,avoid_unused_constructor_parameters,unreachable_from_main
-
 class _PortfolioApiService implements PortfolioApiService {
   _PortfolioApiService(this._dio, {this.baseUrl, this.errorLogger}) {
     baseUrl ??= 'https://api.coingecko.com/api/v3';
@@ -24,8 +16,8 @@ class _PortfolioApiService implements PortfolioApiService {
   @override
   Future<Map<String, SimplePriceModel>> getSimplePrice({
     required String ids,
-    String vsCurrencies = ApiConfig.defaultCurrency,
-    bool include24hChange = true,
+    String vsCurrencies = ApiDefaults.currency,
+    bool include24hChange = ApiDefaults.include24hrChange,
   }) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{
@@ -62,7 +54,7 @@ class _PortfolioApiService implements PortfolioApiService {
   @override
   Future<MarketChartModel> getMarketChart({
     required String coinId,
-    String vsCurrency = ApiConfig.defaultCurrency,
+    String vsCurrency = ApiDefaults.currency,
     required int days,
   }) async {
     final _extra = <String, dynamic>{};
@@ -120,5 +112,3 @@ class _PortfolioApiService implements PortfolioApiService {
     return Uri.parse(dioBaseUrl).resolveUri(url).toString();
   }
 }
-
-// dart format on

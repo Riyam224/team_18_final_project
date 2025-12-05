@@ -1,27 +1,26 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
-import 'package:team_18_final_project/core/config/api_config.dart';
-import 'package:team_18_final_project/core/networking/api_base_url.dart';
+import 'package:team_18_final_project/core/constants/api_constants.dart';
 import 'package:team_18_final_project/features/portfolio/data/models/simple_price_model.dart';
 import 'package:team_18_final_project/features/portfolio/data/models/market_chart_model.dart';
 
 part 'portfolio_api_service.g.dart';
 
-@RestApi(baseUrl: ApiConstants.baseUrl)
+@RestApi(baseUrl: ApiBaseUrl.coingecko)
 abstract class PortfolioApiService {
   factory PortfolioApiService(Dio dio, {String baseUrl}) = _PortfolioApiService;
 
-  @GET('/simple/price')
+  @GET(ApiEndpoints.simplePrice)
   Future<Map<String, SimplePriceModel>> getSimplePrice({
-    @Query('ids') required String ids,
-    @Query('vs_currencies') String vsCurrencies = ApiConfig.defaultCurrency,
-    @Query('include_24hr_change') bool include24hChange = true,
+    @Query(ApiQueryParams.ids) required String ids,
+    @Query(ApiQueryParams.vsCurrencies) String vsCurrencies = ApiDefaults.currency,
+    @Query(ApiQueryParams.include24hrChange) bool include24hChange = ApiDefaults.include24hrChange,
   });
 
-  @GET('/coins/{id}/market_chart')
+  @GET(ApiEndpoints.marketChart)
   Future<MarketChartModel> getMarketChart({
-    @Path('id') required String coinId,
-    @Query('vs_currency') String vsCurrency = ApiConfig.defaultCurrency,
-    @Query('days') required int days,
+    @Path(ApiPathParams.id) required String coinId,
+    @Query(ApiQueryParams.vsCurrency) String vsCurrency = ApiDefaults.currency,
+    @Query(ApiQueryParams.days) required int days,
   });
 }

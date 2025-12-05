@@ -1,6 +1,8 @@
-part of 'portfolio_cubit.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
+import 'package:team_18_final_project/features/portfolio/presentation/widgets/allocation_chart.dart';
 
-class PortfolioState {
+class PortfolioState extends Equatable {
   final bool isLoading;
   final String? error;
   final String totalValue;
@@ -47,9 +49,19 @@ class PortfolioState {
         allocations: const [],
         holdings: const [],
       );
+
+  @override
+  List<Object?> get props => [
+        isLoading,
+        error,
+        totalValue,
+        changeLabel,
+        allocations,
+        holdings,
+      ];
 }
 
-class HoldingViewData {
+class HoldingViewData extends Equatable {
   final String name;
   final String symbol;
   final double percentage;
@@ -71,4 +83,17 @@ class HoldingViewData {
     required this.icon,
     required this.iconColor,
   });
+
+  @override
+  List<Object?> get props => [
+        name,
+        symbol,
+        percentage,
+        amount,
+        value,
+        change,
+        changePercent,
+        icon,
+        iconColor,
+      ];
 }

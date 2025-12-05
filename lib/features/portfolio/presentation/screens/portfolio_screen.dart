@@ -12,6 +12,7 @@ import 'package:team_18_final_project/features/portfolio/domain/entities/transac
 import 'package:team_18_final_project/features/portfolio/presentation/portfolio_utils/app_portfolio_constants.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/widgets/allocation_chart.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/cubit/portfolio_cubit.dart';
+import 'package:team_18_final_project/features/portfolio/presentation/cubit/portfolio_state.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/widgets/holding_card.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/widgets/month_selector.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/widgets/total_value_card.dart';
@@ -142,10 +143,14 @@ class PortfolioScreen extends StatelessWidget {
     final difference = now.difference(timestamp);
 
     if (difference.inHours < AppPortfolioConstants.hoursInDay) {
-      final hourLabel = difference.inHours == 1 ? AppStrings.hour : AppStrings.hours;
+      final hourLabel = difference.inHours == AppPortfolioConstants.oneValue
+          ? AppStrings.hour
+          : AppStrings.hours;
       return '${difference.inHours} $hourLabel ${AppStrings.ago}';
     } else if (difference.inDays < AppPortfolioConstants.daysInWeek) {
-      final dayLabel = difference.inDays == 1 ? AppStrings.day : AppStrings.days;
+      final dayLabel = difference.inDays == AppPortfolioConstants.oneValue
+          ? AppStrings.day
+          : AppStrings.days;
       return '${difference.inDays} $dayLabel ${AppStrings.ago}';
     } else {
       return DateFormat(AppPortfolioConstants.dateFormat).format(timestamp);

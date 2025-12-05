@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:team_18_final_project/features/portfolio/presentation/portfolio_utils/app_portfolio_constants.dart';
 
 class PortfolioHolding extends Equatable {
   final String id;
@@ -19,7 +20,8 @@ class PortfolioHolding extends Equatable {
 
   double get valueUsd => amount * priceUsd;
 
-  double get changeUsd => valueUsd * (changePercent24h / 100);
+  double get changeUsd =>
+      valueUsd * (changePercent24h / AppPortfolioConstants.percentageMultiplier);
 
   @override
   List<Object?> get props => [

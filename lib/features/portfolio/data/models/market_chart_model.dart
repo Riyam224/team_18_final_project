@@ -1,47 +1,40 @@
+import 'package:team_18_final_project/features/portfolio/presentation/portfolio_utils/app_portfolio_constants.dart';
+
 class MarketChartModel {
   final List<List<num>> prices;
-  final List<List<num>>? marketCaps;
-  final List<List<num>>? totalVolumes;
+  final List<List<num>> marketCaps;
+  final List<List<num>> totalVolumes;
 
   const MarketChartModel({
     required this.prices,
-    this.marketCaps,
-    this.totalVolumes,
+    required this.marketCaps,
+    required this.totalVolumes,
   });
 
   factory MarketChartModel.fromJson(Map<String, dynamic> json) {
+    List<List<num>> safeParse(dynamic data) {
+      if (data is! List) return [];
+
+      return data
+          .whereType<List>()
+          .map((list) {
+        final cleaned = list.whereType<num>().toList();
+
+        if (cleaned.length < AppPortfolioConstants.minArrayLength) {
+          return [
+            AppPortfolioConstants.zeroValue,
+            AppPortfolioConstants.zeroValue
+          ];
+        }
+
+        return cleaned;
+      }).toList();
+    }
+
     return MarketChartModel(
-      prices: (json['prices'] as List<dynamic>?)
-              ?.map((e) => (e as List<dynamic>).cast<num>())
-              .toList() ??
-          [],
-      marketCaps: (json['market_caps'] as List<dynamic>?)
-          ?.map((e) => (e as List<dynamic>).cast<num>())
-          .toList(),
-      totalVolumes: (json['total_volumes'] as List<dynamic>?)
-          ?.map((e) => (e as List<dynamic>).cast<num>())
-          .toList(),
+      prices: safeParse(json['prices']),
+      marketCaps: safeParse(json['market_caps']),
+      totalVolumes: safeParse(json['total_volumes']),
     );
-  }
-
-  double get averagePrice {
-    if (prices.isEmpty) return 0;
-    final sum = prices.fold<double>(0, (sum, price) => sum + price[1].toDouble());
-    return sum / prices.length;
-  }
-
-  double get latestPrice {
-    if (prices.isEmpty) return 0;
-    return prices.last[1].toDouble();
-  }
-
-  double get earliestPrice {
-    if (prices.isEmpty) return 0;
-    return prices.first[1].toDouble();
-  }
-
-  double get priceChangePercent {
-    if (prices.isEmpty || earliestPrice == 0) return 0;
-    return ((latestPrice - earliestPrice) / earliestPrice) * 100;
   }
 }
