@@ -145,4 +145,11 @@ class AppTextStyles {
     fontWeight: FontWeight.w700, // SemiBold
   );
 
+
+  static const TextStyle titleLargesemiBold = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
+
 }

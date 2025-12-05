@@ -65,5 +65,10 @@ class AppColors {
 
   static const Color darkgreen = Color(0xFF7DDDA4);
 
+  static const Color darkBackAvatar = Color(0xFF333333);
+  static const Color backAvatar = Color(0xFFD9D9D9);
+  static const Color grayDevider = Color(0xFF5E5E5E);
+  static const Color iconDark = Color(0xFF224584);
+
 
 }
