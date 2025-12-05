@@ -149,7 +149,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
     
-    await tester.tap(find.byType(SettingsListTile));
+    await tester.tap(find.text('Test Title')); 
     await tester.pump();
     
     expect(tapped, isTrue); 

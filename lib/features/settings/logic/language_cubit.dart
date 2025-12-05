@@ -1,9 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:equatable/equatable.dart';
 
-class LanguageState {
+class LanguageState extends Equatable {
   final String languageCode;
   const LanguageState(this.languageCode);
+
+  @override
+  List<Object?> get props => [languageCode];
 }
 
 class LanguageCubit extends Cubit<LanguageState> {
@@ -23,6 +27,6 @@ class LanguageCubit extends Cubit<LanguageState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString(_languageKey, newCode);
     
-    emit(LanguageState(newCode)); 
+    emit(LanguageState(newCode));
   }
 }

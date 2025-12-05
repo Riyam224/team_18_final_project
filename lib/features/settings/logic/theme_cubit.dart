@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:equatable/equatable.dart';
 
-class ThemeState {
+class ThemeState extends Equatable {
   final ThemeMode themeMode;
   const ThemeState(this.themeMode);
+
+  @override
+  List<Object?> get props => [themeMode];
 }
 
 class ThemeCubit extends Cubit<ThemeState> {
@@ -17,18 +21,18 @@ class ThemeCubit extends Cubit<ThemeState> {
   Future<void> _loadTheme() async {
     final prefs = await SharedPreferences.getInstance();
     final savedTheme = prefs.getString(_themeKey);
-    ThemeMode mode = ThemeMode.light;   
+    ThemeMode mode = ThemeMode.light;
 
     if (savedTheme == 'dark') {
       mode = ThemeMode.dark;
     }
-    
+
     emit(ThemeState(mode));
   }
 
   Future<void> toggleTheme(ThemeMode newMode) async {
     final prefs = await SharedPreferences.getInstance();
-    
+
     if (newMode == ThemeMode.light) {
       await prefs.setString(_themeKey, 'light');
     } else if (newMode == ThemeMode.dark) {

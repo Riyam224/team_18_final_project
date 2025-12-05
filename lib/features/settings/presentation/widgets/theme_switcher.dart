@@ -9,7 +9,8 @@ import 'package:team_18_final_project/features/settings/presentation/widgets/set
 import 'package:team_18_final_project/l10n/app_localizations.dart';
 
 class ThemeSwitcherTile extends StatelessWidget {
-  const ThemeSwitcherTile({super.key});
+  final Key? widgetKey;
+  const ThemeSwitcherTile({Key? key}) : widgetKey = key, super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +26,7 @@ class ThemeSwitcherTile extends StatelessWidget {
             isDarkModeActive ? theme.primaryColor : theme.primaryColor;
 
         return SettingsListTile(
+          key:  widgetKey, 
           title: AppLocalizations.of(context)!.darkModeTitle,
           titleTextStyle: AppTextStyles.titleLargesemiBold.copyWith(
             color: isDarkModeActive ? AppColors.textWhite : AppColors.primary,
@@ -32,6 +34,7 @@ class ThemeSwitcherTile extends StatelessWidget {
           iconPath: AppAssets.settingsDarkMode,
           iconColor: iconColor,
           trailing: CustomToggleSwitch(
+            key: const Key('themeToggleButton'),
             value: isDarkModeActive,
             onChanged: (bool isActive) {
               cubit.toggleTheme(isActive ? ThemeMode.dark : ThemeMode.light);
