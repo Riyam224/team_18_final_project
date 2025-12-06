@@ -10,8 +10,9 @@ ThemeData buildDarkTheme() {
     scaffoldBackgroundColor: AppColors.darkBackground2,
     primaryColor: AppColors.primary,
     // rahma
-    //cardColor: AppColors.darkCard,
     cardColor: AppColors.darkBackground,
+    //cardColor: const Color(0xFF0D0D0D), // #0D0D0D
+
 
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primary,
@@ -20,15 +21,19 @@ ThemeData buildDarkTheme() {
       //secondary: AppColors.secondary,
       background: AppColors.darkBackground,
       surface: AppColors.darkSurface,
-      onBackground: AppColors.textWhite,
       onSurface: AppColors.textWhite,
       onPrimary: Colors.white,
       onSecondary: Colors.white,
     ),
     textTheme: TextTheme(
-      headlineLarge: AppTextStyles.headlineLarge.copyWith(color: Colors.white),
+      displayLarge:
+          AppTextStyles.displayLarge.copyWith(color: AppColors.textWhite),
+      displayMedium:
+          AppTextStyles.displayMedium.copyWith(color: AppColors.textWhite),
+      headlineLarge:
+          AppTextStyles.headlineLarge.copyWith(color: AppColors.textWhite),
       headlineMedium:
-          AppTextStyles.headlineMedium.copyWith(color: Colors.white),
+          AppTextStyles.headlineMedium.copyWith(color: AppColors.textWhite),
       //rahma
       headlineSmall: AppTextStyles.headlineSmallBold.copyWith(color: AppColors.textWhite),
       titleLarge: AppTextStyles.titleLarge.copyWith(color: AppColors.textWhite),
@@ -37,18 +42,27 @@ ThemeData buildDarkTheme() {
           AppTextStyles.titleMedium.copyWith(color: AppColors.textWhiteSoft),
       titleSmall:
           AppTextStyles.titleSmall.copyWith(color: AppColors.textWhite),
-      bodySmall:
-          AppTextStyles.bodySmall.copyWith(color: AppColors.textGrayDark),
+      bodyLarge:
+          AppTextStyles.bodyLarge.copyWith(color: AppColors.textWhiteSoft),
       bodyMedium:
           AppTextStyles.bodyMedium.copyWith(color: AppColors.textWhiteSoft),
-      bodyLarge: AppTextStyles.bodyLarge.copyWith(color: Colors.white),
-      labelLarge: AppTextStyles.labelLarge.copyWith(color: AppColors.primary),
+      bodySmall:
+          AppTextStyles.bodySmall.copyWith(color: AppColors.textGrayDark),
+      labelLarge: AppTextStyles.labelLarge.copyWith(color: AppColors.textWhite),
+      labelMedium:
+          AppTextStyles.labelMedium.copyWith(color: AppColors.textWhite),
+      labelSmall:
+          AppTextStyles.labelSmall.copyWith(color: AppColors.textGrayDark),
     ),
-    appBarTheme: const AppBarTheme(
-      //rahma
+
+    appBarTheme:  AppBarTheme(
       backgroundColor: AppColors.darkBackground2,
       elevation: 0,
-      foregroundColor: Colors.white,
+      foregroundColor: AppColors.textWhite,
+      centerTitle: true,
+      titleTextStyle: AppTextStyles.headlineMedium.copyWith(
+        color: AppColors.textWhite,
+      ),
     ),
     iconTheme: const IconThemeData(
       color: AppColors.textWhiteSoft,

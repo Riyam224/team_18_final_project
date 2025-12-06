@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
@@ -17,10 +17,22 @@ import 'package:team_18_final_project/l10n/app_localizations.dart';
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
 
-  final List<Map<String, String>> availableLanguages = const [
-    {'name': 'English', 'code': 'en'},
-    {'name': 'العربية', 'code': 'ar'},
+  
+
+List<Map<String, String>> getAvailableLanguages(BuildContext context) {
+  return [
+    {
+      'name': AppLocalizations.of(context)!.languageEnglish,  
+      'code': 'en'
+    },
+    {
+      'name': AppLocalizations.of(context)!.languageArabic,  
+      'code': 'ar'
+    },
   ];
+}
+
+
 
   void _showLanguageSelectionDialog(BuildContext context, bool isDark) {
     final theme = Theme.of(context);
@@ -42,9 +54,9 @@ class SettingsScreen extends StatelessWidget {
             width: double.maxFinite,
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: availableLanguages.length,
+              itemCount: getAvailableLanguages(context).length,
               itemBuilder: (context, index) {
-                final lang = availableLanguages[index];
+                final lang = getAvailableLanguages(context)[index];
                 final isSelected = lang['code'] == currentLanguageCode;
 
                 return ListTile(
@@ -109,7 +121,7 @@ class SettingsScreen extends StatelessWidget {
             children: [
               const SettingsHeader(),
               Padding(
-                padding: EdgeInsets.symmetric(horizontal: 18.w),
+                padding: AppSpacing.paddingH18,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -146,7 +158,7 @@ class SettingsScreen extends StatelessWidget {
                       onTap: () {},
                       chevronPath: AppAssets.settingsArrow,
                     ),
-                    SizedBox(height: 12.h),
+                    AppSpacing.gapH12,
                     Text(AppLocalizations.of(context)!.settingsTitle,
                         style: AppTextStyles.titleLargesemiBold.copyWith(
                           color:

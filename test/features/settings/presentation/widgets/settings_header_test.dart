@@ -25,6 +25,8 @@ class MockAppLocalizations implements AppLocalizations {
   @override String get languageTitle => 'Language';
   @override String get darkModeTitle => 'Dark Mode';
   @override String get chooseLanguage => 'Choose Language';
+  @override String get languageEnglish => 'English';
+  @override String get languageArabic => 'Arabic';
   @override String get cancelButton => 'Cancel';
 }
 

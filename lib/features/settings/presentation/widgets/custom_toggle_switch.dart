@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class CustomToggleSwitch extends StatelessWidget {
@@ -17,9 +18,9 @@ class CustomToggleSwitch extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     
-    final double width = 39.w; 
-    final double height = 24.h;
-    final double toggleDiameter = 20.h;
+    final double width = AppSizing.w39; 
+    final double height = AppSizing.h24;
+    final double toggleDiameter = AppSizing.h20;
 
     final Color activeColor =  AppColors.iconDark ;
     final Color inactiveColor =  AppColors.primary ;
@@ -33,7 +34,7 @@ class CustomToggleSwitch extends StatelessWidget {
         curve: Curves.easeIn,
         width: width,
         height: height,
-        padding: EdgeInsets.all(2.h),
+        padding: AppSpacing.paddingAllH2,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
           color: value ? activeColor : inactiveColor,

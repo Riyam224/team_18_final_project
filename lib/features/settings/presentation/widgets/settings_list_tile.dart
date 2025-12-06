@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:team_18_final_project/core/constants/app_sizing.dart';
+import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -53,13 +54,13 @@ class SettingsListTile extends StatelessWidget {
           onTap: onTap,
           child: Container(
             color: theme.scaffoldBackgroundColor,
-            height: 72.h,
-            padding: EdgeInsets.symmetric(horizontal: 0, vertical: 20.h),
+            height: AppSizing.h72,
+            padding: AppSpacing.paddingV20,
             child: Row(
               children: [
                 Container(
-                  width: 32.w,
-                  height: 32.w,
+                  width: AppSizing.w32,
+                  height: AppSizing.h32,
                   decoration: BoxDecoration(
                     color: iconBackgroundColor,
                     shape: BoxShape.circle,
@@ -67,8 +68,8 @@ class SettingsListTile extends StatelessWidget {
                   child: Center(
                     child: SvgPicture.asset(
                       iconPath,
-                      width: 18.w,
-                      height: 18.w,
+                      width: AppSizing.w18,
+                      height: AppSizing.w18,
                       colorFilter: ColorFilter.mode(
                         iconForegroundColor,
                         BlendMode.srcIn,
@@ -76,8 +77,8 @@ class SettingsListTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                SizedBox(width: 16.w),
-                // العنوان
+                AppSpacing.gapW16,
+
                 Expanded(
                   child: Text(
                     title,
@@ -106,8 +107,8 @@ class SettingsListTile extends StatelessWidget {
                     if (chevronPath != null) {
                       chevronWidget = SvgPicture.asset(
                         chevronPath!,
-                        width: 20.w,
-                        height: 20.w,
+                        width: AppSizing.w20,
+                        height: AppSizing.w20,
                         colorFilter: ColorFilter.mode(
                           finalChevronColor,
                           BlendMode.srcIn,
@@ -116,7 +117,7 @@ class SettingsListTile extends StatelessWidget {
                     } else {
                       chevronWidget = Icon(
                         Icons.keyboard_arrow_right,
-                        size: 24.w,
+                        size: AppSizing.w24,
                         color: finalChevronColor,
                       );
                     }

@@ -37,4 +37,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get name => 'صوفيا ازابيلا';
+
+  @override
+  String get languageEnglish => 'الإنجليزية';
+
+  @override
+  String get languageArabic => 'العربية';
 }

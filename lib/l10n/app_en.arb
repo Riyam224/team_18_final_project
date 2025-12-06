@@ -9,5 +9,7 @@
     "darkModeTitle": "Dark Mode",
     "chooseLanguage": "Choose Language",
     "cancelButton": "Cancel",
-    "name": "Sophia Isabella"
+    "name": "Sophia Isabella",
+    "languageEnglish": "English", 
+    "languageArabic": "Arabic"
 }

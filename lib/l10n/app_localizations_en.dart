@@ -37,4 +37,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get name => 'Sophia Isabella';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageArabic => 'Arabic';
 }
