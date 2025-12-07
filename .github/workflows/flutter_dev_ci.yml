@@ -2,9 +2,8 @@ name: Flutter CI + Firebase Distribution (Android Debug)
 
 on:
   push:
-    branches: [develop]
-  pull_request:
-    branches: [develop]
+    branches:
+      - feature/ci_cd_setup_v3
   workflow_dispatch:
 
 jobs:
