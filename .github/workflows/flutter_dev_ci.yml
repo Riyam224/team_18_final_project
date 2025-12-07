@@ -3,8 +3,8 @@ name: Flutter CI + Firebase Distribution (Android Debug)
 on:
   push:
     branches:
-      - feature/ci_cd_setup_v3
-  workflow_dispatch:
+      - feature/ci_cd_setup_v3   # Only run CI/CD on your feature branch
+  workflow_dispatch:             # Allow manual trigger
 
 jobs:
   build-and-distribute:
