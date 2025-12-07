@@ -3,8 +3,8 @@ name: Flutter CI + Firebase Distribution (Android Debug)
 on:
   push:
     branches:
-      - feature/ci_cd_setup_v3   # Only run CI/CD on your feature branch
-  workflow_dispatch:
+      - feature/ci_cd_setup_v3   # Run CI/CD only on your branch
+  workflow_dispatch:             # Allow manual trigger from Actions tab
 
 jobs:
   build-and-distribute:
@@ -21,10 +21,10 @@ jobs:
 
       - name: Install dependencies
         run: flutter pub get
-     
+
       # - name: Flutter Analyze
       #   run: flutter analyze
-      # (commented out for now so CI doesn't fail due to warnings)
+      # Commented out because warnings fail CI. Enable later if needed.
 
       - name: Run Tests with Coverage
         run: flutter test --coverage
