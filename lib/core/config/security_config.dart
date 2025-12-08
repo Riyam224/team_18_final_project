@@ -1,5 +1,6 @@
 import 'package:team_18_final_project/core/config/audit_log_config.dart';
 import 'package:team_18_final_project/core/config/biometric_config.dart';
+import 'package:team_18_final_project/core/config/routes_config.dart';
 import 'package:team_18_final_project/core/config/timing_config.dart';
 
 /// Security configuration for the application
@@ -36,16 +37,8 @@ class SecurityConfig {
   static const bool enableScreenshotPrevention = true;
 
   // Sensitive Routes (routes that require screenshot prevention)
-  static const List<String> sensitiveRoutes = [
-    '/home',
-    '/portfolio',
-    '/transactions',
-    '/coin-details',
-    '/payment',
-    '/buy-sell',
-    '/settings',
-    '/profile',
-  ];
+  // Delegated to RoutesConfig to avoid duplication
+  static const List<String> sensitiveRoutes = RoutesConfig.sensitiveRoutes;
 
   // Default timeout values for user settings (delegated to TimingConfig)
   static const int defaultSessionTimeoutMinutesUserSetting =

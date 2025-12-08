@@ -349,18 +349,18 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<String?> getUserFirstName() async {
-    final result = await _secureStorage.read(key: 'user_first_name');
+    final result = await _secureStorage.read(key: StorageKeysConfig.userFirstName);
     return result.fold((failure) => null, (value) => value);
   }
 
   @override
   Future<void> storeUserFirstName(String firstName) async {
-    await _secureStorage.write(key: 'user_first_name', value: firstName);
+    await _secureStorage.write(key: StorageKeysConfig.userFirstName, value: firstName);
   }
 
   @override
   Future<void> storeUserLastName(String lastName) async {
-    await _secureStorage.write(key: 'user_last_name', value: lastName);
+    await _secureStorage.write(key: StorageKeysConfig.userLastName, value: lastName);
   }
 
   @override

@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element_parameter
+
 part of 'portfolio_api_service.dart';
 
 class _PortfolioApiService implements PortfolioApiService {

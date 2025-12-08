@@ -3,6 +3,7 @@ import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 
 class MonthSelector extends StatefulWidget {
   final List<String> months;
@@ -61,8 +62,7 @@ class _MonthChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = context.isDark();
     final selectedBg = isDark ? Colors.white.withOpacity(0.08) : Colors.white;
     final borderColor =
         isSelected ? (isDark ? Colors.white70 : AppColors.primary) : Colors.transparent;

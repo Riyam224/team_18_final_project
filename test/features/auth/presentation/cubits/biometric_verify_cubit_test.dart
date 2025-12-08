@@ -56,9 +56,6 @@ void main() {
     cubit.close();
   });
 
-  BiometricVerifyState _successStateMatcher(BiometricVerifyState state) =>
-      state;
-
   group('verify()', () {
     test('emits once even when called multiple times', () async {
       final session = AuthSessionEntity(

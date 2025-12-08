@@ -19,6 +19,9 @@ class ApiQueryParams {
 
   static const String vsCurrency = 'vs_currency';
   static const String days = 'days';
+  static const String order = 'order';
+  static const String perPage = 'per_page';
+  static const String page = 'page';
 }
 
 class ApiPathParams {
@@ -34,6 +37,8 @@ class ApiDefaults {
   static const int defaultDays = 7;
   static const int minDays = 1;
   static const int maxDays = 365;
+  static const String orderByMarketCap = 'market_cap_desc';
+  static const int defaultPerPage = 50;
 }
 
 class ApiHeaders {

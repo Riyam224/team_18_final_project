@@ -164,8 +164,8 @@ class FirebaseUserService {
   }
 
   Future<UserProfile?> _localProfile() async {
-    final firstResult = await _secureStorage.read(key: 'user_first_name');
-    final lastResult = await _secureStorage.read(key: 'user_last_name');
+    final firstResult = await _secureStorage.read(key: StorageKeysConfig.userFirstName);
+    final lastResult = await _secureStorage.read(key: StorageKeysConfig.userLastName);
     final emailResult = await _secureStorage.read(key: StorageKeysConfig.userEmail);
     final phoneResult = await _secureStorage.read(key: StorageKeysConfig.userPhoneNumber);
 
@@ -187,8 +187,8 @@ class FirebaseUserService {
   }
 
   Future<void> _persistLocal(UserProfile profile) async {
-    await _secureStorage.write(key: 'user_first_name', value: profile.firstName);
-    await _secureStorage.write(key: 'user_last_name', value: profile.lastName);
+    await _secureStorage.write(key: StorageKeysConfig.userFirstName, value: profile.firstName);
+    await _secureStorage.write(key: StorageKeysConfig.userLastName, value: profile.lastName);
     await _secureStorage.write(key: StorageKeysConfig.userEmail, value: profile.email);
     await _secureStorage.write(key: StorageKeysConfig.userPhoneNumber, value: profile.phone);
   }

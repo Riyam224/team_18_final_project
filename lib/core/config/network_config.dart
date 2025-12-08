@@ -1,16 +1,18 @@
+import 'package:team_18_final_project/core/constants/api_constants.dart';
+
 /// Network configuration for the application
 /// Contains all network-related constants (headers, status codes, API URLs)
 class NetworkConfig {
   const NetworkConfig._();
 
-  // API Base URLs
-  static const String coinGeckoBaseUrl = 'https://api.coingecko.com/api/v3';
+  // API Base URLs - Delegated to ApiBaseUrl
+  static const String coinGeckoBaseUrl = ApiBaseUrl.coingecko;
 
   // HTTP Headers
   static const String acceptHeader = 'Accept';
-  static const String acceptValue = 'application/json';
-  static const String contentTypeHeader = 'Content-Type';
-  static const String contentTypeValue = 'application/json';
+  static const String acceptValue = ApiHeaders.applicationJson;
+  static const String contentTypeHeader = ApiHeaders.contentType;
+  static const String contentTypeValue = ApiHeaders.applicationJson;
   static const String apiKeyHeader = 'x-cg-demo-api-key';
 
   // HTTP Status Codes

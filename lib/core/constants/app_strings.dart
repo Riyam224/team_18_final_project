@@ -127,6 +127,10 @@ class AppStrings {
   static const processing = 'Processing...';
   static const verifyingFingerprint = 'Verifying fingerprint...';
   static const authenticationComplete = 'Authentication complete';
+  static const biometricLoginTitle = 'Biometric Login';
+  static const biometricLoginNotAvailable =
+      'Biometric login is not available. Please enable biometrics on your device and in settings, or use your password.';
+  static const ok = 'OK';
 
   // Auth - Biometric Error Messages
   static const fingerprintAuthFailed = 'Fingerprint authentication failed';

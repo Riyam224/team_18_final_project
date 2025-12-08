@@ -18,6 +18,24 @@ class HomeRepositoryImpl implements HomeRepository {
   // Cache for global data to avoid duplicate calls
   dynamic _cachedGlobalData;
   DateTime? _cacheTimestamp;
+  DateTime? _lastRequestTime;
+
+  /// Ensures a minimum delay between outbound API requests to avoid rate limits
+  Future<void> _applyRequestDebounce() async {
+    const debounceDuration = Duration(milliseconds: 300);
+
+    if (_lastRequestTime == null) {
+      _lastRequestTime = DateTime.now();
+      return;
+    }
+
+    final elapsed = DateTime.now().difference(_lastRequestTime!);
+    if (elapsed < debounceDuration) {
+      await Future.delayed(debounceDuration - elapsed);
+    }
+
+    _lastRequestTime = DateTime.now();
+  }
 
   /// Fetches global data with caching to prevent duplicate API calls
   Future<dynamic> _getGlobalDataCached() async {
@@ -31,6 +49,7 @@ class HomeRepositoryImpl implements HomeRepository {
     }
 
     // Fetch fresh data
+    await _applyRequestDebounce();
     final response = await _apiService.getGlobalData();
     _cachedGlobalData = response.data;
     _cacheTimestamp = now;
@@ -73,6 +92,7 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<Either<Failure, List<TrendingCoinEntity>>> getTrendingCoins() async {
     try {
+      await _applyRequestDebounce();
       final response = await _apiService.getTrendingCoins();
 
       final trendingCoins = response.coins.map((coinItem) {
@@ -118,6 +138,7 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<Either<Failure, List<TopGainerEntity>>> getTopGainers() async {
     try {
+      await _applyRequestDebounce();
       final response = await _apiService.getTopGainers();
 
       // Filter and sort by price change percentage

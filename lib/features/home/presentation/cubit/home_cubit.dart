@@ -19,24 +19,26 @@ class HomeCubit extends Cubit<HomeState> {
     required this.getPortfolioBalanceUseCase,
   }) : super(HomeInitial());
 
-  /// Loads all home screen data by executing use cases in parallel
+  /// Loads all home screen data by executing use cases sequentially with delays
   Future<void> loadHomeData() async {
     emit(HomeLoading());
 
     try {
-      final results = await Future.wait([
-        getMarketOverviewUseCase(),
-        getTrendingCoinsUseCase(),
-        getTopGainersUseCase(),
-        getPortfolioBalanceUseCase(),
-      ]);
-
+      // Execute requests sequentially with delays to avoid rate limiting
+      final marketOverviewResult = await getMarketOverviewUseCase();
       if (isClosed) return;
 
-      final marketOverviewResult = results[0] as dynamic;
-      final trendingCoinsResult = results[1] as dynamic;
-      final topGainersResult = results[2] as dynamic;
-      final portfolioBalanceResult = results[3] as dynamic;
+      await Future.delayed(const Duration(milliseconds: 300));
+      final trendingCoinsResult = await getTrendingCoinsUseCase();
+      if (isClosed) return;
+
+      await Future.delayed(const Duration(milliseconds: 300));
+      final topGainersResult = await getTopGainersUseCase();
+      if (isClosed) return;
+
+      await Future.delayed(const Duration(milliseconds: 300));
+      final portfolioBalanceResult = await getPortfolioBalanceUseCase();
+      if (isClosed) return;
 
       // Extract failures or values from each result
       final marketOverviewFailure = marketOverviewResult.fold((f) => f, (_) => null);

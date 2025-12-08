@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class TransactionTile extends StatelessWidget {
@@ -22,8 +23,7 @@ class TransactionTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = context.isDark();
     final iconColor = isBuy ? AppColors.priceUp : AppColors.alertRed;
     final icon = isBuy ? Icons.arrow_upward : Icons.arrow_downward;
     final cardColor = isDark ? AppColors.darkBackground : Colors.white;

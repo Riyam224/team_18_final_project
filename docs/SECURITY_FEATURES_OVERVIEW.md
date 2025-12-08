@@ -42,6 +42,7 @@ The application implements a comprehensive, multi-layered security architecture 
 3. **Secure by Default**: Security features enabled by default
 4. **Fail Secure**: System fails to a secure state
 5. **Privacy First**: User data encrypted and protected
+6. **Clean State on Logout**: All dependencies reset to prevent data leakage
 
 ---
 
@@ -1111,6 +1112,60 @@ static const int autoLockTimeoutSeconds = 120;  // Your timeout
 5. **Test security features** - Write unit and integration tests
 6. **Log security events** - Use `IAuditLogService`
 7. **Follow dependency order** - Initialize services correctly
+8. **CRITICAL: Reset dependencies on logout** - Always call `resetDependencies()` to prevent data leakage between users
+
+#### Dependency Reset Pattern (CRITICAL)
+
+When a user logs out, you MUST reset all GetIt dependencies to prevent:
+- ❌ Session data leakage between users
+- ❌ Cached credentials persisting
+- ❌ Stale encryption keys in memory
+- ❌ Previous user's data accessible to next user
+
+**Implementation** ([lib/core/di/di.dart](../lib/core/di/di.dart)):
+```dart
+/// Reset all dependencies - MUST be called on logout for security
+Future<void> resetDependencies({
+  AppEnvironment env = AppEnvironment.prod,
+  SecurityOverrides? securityOverrides,
+}) async {
+  await sl.reset();
+  await setupDependencies(
+    env: env,
+    securityOverrides: securityOverrides,
+  );
+}
+```
+
+**Usage in Logout** ([lib/features/settings/presentation/screens/settings_screen.dart](../lib/features/settings/presentation/screens/settings_screen.dart)):
+```dart
+ElevatedButton(
+  onPressed: () async {
+    // 1. Log the event
+    await _auditLogService.log(
+      event: 'User logged out from settings',
+      metadata: {'type': 'auth'},
+    );
+
+    // 2. End the session
+    await _sessionManager.endSession();
+
+    // 3. CRITICAL: Reset all dependencies
+    await resetDependencies();
+
+    // 4. Navigate to login
+    router.go(AppRoutes.login);
+  },
+  child: const Text('Logout'),
+)
+```
+
+**Why This Matters:**
+- `ISessionManager` holds active session tokens in memory
+- `ISecureStorage` maintains encryption keys in memory
+- `AuthRepository` caches user profile data
+- `TransactionRepository` caches transaction history
+- Without reset, next user could access previous user's cached data
 
 ### For Users
 

@@ -6,6 +6,7 @@ import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/section_title.dart';
 import 'package:team_18_final_project/features/portfolio/data/datasources/transaction_local_data_source.dart';
 import 'package:team_18_final_project/features/portfolio/domain/entities/transaction.dart';
@@ -23,7 +24,7 @@ class PortfolioScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isDark = context.isDark();
     final backgroundColor =
         isDark ? AppColors.darkBackground2 : AppColors.lightBackground;
 

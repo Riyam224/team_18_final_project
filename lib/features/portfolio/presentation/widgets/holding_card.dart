@@ -3,6 +3,7 @@ import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/portfolio_utils/app_portfolio_constants.dart';
 
 class HoldingCard extends StatelessWidget {
@@ -33,8 +34,7 @@ class HoldingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final isDark = context.isDark();
     final cardColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
     final titleColor = isDark ? AppColors.textWhite : AppColors.textGray;
     final subtitleColor = isDark ? AppColors.textGrayLight : AppColors.gray3;

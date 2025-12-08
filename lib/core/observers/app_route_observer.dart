@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:secure_application/secure_application.dart';
+import 'package:team_18_final_project/core/config/routes_config.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
@@ -22,14 +23,8 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
         _screenshotService = screenshotService;
 
   /// Routes that MUST block screenshot + blur UI (financial data)
-  final List<String> sensitiveRoutes = [
-    AppRoutes.home,
-    AppRoutes.portfolio,
-    AppRoutes.transactions,
-    AppRoutes.coinDetails,
-    AppRoutes.buySell,
-    AppRoutes.payment,
-  ];
+  /// Delegated to RoutesConfig to avoid duplication
+  final List<String> sensitiveRoutes = RoutesConfig.sensitiveRoutes;
 
   /// Routes that must NEVER blur or block screenshots
   final List<String> nonBlurRoutes = [

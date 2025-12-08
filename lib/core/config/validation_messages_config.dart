@@ -8,9 +8,10 @@ class ValidationMessagesConfig {
   static const String emailInvalid = 'Please enter a valid email address';
 
   // Password Validation Messages
+  static const int passwordMinLength = 8;
   static const String passwordRequired = 'Password is required';
   static const String passwordTooShort =
-      'Password must be at least 6 characters';
+      'Password must be at least 8 characters';
   static const String passwordTooWeak = 'Password is too weak';
   static const String passwordMissingUppercase =
       'Password must contain at least one uppercase letter';

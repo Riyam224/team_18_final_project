@@ -9,6 +9,8 @@ class StorageKeysConfig {
   static const String refreshToken = 'refresh_token';
   static const String userEmail = 'user_email';
   static const String userDisplayName = 'user_display_name';
+  static const String userFirstName = 'user_first_name';
+  static const String userLastName = 'user_last_name';
   static const String userPhotoUrl = 'user_photo_url';
   static const String userPhoneNumber = 'user_phone_number';
 

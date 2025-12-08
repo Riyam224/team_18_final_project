@@ -102,6 +102,18 @@ Future<void> setupDependencies({
   await _setupTransactions();
 }
 
+/// Reset all dependencies - MUST be called on logout for security
+Future<void> resetDependencies({
+  AppEnvironment env = AppEnvironment.prod,
+  SecurityOverrides? securityOverrides,
+}) async {
+  await sl.reset();
+  await setupDependencies(
+    env: env,
+    securityOverrides: securityOverrides,
+  );
+}
+
 Future<void> _setupCore() async {
   sl.registerLazySingleton<Dio>(() => DioClient.createDio());
 }
