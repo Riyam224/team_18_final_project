@@ -1,5 +1,5 @@
-import 'package:team_18_final_project/core/constants/api_constants.dart';
+import 'package:team_18_final_project/core/config/network_config.dart';
 
 class ApiConstants {
-  static const baseUrl = ApiBaseUrl.coingecko;
+  static const baseUrl = NetworkConfig.coinGeckoBaseUrl;
 }

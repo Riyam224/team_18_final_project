@@ -12,22 +12,11 @@ class AppColors {
   static const Color accentCyan = Color(0xFF4DD0E1);
   static const Color accentCoral = Color(0xFFFF8A80);
 
-  // ===== Crypto Colors =====
-  static const Color bitcoin = Color(0xFFF7931A);
-  static const Color ethereum = Color(0xFF627EEA);
-  static const Color cryptoCardano = Color(0xFF0033AD);
-  static const Color cryptoRipple = Color(0xFF23292F);
-  static const Color cryptoPolkadot = Color(0xFFE6007A);
-  static const Color cryptoBinance = Color(0xFFF3BA2F);
-  static const Color cryptoSolana = Color(0xFF14F195);
-  static const Color cryptoDogecoin = Color(0xFFC3A634);
-  static const Color cryptoPolygon = Color(0xFF8247E5);
-  static const Color cryptoDefault = Color(0xFF757575);
-
   // ===== Light Mode =====
   static const Color lightBackground = Color(0xFFF5F8FE);
   static const Color lightSurface = Color(0xFFFFFFFF);
   static const Color lightSurface2 = Color(0xFFF8F8F8);
+  static const Color lightInputBackground = Color(0xFFF5F8FE);
 
   // Grays (Text & Borders)
   static const Color gray0 = Color(0xFF27292A);
@@ -44,6 +33,7 @@ class AppColors {
   static const Color textDark = Color(0xFF000000);
   static const Color textGray = Color(0xFF494D58);
   static const Color textGraySecondary = Color(0xFF8C8C8C);
+  static const Color textGrayFooter = Color(0xFF8E949A);
   static const Color lightPink = Color(0xFFF4CCCC);
 
   // ===== Dark Mode =====
@@ -58,6 +48,7 @@ class AppColors {
   // Dark Text
   static const Color textWhite = Color(0xFFFFFFFF);
   static const Color textWhiteSoft = Color(0xFFE2E3E4);
+  static const Color textWhiteSoft2 = Color(0xFFE0E1E7);
   static const Color textGrayDark = Color(0xFF787A8D);
   static const Color textLightGreen = Color(0xFFE1F8D3);
   static const Color darkBrown = Color(0xFF3D1C1B);
@@ -72,4 +63,54 @@ class AppColors {
   static const Color warning = Color(0xFFF7931A);
   static const Color error = Color(0xFFF47E7E);
   static const Color alertRed = Color(0xFFFF403B);
+
+  // ===== Others =====
+  static const Color currentBalance = Color(0xffB4BFD3);
+  static const Color cardWeekly = Color(0xFFF5F8FE);
+  static const Color viewAll = Color(0xFF192B4D);
+  static const Color marketItem = Color(0xff1E1F4B);
+  static const Color marketValue = Color(0xFF6079FA);
+
+  // ===== Cryptocurrency Colors =====
+  static const Color bitcoin = Color(0xFFF7931A);
+  static const Color ethereum = Color(0xFF627EEA);
+  static const Color btcOrange = Color(0xFFF7931A);
+  static const Color ethBlue = Color(0xFF627EEA);
+  static const Color bnbYellow = Color(0xFFF3BA2F);
+  static const Color xrpBlack = Color(0xFF23292F);
+  static const Color adaBlue = Color(0xFF0033AD);
+  static const Color solGreen = Color(0xFF14F195);
+  static const Color dogeYellow = Color(0xFFC2A633);
+  static const Color defaultCoin = Color(0xFF6366F1);
+  static const Color cryptoCardano = Color(0xFF0033AD);
+  static const Color cryptoRipple = Color(0xFF23292F);
+  static const Color cryptoPolkadot = Color(0xFFE6007A);
+  static const Color cryptoBinance = Color(0xFFF3BA2F);
+  static const Color cryptoSolana = Color(0xFF14F195);
+  static const Color cryptoDogecoin = Color(0xFFC3A634);
+  static const Color cryptoPolygon = Color(0xFF8247E5);
+  static const Color cryptoDefault = Color(0xFF757575);
+
+  // ===== Common UI Colors =====
+  static const Color white = Color(0xFFFFFFFF);
+  static const Color red = Color(0xFFFF0000);
+  static const Color balanceCardBg = Color(0xFF1D3A70);
+  static const Color balanceCardText = Color(0xFFF5F8FE);
+
+  // ===== Shadows =====
+  static const Color shadowLight = Color(0x0C000000); // 5% black
+
+  //=========== Card Shape Colors ===========//
+  // The names clearly describe their colors and the usage context (arc, hex dot, light/dark).
+
+  static const Color creditCardArcPrimary = Color.fromARGB(255, 200, 200, 200);
+  static const Color creditCardArcSecondary =
+      Color.fromARGB(255, 220, 220, 220);
+  static const Color creditCardArcTertiary = Color.fromARGB(255, 180, 180, 180);
+  static const Color creditCardArcQuaternary =
+      Color.fromARGB(255, 200, 200, 200);
+  static const Color creditCardHexDotPrimary =
+      Color.fromARGB(255, 150, 150, 150);
+  static const Color creditCardHexDotSecondary =
+      Color.fromARGB(255, 200, 200, 200);
 }

@@ -4,7 +4,6 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/crypto_price_display.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/determine_color_for_button_state.dart';
@@ -37,11 +36,10 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: context.isDark()
-            ? AppColors.darkBackground
-            : AppColors.lightSurface,
+        color: isDark ? AppColors.darkBackground : AppColors.lightSurface,
         borderRadius: BorderRadius.circular(16).r,
       ),
       padding:
@@ -158,11 +156,12 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
   }
 
   LineChartBarData _lineChartBarDataWidget(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return LineChartBarData(
       spots: spots,
       isCurved: true,
       barWidth: 2.0,
-      color: context.isDark() ? AppColors.lightSurface : AppColors.primary,
+      color: isDark ? AppColors.lightSurface : AppColors.primary,
       dotData: FlDotData(show: false),
       belowBarData: BarAreaData(
         show: true,

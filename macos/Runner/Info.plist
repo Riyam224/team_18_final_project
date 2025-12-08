@@ -28,5 +28,9 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+
+	<!-- Required for Touch ID authentication on macOS -->
+	<key>NSFaceIDUsageDescription</key>
+	<string>Your biometric data is used to securely authenticate you.</string>
 </dict>
 </plist>

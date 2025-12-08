@@ -4,16 +4,16 @@ import 'package:team_18_final_project/core/utils/app_colors.dart';
 class AppPortfolioColors {
   AppPortfolioColors._();
 
-  static const Color bitcoin = AppColors.accentPurple;
-  static const Color ethereum = AppColors.accentCyan;
-  static const Color litecoin = AppColors.accentCoral;
-  static const Color cardano = AppColors.cryptoCardano;
-  static const Color ripple = AppColors.cryptoRipple;
-  static const Color polkadot = AppColors.cryptoPolkadot;
-  static const Color binanceCoin = AppColors.cryptoBinance;
-  static const Color solana = AppColors.cryptoSolana;
-  static const Color dogecoin = AppColors.cryptoDogecoin;
-  static const Color polygon = AppColors.cryptoPolygon;
+  static Color get bitcoin => AppColors.accentPurple;
+  static Color get ethereum => AppColors.accentCyan;
+  static Color get litecoin => AppColors.accentCoral;
+  static Color get cardano => AppColors.cryptoCardano;
+  static Color get ripple => AppColors.cryptoRipple;
+  static Color get polkadot => AppColors.cryptoPolkadot;
+  static Color get binanceCoin => AppColors.cryptoBinance;
+  static Color get solana => AppColors.cryptoSolana;
+  static Color get dogecoin => AppColors.cryptoDogecoin;
+  static Color get polygon => AppColors.cryptoPolygon;
 
   static Color getCryptoColor(String cryptoId) {
     switch (cryptoId.toLowerCase()) {

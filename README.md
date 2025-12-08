@@ -1,241 +1,334 @@
-# Team 18 Final Project - Crypto Portfolio App
+# Fintech App - Team 18 Final Project
 
-A Flutter fintech application featuring cryptocurrency portfolio management with Clean Architecture, BLoC state management, and 98% test coverage.
+A modern Flutter fintech application with enterprise-grade security features, real-time cryptocurrency market data, and clean architecture implementation.
+
+---
 
 ## 🚀 Quick Start
 
-```bash
-# Clone and setup
-git clone https://github.com/your-repo/team_18_final_project.git
-cd team_18_final_project
-flutter pub get
+### Prerequisites
 
-# Generate code (Retrofit/json_serializable)
-flutter pub run build_runner build --delete-conflicting-outputs
+- Flutter SDK 3.0+
+- Dart 3.0+
+- Firebase account (for authentication)
+
+### Installation
+
+```bash
+# Clone repository
+git clone <repository-url>
+cd team_18_final_project
+
+# Install dependencies
+flutter pub get
 
 # Run the app
 flutter run
-
-# Run tests
-flutter test
 ```
 
-## ✨ Features
+### With CoinGecko API Key (Optional)
 
-- 📊 **Real-time Portfolio Tracking** - Live cryptocurrency prices via CoinGecko API
-- 💰 **Multi-Crypto Support** - BTC, ETH, LTC, and more
-- 📈 **Performance Analytics** - 24-hour price changes and trends
-- 🥧 **Asset Allocation Charts** - Visual breakdown with donut charts
-- 📅 **Historical Data** - Monthly performance filtering
-- 🎨 **Modern UI** - Dark/Light theme with custom gradients
-- ✅ **98% Test Coverage** - 102 tests (unit, widget, integration)
+For full market data features:
+
+```bash
+flutter run --dart-define=COINGECKO_API_KEY=your_api_key_here
+```
+
+Get your free API key: [CoinGecko API](https://www.coingecko.com/en/api/pricing)
+
+---
+
+## ✨ Key Features
+
+### 🔐 Security Features
+- **Biometric Authentication** - Face ID / Touch ID / Fingerprint login
+- **End-to-End Encryption** - AES-256 encryption for sensitive data
+- **Session Management** - Auto-expiring secure sessions
+- **App Lock** - Automatic locking after inactivity
+- **Screenshot Prevention** - Blocks screenshots on sensitive screens
+- **Root/Jailbreak Detection** - Security warnings on compromised devices
+- **Audit Logging** - Security event tracking
+
+### 💰 Finance Features
+- **Live Market Data** - Real-time cryptocurrency prices via CoinGecko API
+- **Portfolio Tracking** - Monitor your crypto holdings
+- **Transaction History** - Encrypted transaction records
+- **Market Overview** - Global crypto market statistics
+- **Trending Coins** - Discover popular cryptocurrencies
+- **Top Gainers** - Track best performing coins
+
+### 🎨 User Experience
+- **Clean Architecture** - Maintainable and testable codebase
+- **Modern UI** - Material Design 3 with light/dark themes
+- **Responsive Design** - Optimized for all screen sizes
+- **Smooth Navigation** - GoRouter with declarative routing
+- **Onboarding Flow** - Welcoming first-time user experience
+
+### 🛂 Auth & Security Overview
+- **Auth Flow**: Splash → Onboarding (first-time) → Login/Register → optional biometric verify (Face/Touch/Fingerprint) using `local_auth`.
+- **Session Management**: `ISessionManager` stores tokens securely, tracks activity, and guards protected routes; auto-lock via `IAppLockService`.
+- **Biometrics**: Setup and login flows with shared `TimingConfig` delays and stored biometric credentials; falls back to password on failure.
+- **Root/Screenshot Protection**: Root/JB checks on startup; screenshot/recording blocked on sensitive routes via platform channel blur/`FLAG_SECURE`.
+- **Data Protection**: AES encryption for sensitive storage, secure storage keys centralized; audit logging for security events.
+
+---
 
 ## 🏗️ Architecture
 
-**Clean Architecture** with three layers:
+This project follows **Clean Architecture** principles:
 
 ```
-┌─────────────────────┐
-│   PRESENTATION      │  ← BLoC/Cubit, Screens, Widgets
-├─────────────────────┤
-│      DOMAIN         │  ← Entities, Use Cases, Repository Interfaces
-├─────────────────────┤
-│       DATA          │  ← API, Models, Repository Implementation
-└─────────────────────┘
+┌─────────────────────────────────────┐
+│     Presentation Layer              │  ← UI, Screens, Cubits
+├─────────────────────────────────────┤
+│        Domain Layer                 │  ← Business Logic, Use Cases
+├─────────────────────────────────────┤
+│         Data Layer                  │  ← API, Database, Repositories
+├─────────────────────────────────────┤
+│         Core Layer                  │  ← DI, Security, Networking
+└─────────────────────────────────────┘
 ```
 
-## 🛠️ Tech Stack
+**→ [Read Architecture Guide](docs/ARCHITECTURE.md)**
 
-| Category | Technology |
-|----------|-----------|
-| **Framework** | Flutter 3.x |
-| **Language** | Dart 3.x |
-| **State Management** | BLoC/Cubit |
-| **Dependency Injection** | GetIt |
-| **Networking** | Dio + Retrofit |
-| **API** | CoinGecko API v3 |
-| **Charts** | fl_chart |
-| **Error Handling** | Dartz (Either/Failure) |
-| **Testing** | flutter_test, Mocktail, bloc_test |
+---
 
 ## 📁 Project Structure
 
 ```
 lib/
-├── core/                    # Core utilities & configuration
-│   ├── constants/          # App-wide constants
-│   ├── di/                 # Dependency injection
-│   ├── networking/         # API client setup
-│   └── utils/              # Utilities (colors, themes)
+├── core/                   # Infrastructure & shared code
+│   ├── config/            # App configuration
+│   ├── di/                # Dependency injection
+│   ├── networking/        # HTTP client setup
+│   ├── routing/           # Navigation
+│   └── security/          # Security services
 │
-└── features/portfolio/     # Portfolio feature
-    ├── domain/             # Business logic (pure Dart)
-    ├── data/               # API & data sources
-    └── presentation/       # UI & state management
+├── features/              # Feature modules (Clean Architecture)
+│   ├── auth/             # Authentication & security
+│   ├── home/             # Dashboard & market overview
+│   ├── market/           # Crypto market & trading
+│   ├── portfolio/        # Portfolio management
+│   ├── profile/          # User profile
+│   ├── settings/         # App settings
+│   └── transactions/     # Transaction history
+│
+└── main.dart             # App entry point
 
-test/
-├── core/constants/         # Core constants tests (60 tests)
-└── features/portfolio/     # Portfolio tests (102 tests)
-    ├── domain/            # Entity & use case tests
-    ├── data/              # Repository tests
-    └── presentation/      # Cubit & widget tests
+docs/                     # Comprehensive documentation
+test/                     # Unit & widget tests
+integration_test/         # Integration tests
 ```
 
-## 📊 Testing
-
-- **Total Tests**: 102
-- **Passing**: 100 (98%)
-- **Coverage**: Domain (100%), Data (95%), Presentation (96%)
-
-```bash
-# Run all tests
-flutter test
-
-# Run with coverage
-flutter test --coverage
-
-# Portfolio tests only
-flutter test test/features/portfolio/
-
-# Integration tests
-flutter test test/features/portfolio/presentation/portfolio_screen_integration_test.dart
-```
-
-## 📖 Documentation
-
-### Main Documentation Files
-
-| Document | Purpose |
-|----------|---------|
-| **[docs/PORTFOLIO.md](docs/PORTFOLIO.md)** | Complete feature guide - architecture, API integration, UI components, how to add cryptocurrencies, troubleshooting |
-| **[test/features/portfolio/README.md](test/features/portfolio/README.md)** | Testing guide - how to run tests, test structure, patterns, 98% coverage details |
-
-### Quick Links by Task
-
-| What you need | Where to go |
-|--------------|-------------|
-| **Set up the project** | This README → [Quick Start](#-quick-start) |
-| **Understand architecture** | [docs/PORTFOLIO.md#architecture](docs/PORTFOLIO.md#architecture) |
-| **Add a cryptocurrency** | [docs/PORTFOLIO.md#adding-a-new-cryptocurrency](docs/PORTFOLIO.md#adding-a-new-cryptocurrency) |
-| **Customize colors** | [docs/PORTFOLIO.md#task-4-customize-colors](docs/PORTFOLIO.md#task-4-customize-colors) |
-| **Run tests** | [test/features/portfolio/README.md](test/features/portfolio/README.md#-quick-start) |
-| **Fix an issue** | [docs/PORTFOLIO.md#troubleshooting](docs/PORTFOLIO.md#troubleshooting) |
-
-## 🎨 Color System
-
-All colors are centralized with zero hardcoding:
-
-```dart
-// Core colors (lib/core/utils/app_colors.dart)
-static const Color accentPurple = Color(0xFF8979FF);  // BTC
-static const Color accentCyan = Color(0xFF4DD0E1);    // ETH
-static const Color accentCoral = Color(0xFFFF8A80);   // LTC
-
-// Portfolio colors reference core colors
-static const Color bitcoin = AppColors.accentPurple;
-```
-
-**Benefits:** Single source of truth, easy maintenance, reusable across features
-
-## 🔧 Development Workflow
-
-### Adding a New Cryptocurrency
-
-1. Update local data source with holding details
-2. Add color to `lib/core/utils/app_colors.dart`
-3. Map color/icon in `lib/features/portfolio/presentation/portfolio_utils/app_portfolio_colors.dart`
-4. Run tests: `flutter test test/core/constants/app_portfolio_colors_test.dart`
-
-See [docs/PORTFOLIO.md - Adding New Crypto](docs/PORTFOLIO.md#adding-a-new-cryptocurrency) for detailed steps.
-
-### Git Branches
-
-- `main` - Production-ready code
-- `develop` - Integration branch (current: `feature/portfolio_v3`)
-- `feature/*` - Feature branches
-
-### Commit Convention
-
-```bash
-feat: add new cryptocurrency support
-fix: correct portfolio calculation
-test: add integration tests
-docs: update README
-```
-
-## 🌐 API Integration
-
-**CoinGecko API**
-
-- Base URL: `https://api.coingecko.com/api/v3`
-- No authentication required (free tier)
-- Rate limit: 10-50 calls/minute
-- [Documentation](https://www.coingecko.com/en/api)
-
-**Supported Cryptocurrencies:**
-Bitcoin (BTC), Ethereum (ETH), Litecoin (LTC), Cardano (ADA), Polkadot (DOT), Solana (SOL), Dogecoin (DOGE), Polygon (MATIC), Binance Coin (BNB), Ripple (XRP)
-
-## 🐛 Troubleshooting
-
-**Build issues:**
-
-```bash
-flutter clean
-flutter pub get
-flutter pub run build_runner build --delete-conflicting-outputs
-```
-
-**Test failures:**
-
-```bash
-flutter test --no-sound-null-safety
-```
-
-**API rate limiting:** See [docs/PORTFOLIO.md - Troubleshooting](docs/PORTFOLIO.md#troubleshooting)
-
-## 📦 Key Dependencies
-
-```yaml
-dependencies:
-  flutter_bloc: ^8.1.3        # State management
-  get_it: ^7.6.4              # Dependency injection
-  dio: ^5.4.0                 # HTTP client
-  retrofit: ^4.0.3            # REST API
-  dartz: ^0.10.1              # Functional programming
-  fl_chart: ^0.65.0           # Charts
-  go_router: ^12.1.1          # Navigation
-
-dev_dependencies:
-  mocktail: ^1.0.0            # Mocking
-  bloc_test: ^9.1.0           # BLoC testing
-  build_runner: ^2.4.6        # Code generation
-```
-
-## 📝 Code Style
-
-- Follow [Effective Dart](https://dart.dev/guides/language/effective-dart)
-- Write tests for all features
-- Use meaningful names
-- Keep functions small and focused
-- Comment complex business logic
-
-## 🤝 Contributing
-
-1. Create feature branch from `develop`
-2. Follow Clean Architecture structure
-3. Write tests (aim for >90% coverage)
-4. Update documentation
-5. Create PR to `develop`
-6. Ensure all tests pass
-
-## 📄 License
-
-This project is part of Team 18's final project submission.
+**→ [See detailed structure in Architecture Guide](docs/ARCHITECTURE.md)**
 
 ---
 
-**Team**: Team 18
-**Framework**: Flutter 3.x
-**Last Updated**: December 2, 2025
-**Test Coverage**: 98% (102 tests)
-**Documentation**: [docs/](docs/)
+## 📚 Documentation
+
+Comprehensive documentation is available in the [`docs/`](docs/) folder:
+
+| Document | Description |
+|----------|-------------|
+| **[Architecture Guide](docs/ARCHITECTURE.md)** | Clean Architecture implementation |
+| **[Core Architecture](docs/CORE_ARCHITECTURE_GUIDE.md)** | Core layer deep dive (DI, Security, Config) |
+| **[Features Guide](docs/FEATURES_COMPLETE_GUIDE.md)** | All app features explained |
+| **[Security Features](docs/SECURITY_FEATURES_OVERVIEW.md)** | Complete security reference |
+| **[Authentication Flow](docs/AUTH_FLOW.md)** | Auth & biometric implementation |
+| **[API Integration](docs/API_INTEGRATION.md)** | CoinGecko API & networking |
+| **[Testing Guide](docs/TESTING_GUIDE.md)** | Testing strategy & guides |
+| **[Test Coverage](docs/TEST_COVERAGE.md)** | Coverage reports & analysis |
+
+---
+
+## 🧪 Testing
+
+### Run Tests
+
+```bash
+# Unit tests
+flutter test
+
+# Integration tests
+flutter test integration_test/
+
+# With coverage
+flutter test --coverage
+```
+
+> Notes:
+> - Hardware/platform-dependent suites (app lock, session manager, root detection, biometrics, screenshot prevention) are currently `@Skip`ped until platform mocks are added.
+> - Tests bootstrap a test-safe DI graph (in-memory/no-op security services) via `test/test_config.dart`; integration tests launch `main(env: AppEnvironment.test, securityOverrides: createTestSecurityOverrides())`.
+
+### Test Structure
+
+- `test/` - Unit and widget tests
+- `integration_test/` - End-to-end tests
+- Test coverage reports available
+
+**→ [Testing Guide](docs/TESTING_GUIDE.md)** | **[Coverage Guide](docs/TEST_COVERAGE.md)** | **[Tests Overview](docs/TESTS_OVERVIEW.md)**
+
+---
+
+## 💻 Tech Stack
+
+### Core
+- **Flutter** - Cross-platform framework
+- **Dart 3.0+** - Programming language
+- **Firebase** - Authentication & Firestore
+
+### Key Packages
+- **flutter_bloc** - State management
+- **dio** - HTTP client
+- **go_router** - Navigation
+- **get_it** - Dependency injection
+- **flutter_secure_storage** - Secure data storage
+- **local_auth** - Biometric authentication
+- **encrypt** - AES encryption
+
+**→ [View pubspec.yaml](pubspec.yaml)**
+
+---
+
+## 🔧 Configuration
+
+### Environment Variables
+
+```bash
+# CoinGecko API (optional)
+--dart-define=COINGECKO_API_KEY=your_key
+```
+
+### Firebase Setup
+
+1. Create Firebase project
+2. Add `google-services.json` (Android) and `GoogleService-Info.plist` (iOS)
+3. Enable Authentication and Firestore
+
+**→ [Configuration Guide](docs/CORE_ARCHITECTURE_GUIDE.md#configuration-system)**
+
+---
+
+## 🚦 Git Workflow
+
+```bash
+# Create feature branch
+git checkout -b feature/your-feature-name
+
+# Commit changes
+git add .
+git commit -m "feat: add your feature"
+
+# Push and create PR
+git push origin feature/your-feature-name
+```
+
+### Branch Strategy
+- `main` - Production releases
+- `develop` - Active development
+- `feature/*` - New features
+- `bugfix/*` - Bug fixes
+
+---
+
+## 📝 Contributing
+
+### Adding a New Feature
+
+1. **Create feature directory** in `lib/features/`
+2. **Follow Clean Architecture** - separate presentation, domain, data layers
+3. **Register dependencies** in `lib/core/di/di.dart`
+4. **Add routes** in `lib/core/routing/app_router.dart`
+5. **Write tests** for all layers
+6. **Update documentation**
+
+**→ [Adding Features Guide](docs/FEATURES_COMPLETE_GUIDE.md#adding-a-new-feature)**
+
+### Code Style
+
+- Follow Flutter/Dart conventions
+- Use `flutter_lints` package
+- Write meaningful commit messages
+- Document public APIs
+- Test your code
+
+---
+
+## 🛡️ Security
+
+This app implements enterprise-grade security:
+
+- ✅ **Biometric Authentication** - Secure login with Face ID/Touch ID
+- ✅ **Data Encryption** - AES-256 encryption at rest
+- ✅ **Secure Storage** - Platform keychain/keystore
+- ✅ **Session Management** - Auto-expiring sessions
+- ✅ **Screenshot Protection** - Prevents screenshots on sensitive screens
+- ✅ **Root Detection** - Warns on compromised devices
+- ✅ **Audit Logging** - Security event tracking
+
+**→ [Complete Security Documentation](docs/SECURITY_FEATURES_OVERVIEW.md)**
+
+---
+
+## 📊 Project Status
+
+### Current Version
+- **Version**: 1.0.0+1
+- **Flutter**: 3.0+
+- **Status**: Active Development
+
+### Features Status
+- ✅ Authentication & Biometric Login
+- ✅ Home Dashboard
+- ✅ Market Data Integration
+- ✅ Portfolio Management
+- ✅ Transaction History
+- ✅ Security Features
+- ✅ Theme System (Light/Dark)
+- 🚧 Trading Features (In Progress)
+- 🚧 Advanced Charts (Planned)
+
+---
+
+## 👥 Team
+
+**Team 18** - Final Project
+
+---
+
+## 📄 License
+
+This project is for educational purposes.
+
+---
+
+## 🔗 Resources
+
+- [Flutter Documentation](https://docs.flutter.dev)
+- [Clean Architecture](https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html)
+- [Firebase Documentation](https://firebase.google.com/docs)
+- [CoinGecko API](https://www.coingecko.com/en/api/documentation)
+
+---
+
+## 📞 Support
+
+### Having Issues?
+
+1. Check the **[Documentation](docs/)** folder
+2. Review **[Troubleshooting Guide](docs/SECURITY_FEATURES_OVERVIEW.md#troubleshooting)**
+3. Run `flutter doctor` to check your setup
+4. Clean and rebuild: `flutter clean && flutter pub get`
+
+### Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| Build errors | Run `flutter clean && flutter pub get` |
+| API not working | Add `COINGECKO_API_KEY` environment variable |
+| Tests failing | Check test dependencies and mocks |
+| Firebase errors | Verify Firebase configuration files |
+
+---
+
+**Last Updated**: 2025-11-30 | **Documentation**: [View Docs](docs/)

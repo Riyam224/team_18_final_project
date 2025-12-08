@@ -1,7 +1,7 @@
 class Endpoints {
   static const global = "/global";
-  static const trending = "/search/trending";
-  static const topMarkets =
+  static const trendingCoinsList = "/search/trending";
+  static const topGainers =
       "/coins/markets?vs_currency=usd&order=market_cap_desc";
 
   static String marketList(int page) =>
