@@ -69,8 +69,9 @@ class SecurityOverrides {
   final ISecureStorage Function() secureStorage;
   final IEncryptionService Function(ISecureStorage secureStorage) encryption;
   final IBiometricService Function() biometric;
-  final ISessionManager Function(ISecureStorage secureStorage,
-      IEncryptionService encryptionService) sessionManager;
+  final ISessionManager Function(
+          ISecureStorage secureStorage, IEncryptionService encryptionService)
+      sessionManager;
   final IAppLockService Function(ISecureStorage secureStorage) appLock;
   final IAuditLogService Function(ISecureStorage secureStorage) auditLog;
   final IScreenshotPreventionService Function(ISecureStorage secureStorage)
@@ -167,7 +168,8 @@ Future<void> _setupAuth() async {
   sl.registerLazySingleton(() => RegisterUserUseCase(sl()));
   sl.registerLazySingleton(() => StoreUserCredentialsUseCase(sl()));
   sl.registerLazySingleton(() => StoreBiometricSettingsUseCase(sl()));
-  sl.registerLazySingleton(() => BiometricLoginUseCase(sl(), sl<IBiometricService>()));
+  sl.registerLazySingleton(
+      () => BiometricLoginUseCase(sl(), sl<IBiometricService>()));
 
   sl.registerFactory(
     () => AuthCubit(
@@ -210,10 +212,12 @@ Future<void> _setupHome() async {
     () => HomeRepositoryImpl(sl<HomeApiService>()),
   );
 
-  sl.registerLazySingleton(() => GetMarketOverviewUseCase(sl<HomeRepository>()));
+  sl.registerLazySingleton(
+      () => GetMarketOverviewUseCase(sl<HomeRepository>()));
   sl.registerLazySingleton(() => GetTrendingCoinsUseCase(sl<HomeRepository>()));
   sl.registerLazySingleton(() => GetTopGainersUseCase(sl<HomeRepository>()));
-  sl.registerLazySingleton(() => GetPortfolioBalanceUseCase(sl<HomeRepository>()));
+  sl.registerLazySingleton(
+      () => GetPortfolioBalanceUseCase(sl<HomeRepository>()));
 
   sl.registerFactory(
     () => HomeCubit(
@@ -250,7 +254,8 @@ Future<void> _setupPortfolio() async {
   );
 
   sl.registerFactory<PortfolioCubit>(
-    () => PortfolioCubit(getPortfolioOverview: sl<GetPortfolioOverviewUseCase>()),
+    () =>
+        PortfolioCubit(getPortfolioOverview: sl<GetPortfolioOverviewUseCase>()),
   );
 }
 

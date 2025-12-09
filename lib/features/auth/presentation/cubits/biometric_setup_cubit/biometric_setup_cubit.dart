@@ -26,9 +26,12 @@ class BiometricSetupCubit extends Cubit<BiometricSetupState> {
     final resolvedEmail = email ?? credentials?.email;
     final resolvedPassword = password ?? credentials?.encryptedPassword;
 
-    if (resolvedEmail == null || resolvedEmail.isEmpty ||
-        resolvedPassword == null || resolvedPassword.isEmpty) {
-      emit(BiometricSetupError('No stored credentials found for biometric setup. Please log in first.'));
+    if (resolvedEmail == null ||
+        resolvedEmail.isEmpty ||
+        resolvedPassword == null ||
+        resolvedPassword.isEmpty) {
+      emit(BiometricSetupError(
+          'No stored credentials found for biometric setup. Please log in first.'));
       return;
     }
 

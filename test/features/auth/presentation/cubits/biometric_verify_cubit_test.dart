@@ -76,8 +76,8 @@ void main() {
           )).thenAnswer((_) async => const Right(null));
       when(() => mockRepository.getBiometricType())
           .thenAnswer((_) async => const Right('fingerprint'));
-      when(() => mockLoginUseCase())
-          .thenAnswer((_) async => Right<AuthFailure, AuthSessionEntity>(session));
+      when(() => mockLoginUseCase()).thenAnswer(
+          (_) async => Right<AuthFailure, AuthSessionEntity>(session));
       when(() => mockStoreCredentials(
             userId: any(named: 'userId'),
             token: any(named: 'token'),

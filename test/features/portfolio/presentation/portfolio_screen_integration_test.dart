@@ -41,7 +41,8 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('displays portfolio data when loaded', (WidgetTester tester) async {
+    testWidgets('displays portfolio data when loaded',
+        (WidgetTester tester) async {
       repository.setResponse(Right(TestPortfolioData.overview()));
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
@@ -52,7 +53,8 @@ void main() {
       expect(find.text('Ethereum'), findsOneWidget);
     });
 
-    testWidgets('displays error message on failure', (WidgetTester tester) async {
+    testWidgets('displays error message on failure',
+        (WidgetTester tester) async {
       repository.setResponse(Left(ServerFailure(message: 'Connection error')));
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();
@@ -60,7 +62,8 @@ void main() {
       expect(find.text('Connection error'), findsOneWidget);
     });
 
-    testWidgets('displays holdings with correct data', (WidgetTester tester) async {
+    testWidgets('displays holdings with correct data',
+        (WidgetTester tester) async {
       repository.setResponse(Right(TestPortfolioData.overview()));
       await tester.pumpWidget(createWidgetUnderTest());
       await tester.pumpAndSettle();

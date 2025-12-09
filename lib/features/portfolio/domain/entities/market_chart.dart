@@ -16,7 +16,8 @@ class MarketChart extends Equatable {
     if (prices.isEmpty) return null;
     final sum = prices.fold<double>(
       AppPortfolioConstants.zeroValue.toDouble(),
-      (sum, entry) => sum + entry[AppPortfolioConstants.priceDataIndex].toDouble(),
+      (sum, entry) =>
+          sum + entry[AppPortfolioConstants.priceDataIndex].toDouble(),
     );
     return sum / prices.length;
   }
@@ -35,7 +36,9 @@ class MarketChart extends Equatable {
     final latest = latestPrice;
     final earliest = earliestPrice;
 
-    if (latest == null || earliest == null || earliest == AppPortfolioConstants.zeroValue) {
+    if (latest == null ||
+        earliest == null ||
+        earliest == AppPortfolioConstants.zeroValue) {
       return null;
     }
     return ((latest - earliest) / earliest) *

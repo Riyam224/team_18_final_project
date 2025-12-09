@@ -37,7 +37,8 @@ class DioClient {
           options.headers[NetworkConfig.apiKeyHeader] = apiKey;
 
           if (kDebugMode) {
-            debugPrint('${NetworkConfig.requestLogPrefix} ${options.method} ${options.uri}');
+            debugPrint(
+                '${NetworkConfig.requestLogPrefix} ${options.method} ${options.uri}');
           }
 
           return handler.next(options);
@@ -56,13 +57,17 @@ class DioClient {
             debugPrint('${NetworkConfig.messageLogPrefix} ${error.message}');
           }
 
-          if (error.response?.statusCode == NetworkConfig.statusTooManyRequests) {
+          if (error.response?.statusCode ==
+              NetworkConfig.statusTooManyRequests) {
             if (kDebugMode) {
-              debugPrint('${NetworkConfig.warningLogPrefix} ${NetworkConfig.rateLimitExceeded}');
+              debugPrint(
+                  '${NetworkConfig.warningLogPrefix} ${NetworkConfig.rateLimitExceeded}');
             }
-          } else if (error.response?.statusCode == NetworkConfig.statusUnauthorized) {
+          } else if (error.response?.statusCode ==
+              NetworkConfig.statusUnauthorized) {
             if (kDebugMode) {
-              debugPrint('${NetworkConfig.unauthorizedLogPrefix} ${NetworkConfig.unauthorizedRequest}');
+              debugPrint(
+                  '${NetworkConfig.unauthorizedLogPrefix} ${NetworkConfig.unauthorizedRequest}');
             }
           }
 
@@ -81,7 +86,8 @@ class DioClient {
           responseHeader: false,
           responseBody: true,
           error: true,
-          logPrint: (obj) => debugPrint('${NetworkConfig.detailsLogPrefix} $obj'),
+          logPrint: (obj) =>
+              debugPrint('${NetworkConfig.detailsLogPrefix} $obj'),
         ),
       );
     }

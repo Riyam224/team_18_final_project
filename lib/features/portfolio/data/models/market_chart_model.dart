@@ -15,9 +15,7 @@ class MarketChartModel {
     List<List<num>> safeParse(dynamic data) {
       if (data is! List) return [];
 
-      return data
-          .whereType<List>()
-          .map((list) {
+      return data.whereType<List>().map((list) {
         final cleaned = list.whereType<num>().toList();
 
         if (cleaned.length < AppPortfolioConstants.minArrayLength) {

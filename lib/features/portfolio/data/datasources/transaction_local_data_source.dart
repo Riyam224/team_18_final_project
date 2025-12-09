@@ -1,7 +1,8 @@
 import 'package:team_18_final_project/features/portfolio/domain/entities/transaction.dart';
 
 class TransactionLocalDataSource {
-  TransactionLocalDataSource({DateTime Function()? now}) : _now = now ?? DateTime.now;
+  TransactionLocalDataSource({DateTime Function()? now})
+      : _now = now ?? DateTime.now;
 
   final DateTime Function() _now;
 

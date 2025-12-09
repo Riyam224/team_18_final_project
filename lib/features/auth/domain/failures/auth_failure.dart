@@ -111,7 +111,8 @@ class InvalidVerificationIdFailure extends AuthFailure {
 /// Requires recent login failure
 class RequiresRecentLoginFailure extends AuthFailure {
   const RequiresRecentLoginFailure({
-    super.message = 'This operation requires recent authentication. Please log in again.',
+    super.message =
+        'This operation requires recent authentication. Please log in again.',
     super.code = 'requires-recent-login',
     super.details,
   });

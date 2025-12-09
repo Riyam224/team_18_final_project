@@ -44,7 +44,8 @@ void main() {
       expect(sellTransaction.type, TransactionType.sell);
       expectClose(sellTransaction.amount, 2.0);
       expectClose(sellTransaction.valueUsd, 6000.0);
-      expect(sellTransaction.timestamp, fixedNow.subtract(const Duration(days: 1)));
+      expect(sellTransaction.timestamp,
+          fixedNow.subtract(const Duration(days: 1)));
     });
 
     test('equatable compares all fields', () {

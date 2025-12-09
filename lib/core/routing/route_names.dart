@@ -52,6 +52,7 @@ class RoutePaths {
   static String coinDetailsPath = '${AppRoutes.coinDetails}/:${RouteParams.id}';
   static String buySellPath = '${AppRoutes.buySell}/:${RouteParams.id}';
 
-  static String coinDetailsRoute(String coinId) => '${AppRoutes.coinDetails}/$coinId';
+  static String coinDetailsRoute(String coinId) =>
+      '${AppRoutes.coinDetails}/$coinId';
   static String buySellRoute(String coinId) => '${AppRoutes.buySell}/$coinId';
 }

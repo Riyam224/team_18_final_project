@@ -34,8 +34,9 @@ class AllocationChart extends StatelessWidget {
     final total = segments.fold<double>(0, (sum, seg) => sum + seg.value);
     final isDark = context.isDark();
     final cardColor = isDark ? AppColors.darkBackground : Colors.white;
-    final shadowColor =
-        isDark ? Colors.black.withOpacity(0.25) : Colors.black.withOpacity(0.06);
+    final shadowColor = isDark
+        ? Colors.black.withOpacity(0.25)
+        : Colors.black.withOpacity(0.06);
     return Container(
       padding: AppSpacing.paddingAll16,
       decoration: BoxDecoration(
@@ -69,7 +70,8 @@ class AllocationChart extends StatelessWidget {
                       textAlign: TextAlign.center,
                       style: AppTextStyles.titleMedium.copyWith(
                         fontWeight: FontWeight.w700,
-                        color: isDark ? AppColors.textWhite : AppColors.textGray,
+                        color:
+                            isDark ? AppColors.textWhite : AppColors.textGray,
                       ),
                     ),
                   ),

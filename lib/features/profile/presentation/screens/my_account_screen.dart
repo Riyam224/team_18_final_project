@@ -56,7 +56,8 @@ class _MyAccountViewState extends State<_MyAccountView> {
     _phone.text = profile.phone;
   }
 
-  Future<void> _showAvatarPicker(BuildContext context, ProfileCubit cubit) async {
+  Future<void> _showAvatarPicker(
+      BuildContext context, ProfileCubit cubit) async {
     final options = [
       AppAssets.profileMan,
       AppAssets.profileGirl,
@@ -135,8 +136,8 @@ class _MyAccountViewState extends State<_MyAccountView> {
             child: loading
                 ? const Center(child: CircularProgressIndicator())
                 : SingleChildScrollView(
-                    padding:
-                        AppSpacing.symmetricPadding(horizontal: 20, vertical: 16),
+                    padding: AppSpacing.symmetricPadding(
+                        horizontal: 20, vertical: 16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -150,7 +151,8 @@ class _MyAccountViewState extends State<_MyAccountView> {
                             avatarUrl: state.profile.avatarUrl,
                             displayName: state.profile.displayName,
                             email: state.profile.email,
-                            onUpload: () async => _showAvatarPicker(context, cubit),
+                            onUpload: () async =>
+                                _showAvatarPicker(context, cubit),
                           ),
                         ),
                         AppSpacing.gapH24,
@@ -162,7 +164,8 @@ class _MyAccountViewState extends State<_MyAccountView> {
                           ),
                           child: SecuritySection(
                             biometricEnabled: state.settings.biometricEnabled,
-                            autoLockMinutes: state.settings.autoLockTimeoutMinutes,
+                            autoLockMinutes:
+                                state.settings.autoLockTimeoutMinutes,
                             saving: saving,
                             onBiometricChanged: cubit.updateBiometricSetting,
                             onAutoLockChanged: cubit.updateAutoLock,
@@ -184,7 +187,8 @@ class _MyAccountViewState extends State<_MyAccountView> {
                             saving: saving,
                             isDark: isDark,
                             onSave: () {
-                              if (!(_formKey.currentState?.validate() ?? false)) {
+                              if (!(_formKey.currentState?.validate() ??
+                                  false)) {
                                 return;
                               }
                               final updated = state.profile.copyWith(

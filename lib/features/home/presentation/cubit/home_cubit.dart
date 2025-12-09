@@ -47,13 +47,15 @@ class HomeCubit extends Cubit<HomeState> {
       final portfolioBalanceResult = await getPortfolioBalanceUseCase();
       if (isClosed) return;
 
-      final marketOverviewFailure = marketOverviewResult.fold((f) => f, (_) => null);
+      final marketOverviewFailure =
+          marketOverviewResult.fold((f) => f, (_) => null);
       if (marketOverviewFailure != null) {
         if (!isClosed) emit(HomeError(message: marketOverviewFailure.message));
         return;
       }
 
-      final trendingCoinsFailure = trendingCoinsResult.fold((f) => f, (_) => null);
+      final trendingCoinsFailure =
+          trendingCoinsResult.fold((f) => f, (_) => null);
       if (trendingCoinsFailure != null) {
         if (!isClosed) emit(HomeError(message: trendingCoinsFailure.message));
         return;
@@ -65,16 +67,21 @@ class HomeCubit extends Cubit<HomeState> {
         return;
       }
 
-      final portfolioBalanceFailure = portfolioBalanceResult.fold((f) => f, (_) => null);
+      final portfolioBalanceFailure =
+          portfolioBalanceResult.fold((f) => f, (_) => null);
       if (portfolioBalanceFailure != null) {
-        if (!isClosed) emit(HomeError(message: portfolioBalanceFailure.message));
+        if (!isClosed)
+          emit(HomeError(message: portfolioBalanceFailure.message));
         return;
       }
 
-      final marketOverview = marketOverviewResult.fold((_) => null, (data) => data);
-      final trendingCoins = trendingCoinsResult.fold((_) => null, (data) => data);
+      final marketOverview =
+          marketOverviewResult.fold((_) => null, (data) => data);
+      final trendingCoins =
+          trendingCoinsResult.fold((_) => null, (data) => data);
       final topGainers = topGainersResult.fold((_) => null, (data) => data);
-      final portfolioBalance = portfolioBalanceResult.fold((_) => null, (data) => data);
+      final portfolioBalance =
+          portfolioBalanceResult.fold((_) => null, (data) => data);
 
       if (!isClosed) {
         emit(HomeLoaded(

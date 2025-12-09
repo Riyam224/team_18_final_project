@@ -76,8 +76,10 @@ void main() {
             email: any(named: 'email'),
             password: any(named: 'password'),
           )).thenAnswer((_) async => tUser);
-      when(() => mockLocalDataSource.cacheSession(any())).thenAnswer((_) async => {});
-      when(() => mockLocalDataSource.cacheUser(any())).thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.cacheSession(any()))
+          .thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.cacheUser(any()))
+          .thenAnswer((_) async => {});
 
       final result = await repository.login(tEmail, tPassword);
 
@@ -113,7 +115,8 @@ void main() {
           ));
     });
 
-    test('should return InvalidCredentialsFailure when password is too short', () async {
+    test('should return InvalidCredentialsFailure when password is too short',
+        () async {
       const shortPassword = '123';
 
       final result = await repository.login(tEmail, shortPassword);
@@ -125,8 +128,10 @@ void main() {
       );
     });
 
-    test('should return UserNotFoundFailure when user does not exist', () async {
-      final exception = firebase_auth.FirebaseAuthException(code: 'user-not-found');
+    test('should return UserNotFoundFailure when user does not exist',
+        () async {
+      final exception =
+          firebase_auth.FirebaseAuthException(code: 'user-not-found');
       when(() => mockRemoteDataSource.signInWithEmailAndPassword(
             email: any(named: 'email'),
             password: any(named: 'password'),
@@ -141,8 +146,10 @@ void main() {
       );
     });
 
-    test('should return InvalidCredentialsFailure for wrong password', () async {
-      final exception = firebase_auth.FirebaseAuthException(code: 'wrong-password');
+    test('should return InvalidCredentialsFailure for wrong password',
+        () async {
+      final exception =
+          firebase_auth.FirebaseAuthException(code: 'wrong-password');
       when(() => mockRemoteDataSource.signInWithEmailAndPassword(
             email: any(named: 'email'),
             password: any(named: 'password'),
@@ -182,9 +189,12 @@ void main() {
             displayName: any(named: 'displayName'),
             phoneNumber: any(named: 'phoneNumber'),
           )).thenAnswer((_) async => tUser);
-      when(() => mockLocalDataSource.cacheSession(any())).thenAnswer((_) async => {});
-      when(() => mockLocalDataSource.cacheUser(any())).thenAnswer((_) async => {});
-      when(() => mockLocalDataSource.cacheUserSettings(any())).thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.cacheSession(any()))
+          .thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.cacheUser(any()))
+          .thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.cacheUserSettings(any()))
+          .thenAnswer((_) async => {});
 
       final result = await repository.register(tRegisterUser);
 
@@ -238,8 +248,10 @@ void main() {
       );
     });
 
-    test('should return EmailAlreadyExistsFailure for duplicate email', () async {
-      final exception = firebase_auth.FirebaseAuthException(code: 'email-already-in-use');
+    test('should return EmailAlreadyExistsFailure for duplicate email',
+        () async {
+      final exception =
+          firebase_auth.FirebaseAuthException(code: 'email-already-in-use');
       when(() => mockRemoteDataSource.registerWithEmailAndPassword(
             email: any(named: 'email'),
             password: any(named: 'password'),
@@ -258,9 +270,12 @@ void main() {
   });
 
   group('signOut', () {
-    test('should sign out and clear user data but preserve biometric credentials', () async {
+    test(
+        'should sign out and clear user data but preserve biometric credentials',
+        () async {
       when(() => mockRemoteDataSource.signOut()).thenAnswer((_) async => {});
-      when(() => mockLocalDataSource.clearUserDataOnly()).thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.clearUserDataOnly())
+          .thenAnswer((_) async => {});
 
       final result = await repository.signOut();
 
@@ -270,7 +285,8 @@ void main() {
     });
 
     test('should return failure when sign out fails', () async {
-      final exception = firebase_auth.FirebaseAuthException(code: 'network-request-failed');
+      final exception =
+          firebase_auth.FirebaseAuthException(code: 'network-request-failed');
       when(() => mockRemoteDataSource.signOut()).thenThrow(exception);
 
       final result = await repository.signOut();
@@ -291,7 +307,8 @@ void main() {
     );
 
     test('should return cached user when available', () async {
-      when(() => mockLocalDataSource.getCachedUser()).thenAnswer((_) async => tUser);
+      when(() => mockLocalDataSource.getCachedUser())
+          .thenAnswer((_) async => tUser);
 
       final result = await repository.getCurrentUser();
 
@@ -305,9 +322,12 @@ void main() {
     });
 
     test('should fetch from remote when cache is empty', () async {
-      when(() => mockLocalDataSource.getCachedUser()).thenAnswer((_) async => null);
-      when(() => mockRemoteDataSource.getCurrentUser()).thenAnswer((_) async => tUser);
-      when(() => mockLocalDataSource.cacheUser(any())).thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.getCachedUser())
+          .thenAnswer((_) async => null);
+      when(() => mockRemoteDataSource.getCurrentUser())
+          .thenAnswer((_) async => tUser);
+      when(() => mockLocalDataSource.cacheUser(any()))
+          .thenAnswer((_) async => {});
 
       final result = await repository.getCurrentUser();
 
@@ -318,8 +338,10 @@ void main() {
     });
 
     test('should return null when no user is logged in', () async {
-      when(() => mockLocalDataSource.getCachedUser()).thenAnswer((_) async => null);
-      when(() => mockRemoteDataSource.getCurrentUser()).thenAnswer((_) async => null);
+      when(() => mockLocalDataSource.getCachedUser())
+          .thenAnswer((_) async => null);
+      when(() => mockRemoteDataSource.getCurrentUser())
+          .thenAnswer((_) async => null);
 
       final result = await repository.getCurrentUser();
 
@@ -339,8 +361,10 @@ void main() {
     test('should store biometric credentials and enable biometric', () async {
       when(() => mockLocalDataSource.cacheBiometricCredentials(any()))
           .thenAnswer((_) async => {});
-      when(() => mockLocalDataSource.setBiometricEnabled(any())).thenAnswer((_) async => {});
-      when(() => mockLocalDataSource.storeUserEmail(any())).thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.setBiometricEnabled(any()))
+          .thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.storeUserEmail(any()))
+          .thenAnswer((_) async => {});
 
       final result = await repository.storeBiometricSettings(
         email: tEmail,
@@ -349,7 +373,8 @@ void main() {
       );
 
       expect(result.isRight(), true);
-      verify(() => mockLocalDataSource.cacheBiometricCredentials(any())).called(1);
+      verify(() => mockLocalDataSource.cacheBiometricCredentials(any()))
+          .called(1);
       verify(() => mockLocalDataSource.setBiometricEnabled(true)).called(1);
       verify(() => mockLocalDataSource.storeUserEmail(tEmail)).called(1);
     });
@@ -377,7 +402,8 @@ void main() {
     });
 
     test('should return null when no credentials are stored', () async {
-      when(() => mockLocalDataSource.getBiometricCredentials()).thenAnswer((_) async => null);
+      when(() => mockLocalDataSource.getBiometricCredentials())
+          .thenAnswer((_) async => null);
 
       final result = await repository.getBiometricCredentials();
 
@@ -391,7 +417,8 @@ void main() {
 
   group('isBiometricEnabled', () {
     test('should return true when biometric is enabled', () async {
-      when(() => mockLocalDataSource.isBiometricEnabled()).thenAnswer((_) async => true);
+      when(() => mockLocalDataSource.isBiometricEnabled())
+          .thenAnswer((_) async => true);
 
       final result = await repository.isBiometricEnabled();
 
@@ -403,7 +430,8 @@ void main() {
     });
 
     test('should return false when biometric is disabled', () async {
-      when(() => mockLocalDataSource.isBiometricEnabled()).thenAnswer((_) async => false);
+      when(() => mockLocalDataSource.isBiometricEnabled())
+          .thenAnswer((_) async => false);
 
       final result = await repository.isBiometricEnabled();
 
@@ -428,7 +456,8 @@ void main() {
     test('should fetch and cache user settings', () async {
       when(() => mockRemoteDataSource.getUserSettings(any()))
           .thenAnswer((_) async => tSettings);
-      when(() => mockLocalDataSource.cacheUserSettings(any())).thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.cacheUserSettings(any()))
+          .thenAnswer((_) async => {});
 
       final result = await repository.getUserSettings(tUserId);
 
@@ -438,8 +467,10 @@ void main() {
     });
 
     test('should handle Firestore errors gracefully', () async {
-      final exception = FirebaseException(plugin: 'firestore', code: 'unavailable');
-      when(() => mockRemoteDataSource.getUserSettings(any())).thenThrow(exception);
+      final exception =
+          FirebaseException(plugin: 'firestore', code: 'unavailable');
+      when(() => mockRemoteDataSource.getUserSettings(any()))
+          .thenThrow(exception);
 
       final result = await repository.getUserSettings(tUserId);
 
@@ -461,13 +492,16 @@ void main() {
     );
 
     test('should update settings remotely and cache them', () async {
-      when(() => mockRemoteDataSource.updateUserSettings(any())).thenAnswer((_) async => {});
-      when(() => mockLocalDataSource.cacheUserSettings(any())).thenAnswer((_) async => {});
+      when(() => mockRemoteDataSource.updateUserSettings(any()))
+          .thenAnswer((_) async => {});
+      when(() => mockLocalDataSource.cacheUserSettings(any()))
+          .thenAnswer((_) async => {});
 
       final result = await repository.updateUserSettings(tSettings);
 
       expect(result.isRight(), true);
-      verify(() => mockRemoteDataSource.updateUserSettings(tSettings)).called(1);
+      verify(() => mockRemoteDataSource.updateUserSettings(tSettings))
+          .called(1);
       verify(() => mockLocalDataSource.cacheUserSettings(tSettings)).called(1);
     });
   });

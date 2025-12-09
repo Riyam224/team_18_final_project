@@ -27,7 +27,8 @@ void main() {
   );
 
   group('call', () {
-    test('should call repository login with cleaned email and password', () async {
+    test('should call repository login with cleaned email and password',
+        () async {
       // Arrange
       when(() => mockRepository.login(any(), any()))
           .thenAnswer((_) async => Right(tAuthSession));
@@ -90,7 +91,8 @@ void main() {
       verify(() => mockRepository.login(tEmail, 'password123')).called(1);
     });
 
-    test('should return UserNotFoundFailure when user does not exist', () async {
+    test('should return UserNotFoundFailure when user does not exist',
+        () async {
       // Arrange
       const tFailure = UserNotFoundFailure();
       when(() => mockRepository.login(any(), any()))

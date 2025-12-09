@@ -17,11 +17,13 @@ class TimingConfig {
   static const Duration sendTimeout = Duration(seconds: 30);
 
   static const int sessionTimeoutMinutes = 30;
-  static const Duration sessionTimeout = Duration(minutes: sessionTimeoutMinutes);
+  static const Duration sessionTimeout =
+      Duration(minutes: sessionTimeoutMinutes);
   static const Duration sessionPollInterval = Duration(seconds: 30);
 
   static const int autoLockTimeoutSeconds = 120;
-  static const Duration autoLockTimeout = Duration(seconds: autoLockTimeoutSeconds);
+  static const Duration autoLockTimeout =
+      Duration(seconds: autoLockTimeoutSeconds);
 
   static const int defaultSessionTimeoutMinutes = 30;
   static const int defaultAutoLockTimeoutSeconds = 120;
@@ -31,11 +33,15 @@ class TimingConfig {
   static const int longDelayMs = 5000;
 
   static const Duration splashAnimationDuration = Duration(milliseconds: 2000);
-  static const Duration splashRegisteredUserDelay = Duration(milliseconds: 3000);
-  static const Duration splashNonRegisteredUserDelay = Duration(milliseconds: 2000);
+  static const Duration splashRegisteredUserDelay =
+      Duration(milliseconds: 3000);
+  static const Duration splashNonRegisteredUserDelay =
+      Duration(milliseconds: 2000);
   static const Duration splashRootWarningDelay = Duration(milliseconds: 2200);
 
-  static const Duration onboardingPageTransitionDuration = Duration(milliseconds: 300);
+  static const Duration onboardingPageTransitionDuration =
+      Duration(milliseconds: 300);
 
-  static const Duration indicatorAnimationDuration = Duration(milliseconds: 250);
+  static const Duration indicatorAnimationDuration =
+      Duration(milliseconds: 250);
 }

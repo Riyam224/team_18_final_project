@@ -50,7 +50,9 @@ class _DetermineColorForButtonStateState
                 child: Text(AppStrings.items[index],
                     style: theme.textTheme.labelMedium!.copyWith(
                         color: index == buttonId
-                            ? (isDark ? AppColors.textDark : AppColors.textWhite)
+                            ? (isDark
+                                ? AppColors.textDark
+                                : AppColors.textWhite)
                             : AppColors.textGray))),
           );
         }));

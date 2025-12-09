@@ -22,8 +22,10 @@ class UserSettingsEntity extends Equatable {
     required this.userId,
     this.biometricEnabled = false,
     this.biometricType = BiometricType.none,
-    this.sessionTimeoutMinutes = SecurityConfig.defaultSessionTimeoutMinutesUserSetting,
-    this.autoLockTimeoutSeconds = SecurityConfig.defaultAutoLockSecondsUserSetting,
+    this.sessionTimeoutMinutes =
+        SecurityConfig.defaultSessionTimeoutMinutesUserSetting,
+    this.autoLockTimeoutSeconds =
+        SecurityConfig.defaultAutoLockSecondsUserSetting,
     this.avatarUrl,
     this.settingsUpdatedAt,
   });
@@ -42,8 +44,10 @@ class UserSettingsEntity extends Equatable {
       userId: userId ?? this.userId,
       biometricEnabled: biometricEnabled ?? this.biometricEnabled,
       biometricType: biometricType ?? this.biometricType,
-      sessionTimeoutMinutes: sessionTimeoutMinutes ?? this.sessionTimeoutMinutes,
-      autoLockTimeoutSeconds: autoLockTimeoutSeconds ?? this.autoLockTimeoutSeconds,
+      sessionTimeoutMinutes:
+          sessionTimeoutMinutes ?? this.sessionTimeoutMinutes,
+      autoLockTimeoutSeconds:
+          autoLockTimeoutSeconds ?? this.autoLockTimeoutSeconds,
       avatarUrl: avatarUrl ?? this.avatarUrl,
       settingsUpdatedAt: settingsUpdatedAt ?? this.settingsUpdatedAt,
     );

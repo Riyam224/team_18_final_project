@@ -6,7 +6,6 @@ import 'package:team_18_final_project/main.dart' as app;
 
 import '../test/support/test_security_fakes.dart';
 
-
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 

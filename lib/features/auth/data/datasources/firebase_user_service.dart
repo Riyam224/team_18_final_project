@@ -299,7 +299,8 @@ class FirebaseUserService {
   }
 
   Future<bool?> getLocalBiometricEnabled() async {
-    final result = await _secureStorage.read(key: StorageKeysConfig.biometricEnabled);
+    final result =
+        await _secureStorage.read(key: StorageKeysConfig.biometricEnabled);
     return result.fold(
       (_) => null,
       (value) => value == null ? null : value == 'true',

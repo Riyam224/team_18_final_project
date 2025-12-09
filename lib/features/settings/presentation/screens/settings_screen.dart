@@ -56,16 +56,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadData() async {
     // Load avatar path
-    final avatarResult = await _secureStorage.read(key: StorageKeysConfig.avatarUrl);
+    final avatarResult =
+        await _secureStorage.read(key: StorageKeysConfig.avatarUrl);
     final avatar = avatarResult.fold((failure) => null, (value) => value);
 
     // Load biometric enabled
-    final enabledResult = await _secureStorage.read(key: StorageKeysConfig.biometricEnabled);
-    final enabled = enabledResult.fold((failure) => false, (value) => value == 'true');
+    final enabledResult =
+        await _secureStorage.read(key: StorageKeysConfig.biometricEnabled);
+    final enabled =
+        enabledResult.fold((failure) => false, (value) => value == 'true');
 
     // Check biometric availability
     final availableResult = await _biometricService.isAvailable();
-    final available = availableResult.fold((failure) => false, (value) => value);
+    final available =
+        availableResult.fold((failure) => false, (value) => value);
 
     // Get auto-lock timeout
     final timeoutResult = await _appLockService.getAutoLockTimeout();
@@ -133,7 +137,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
 
     await _auditLogService.log(
-      event: 'Auto-lock timeout set to ${seconds == 0 ? 'Never' : '${seconds}s'}',
+      event:
+          'Auto-lock timeout set to ${seconds == 0 ? 'Never' : '${seconds}s'}',
       metadata: {'type': 'security'},
     );
 

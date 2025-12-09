@@ -117,7 +117,8 @@ void main() {
       // Assert
       verify(() => mockRepository.addTransaction(buyTransaction)).called(1);
       verify(() => mockRepository.addTransaction(sellTransaction)).called(1);
-      verify(() => mockRepository.addTransaction(transferTransaction)).called(1);
+      verify(() => mockRepository.addTransaction(transferTransaction))
+          .called(1);
     });
 
     test('should handle large transaction amounts', () async {

@@ -77,12 +77,14 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
         await _encryptionService.encrypt(credentials.encryptedPassword);
 
     final emailToStore = encryptedEmail.fold(
-      (failure) => throw Exception('Failed to encrypt biometric email: ${failure.message}'),
+      (failure) => throw Exception(
+          'Failed to encrypt biometric email: ${failure.message}'),
       (encrypted) => encrypted,
     );
 
     final passwordToStore = encryptedPassword.fold(
-      (failure) => throw Exception('Failed to encrypt biometric password: ${failure.message}'),
+      (failure) => throw Exception(
+          'Failed to encrypt biometric password: ${failure.message}'),
       (encrypted) => encrypted,
     );
 
@@ -160,7 +162,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     await _secureStorage.delete(key: StorageKeysConfig.biometricEmail);
     await _secureStorage.delete(key: StorageKeysConfig.biometricPassword);
     await _secureStorage.delete(key: StorageKeysConfig.biometricType);
-    await _secureStorage.delete(key: StorageKeysConfig.biometricCredentialsStored);
+    await _secureStorage.delete(
+        key: StorageKeysConfig.biometricCredentialsStored);
     await _secureStorage.delete(key: StorageKeysConfig.biometricEnabled);
   }
 
@@ -247,7 +250,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     final settingsMap = {
       'userId': settings.userId,
       'biometricEnabled': settings.biometricEnabled,
-      'biometricType': SettingsMapper.biometricTypeToString(settings.biometricType),
+      'biometricType':
+          SettingsMapper.biometricTypeToString(settings.biometricType),
       'sessionTimeoutMinutes': settings.sessionTimeoutMinutes,
       'autoLockTimeoutSeconds': settings.autoLockTimeoutSeconds,
       'avatarUrl': settings.avatarUrl,
@@ -294,8 +298,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
             biometricType: SettingsMapper.biometricTypeFromString(
               settingsMap['biometricType'] as String?,
             ),
-            sessionTimeoutMinutes: settingsMap['sessionTimeoutMinutes'] as int? ?? 30,
-            autoLockTimeoutSeconds: settingsMap['autoLockTimeoutSeconds'] as int? ?? 120,
+            sessionTimeoutMinutes:
+                settingsMap['sessionTimeoutMinutes'] as int? ?? 30,
+            autoLockTimeoutSeconds:
+                settingsMap['autoLockTimeoutSeconds'] as int? ?? 120,
             avatarUrl: settingsMap['avatarUrl'] as String?,
             settingsUpdatedAt: settingsMap['settingsUpdatedAt'] != null
                 ? DateTime.parse(settingsMap['settingsUpdatedAt'] as String)
@@ -382,18 +388,21 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<String?> getUserFirstName() async {
-    final result = await _secureStorage.read(key: StorageKeysConfig.userFirstName);
+    final result =
+        await _secureStorage.read(key: StorageKeysConfig.userFirstName);
     return result.fold((failure) => null, (value) => value);
   }
 
   @override
   Future<void> storeUserFirstName(String firstName) async {
-    await _secureStorage.write(key: StorageKeysConfig.userFirstName, value: firstName);
+    await _secureStorage.write(
+        key: StorageKeysConfig.userFirstName, value: firstName);
   }
 
   @override
   Future<void> storeUserLastName(String lastName) async {
-    await _secureStorage.write(key: StorageKeysConfig.userLastName, value: lastName);
+    await _secureStorage.write(
+        key: StorageKeysConfig.userLastName, value: lastName);
   }
 
   @override

@@ -20,7 +20,8 @@ class BiometricLoginUseCase {
     return authResult.fold(
       (biometricFailure) => Left(
         GenericAuthFailure(
-          message: 'Biometric authentication failed: ${biometricFailure.message}',
+          message:
+              'Biometric authentication failed: ${biometricFailure.message}',
           code: 'biometric-auth-failed',
         ),
       ),
@@ -41,7 +42,8 @@ class BiometricLoginUseCase {
         if (email == null || email.isEmpty) {
           return const Left(
             GenericAuthFailure(
-              message: 'No email found in biometric storage. Please log in with email and password to refresh biometric login.',
+              message:
+                  'No email found in biometric storage. Please log in with email and password to refresh biometric login.',
               code: 'no-stored-email',
             ),
           );
@@ -50,7 +52,8 @@ class BiometricLoginUseCase {
         if (password == null || password.isEmpty) {
           return const Left(
             GenericAuthFailure(
-              message: 'No password found in biometric storage. Please log in with email and password to refresh biometric login.',
+              message:
+                  'No password found in biometric storage. Please log in with email and password to refresh biometric login.',
               code: 'no-stored-password',
             ),
           );
@@ -62,7 +65,8 @@ class BiometricLoginUseCase {
         if (!ValidationConfig.emailRegex.hasMatch(cleanedEmail)) {
           return Left(
             GenericAuthFailure(
-              message: 'Stored email format is invalid: "$cleanedEmail". Please log in with email and password to refresh biometric login.',
+              message:
+                  'Stored email format is invalid: "$cleanedEmail". Please log in with email and password to refresh biometric login.',
               code: 'invalid-biometric-email',
             ),
           );

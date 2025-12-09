@@ -10,7 +10,8 @@ abstract class AuthLocalDataSource {
 
   Future<void> clearSession();
 
-  Future<void> cacheBiometricCredentials(BiometricCredentialsEntity credentials);
+  Future<void> cacheBiometricCredentials(
+      BiometricCredentialsEntity credentials);
 
   Future<BiometricCredentialsEntity?> getBiometricCredentials();
 

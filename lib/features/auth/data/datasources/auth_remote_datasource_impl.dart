@@ -120,7 +120,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
     }
 
-    final profileData = data[FirebaseConfig.profileField] as Map<String, dynamic>;
+    final profileData =
+        data[FirebaseConfig.profileField] as Map<String, dynamic>;
     return ProfileMapper.fromFirestore(userId, profileData);
   }
 
@@ -157,7 +158,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return UserSettingsEntity(userId: userId);
     }
 
-    final settingsData = data[FirebaseConfig.settingsField] as Map<String, dynamic>;
+    final settingsData =
+        data[FirebaseConfig.settingsField] as Map<String, dynamic>;
     return SettingsMapper.fromFirestore(userId, settingsData);
   }
 

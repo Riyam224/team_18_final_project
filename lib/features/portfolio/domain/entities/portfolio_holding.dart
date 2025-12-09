@@ -21,7 +21,8 @@ class PortfolioHolding extends Equatable {
   double get valueUsd => amount * priceUsd;
 
   double get changeUsd =>
-      valueUsd * (changePercent24h / AppPortfolioConstants.percentageMultiplier);
+      valueUsd *
+      (changePercent24h / AppPortfolioConstants.percentageMultiplier);
 
   @override
   List<Object?> get props => [

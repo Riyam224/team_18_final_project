@@ -52,7 +52,8 @@ class AppStrings {
   static const enableBiometrics = 'Enable Biometrics';
   static const enableBiometricsHint = 'Use Face ID / Touch ID to unlock';
   static const autoLockTimeout = 'Auto-lock timeout';
-  static String autoLockSubtitle(int minutes) => 'After $minutes minutes of inactivity';
+  static String autoLockSubtitle(int minutes) =>
+      'After $minutes minutes of inactivity';
   static const minutesShort = 'min';
   static const saveChanges = 'Save changes';
   static const requiredField = 'Required';
@@ -128,17 +129,13 @@ class AppStrings {
       'Stored biometric login is missing valid credentials. Please log in with email and password once to refresh biometric login.';
   static const ok = 'OK';
 
-  static const authNoAccountFound =
-      'No account found with this email.';
-  static const authInvalidCredentials =
-      'Invalid email or password.';
-  static const authEmailExists =
-      'An account with this email already exists.';
+  static const authNoAccountFound = 'No account found with this email.';
+  static const authInvalidCredentials = 'Invalid email or password.';
+  static const authEmailExists = 'An account with this email already exists.';
   static const authWeakPassword = 'Weak password.';
   static const authInvalidEmail = 'Invalid email.';
   static const authNetworkError = 'Network error.';
-  static const authTooManyRequests =
-      'Too many attempts. Try later.';
+  static const authTooManyRequests = 'Too many attempts. Try later.';
   static const authAccountDisabled = 'Account disabled.';
 
   static const fingerprintAuthFailed = 'Fingerprint authentication failed';
@@ -254,7 +251,14 @@ class AppStrings {
   static const String hoursAgo = 'hours ago';
   static const String dayAgo = 'day ago';
   static const String daysAgo = 'days ago';
-  static const List<String> monthsShort = ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'];
+  static const List<String> monthsShort = [
+    'Nov',
+    'Dec',
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr'
+  ];
 
   static const String greeting = 'Hi, riyam 👋';
   static const String marketCap = 'Market Cap';

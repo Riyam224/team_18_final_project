@@ -17,7 +17,8 @@ class StorageKeysConfig {
   static const String biometricType = 'biometric_type';
   static const String biometricEmail = 'biometric_email';
   static const String biometricPassword = 'biometric_password';
-  static const String biometricCredentialsStored = 'biometric_credentials_stored';
+  static const String biometricCredentialsStored =
+      'biometric_credentials_stored';
 
   // Session
   static const String sessionId = 'session_id';
@@ -53,7 +54,8 @@ class StorageKeysConfig {
   static const String lastAuditCleanup = 'last_audit_cleanup';
 
   // Screenshot Prevention
-  static const String screenshotPreventionEnabled = 'screenshot_prevention_enabled';
+  static const String screenshotPreventionEnabled =
+      'screenshot_prevention_enabled';
   static const String protectedRoutes = 'protected_routes';
 
   // Blur

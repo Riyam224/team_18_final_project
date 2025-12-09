@@ -46,7 +46,8 @@ class UserSettings {
     return UserSettings(
       biometricEnabled: biometricEnabled ?? this.biometricEnabled,
       biometricType: biometricType ?? this.biometricType,
-      sessionTimeoutMinutes: sessionTimeoutMinutes ?? this.sessionTimeoutMinutes,
+      sessionTimeoutMinutes:
+          sessionTimeoutMinutes ?? this.sessionTimeoutMinutes,
       autoLockTimeoutMinutes:
           autoLockTimeoutMinutes ?? this.autoLockTimeoutMinutes,
       avatarUrl: avatarUrl ?? this.avatarUrl,

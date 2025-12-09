@@ -52,7 +52,8 @@ class SettingsMapper {
   static Map<String, dynamic> toFirestore(UserSettingsEntity entity) {
     return {
       FirebaseConfig.biometricEnabledField: entity.biometricEnabled,
-      FirebaseConfig.biometricTypeField: biometricTypeToString(entity.biometricType),
+      FirebaseConfig.biometricTypeField:
+          biometricTypeToString(entity.biometricType),
       FirebaseConfig.sessionTimeoutField: entity.sessionTimeoutMinutes,
       FirebaseConfig.autoLockTimeoutField: entity.autoLockTimeoutSeconds,
       FirebaseConfig.avatarUrlField: entity.avatarUrl,
@@ -60,20 +61,24 @@ class SettingsMapper {
     };
   }
 
-  static UserSettingsEntity fromFirestore(String userId, Map<String, dynamic> data) {
+  static UserSettingsEntity fromFirestore(
+      String userId, Map<String, dynamic> data) {
     return UserSettingsEntity(
       userId: userId,
-      biometricEnabled: data[FirebaseConfig.biometricEnabledField] as bool? ?? false,
+      biometricEnabled:
+          data[FirebaseConfig.biometricEnabledField] as bool? ?? false,
       biometricType: biometricTypeFromString(
         data[FirebaseConfig.biometricTypeField] as String?,
       ),
       sessionTimeoutMinutes: data[FirebaseConfig.sessionTimeoutField] as int? ??
           SecurityConfig.defaultSessionTimeoutMinutesUserSetting,
-      autoLockTimeoutSeconds: data[FirebaseConfig.autoLockTimeoutField] as int? ??
-          SecurityConfig.defaultAutoLockSecondsUserSetting,
+      autoLockTimeoutSeconds:
+          data[FirebaseConfig.autoLockTimeoutField] as int? ??
+              SecurityConfig.defaultAutoLockSecondsUserSetting,
       avatarUrl: data[FirebaseConfig.avatarUrlField] as String?,
       settingsUpdatedAt: data[FirebaseConfig.settingsUpdatedAtField] != null
-          ? DateTime.parse(data[FirebaseConfig.settingsUpdatedAtField] as String)
+          ? DateTime.parse(
+              data[FirebaseConfig.settingsUpdatedAtField] as String)
           : null,
     );
   }

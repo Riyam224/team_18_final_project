@@ -126,7 +126,8 @@ class PortfolioScreen extends StatelessWidget {
       final title = '$transactionType ${t.cryptoName}';
       final subtitle = _formatTimestamp(t.timestamp);
       final amount = '${t.amount} ${t.cryptoSymbol}';
-      final valueChange = '${t.type == TransactionType.buy ? '+' : '-'}${currencyFormat.format(t.valueUsd)}';
+      final valueChange =
+          '${t.type == TransactionType.buy ? '+' : '-'}${currencyFormat.format(t.valueUsd)}';
       final isBuy = t.type == TransactionType.buy;
 
       return TransactionTile(

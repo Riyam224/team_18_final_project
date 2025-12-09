@@ -27,27 +27,20 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   final List<String> nonBlurRoutes = [
     AppRoutes.splash,
     AppRoutes.onboarding,
-
     AppRoutes.login,
     AppRoutes.register,
-
     AppRoutes.setFaceIDRegister,
     AppRoutes.faceIdScanningRegister,
     AppRoutes.faceIdSuccessRegister,
-
     AppRoutes.setFingerprintRegister,
     AppRoutes.fingerprintSuccessRegister,
-
     AppRoutes.faceIdScanningLogin,
     AppRoutes.faceIdVerifiedSuccessLogin,
-
     AppRoutes.verifyFingerprintLogin,
     AppRoutes.verifyFingerprintLoginSuccess,
-
     AppRoutes.appLock,
     AppRoutes.lock,
     AppRoutes.biometric,
-
     AppRoutes.market,
     AppRoutes.settings,
     AppRoutes.myAccount,

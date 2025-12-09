@@ -62,14 +62,15 @@ void main() {
       });
 
       test('should map to valid days value', () {
-        final days =
-            AppPortfolioConstants.monthIndexToDays[AppPortfolioConstants.defaultMonthIndex];
+        final days = AppPortfolioConstants
+            .monthIndexToDays[AppPortfolioConstants.defaultMonthIndex];
         expect(days, isNotNull);
         expect(days, 60);
       });
 
       test('should be within valid range', () {
-        expect(AppPortfolioConstants.defaultMonthIndex, greaterThanOrEqualTo(0));
+        expect(
+            AppPortfolioConstants.defaultMonthIndex, greaterThanOrEqualTo(0));
         expect(AppPortfolioConstants.defaultMonthIndex, lessThan(6));
       });
     });
@@ -138,7 +139,8 @@ void main() {
       test('should format change label correctly', () {
         final value = '+5.0%';
         final amount = '\$1,250.00';
-        final label = '$value ($amount) ${AppPortfolioConstants.changeLabelSuffix}';
+        final label =
+            '$value ($amount) ${AppPortfolioConstants.changeLabelSuffix}';
         expect(label, '+5.0% (\$1,250.00) Today');
       });
     });

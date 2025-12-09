@@ -34,8 +34,9 @@ class MarketStatsList extends StatelessWidget {
           ),
           trailing: Text(
             AppStrings.marketStats[index].values.join('').toString(),
-            style: theme.textTheme.titleMedium
-                ?.copyWith(fontSize: 12.sp, color: isDark ? AppColors.textWhite : AppColors.primary),
+            style: theme.textTheme.titleMedium?.copyWith(
+                fontSize: 12.sp,
+                color: isDark ? AppColors.textWhite : AppColors.primary),
           ),
         );
       },

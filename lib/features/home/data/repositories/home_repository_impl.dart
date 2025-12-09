@@ -40,7 +40,8 @@ class HomeRepositoryImpl implements HomeRepository {
 
     if (_cachedGlobalData != null &&
         _cacheTimestamp != null &&
-        now.difference(_cacheTimestamp!) < AppConstants.marketDataCacheDuration) {
+        now.difference(_cacheTimestamp!) <
+            AppConstants.marketDataCacheDuration) {
       return _cachedGlobalData;
     }
 

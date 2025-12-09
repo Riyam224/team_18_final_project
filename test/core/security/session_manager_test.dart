@@ -7,6 +7,7 @@ import 'package:team_18_final_project/core/security/interfaces/i_encryption_serv
 import 'package:dartz/dartz.dart';
 
 class MockSecureStorage extends Mock implements ISecureStorage {}
+
 class MockEncryptionService extends Mock implements IEncryptionService {}
 
 void main() {

@@ -10,7 +10,8 @@ class LoginUserUseCase {
 
   LoginUserUseCase(this.repository);
 
-  Future<Either<AuthFailure, AuthSessionEntity>> call(String email, String password) {
+  Future<Either<AuthFailure, AuthSessionEntity>> call(
+      String email, String password) {
     final cleanedEmail = cleanInput(email);
     final cleanedPassword = cleanInput(password);
 

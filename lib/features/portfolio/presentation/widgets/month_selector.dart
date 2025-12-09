@@ -64,10 +64,12 @@ class _MonthChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = context.isDark();
     final selectedBg = isDark ? Colors.white.withOpacity(0.08) : Colors.white;
-    final borderColor =
-        isSelected ? (isDark ? Colors.white70 : AppColors.primary) : Colors.transparent;
-    final textColor =
-        isSelected ? (isDark ? Colors.white : AppColors.primary) : (isDark ? AppColors.textWhiteSoft : AppColors.gray2);
+    final borderColor = isSelected
+        ? (isDark ? Colors.white70 : AppColors.primary)
+        : Colors.transparent;
+    final textColor = isSelected
+        ? (isDark ? Colors.white : AppColors.primary)
+        : (isDark ? AppColors.textWhiteSoft : AppColors.gray2);
     return GestureDetector(
       onTap: onTap,
       child: Container(

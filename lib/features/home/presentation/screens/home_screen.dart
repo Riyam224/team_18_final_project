@@ -76,8 +76,9 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
       if (!mounted) return;
 
       setState(() {
-        _userName =
-            _extractFirstName(firstName) ?? _extractFirstName(email) ?? _userName;
+        _userName = _extractFirstName(firstName) ??
+            _extractFirstName(email) ??
+            _userName;
         _avatarPath = avatarPath;
       });
     } catch (e) {

@@ -48,14 +48,14 @@ class ProfileCubit extends Cubit<ProfileState> {
         );
 
     _settingsSub = _userService.watchSettings().listen(
-          (settings) async {
-            final merged = await _mergeBiometricFlag(
-              settings ?? state.settings,
-            );
-            emit(state.copyWith(settings: merged));
-          },
-          onError: (e) => emit(state.copyWith(error: e.toString())),
+      (settings) async {
+        final merged = await _mergeBiometricFlag(
+          settings ?? state.settings,
         );
+        emit(state.copyWith(settings: merged));
+      },
+      onError: (e) => emit(state.copyWith(error: e.toString())),
+    );
   }
 
   Future<void> saveProfileUpdates(UserProfile updated) async {
@@ -88,7 +88,8 @@ class ProfileCubit extends Cubit<ProfileState> {
   Future<void> updateBiometricSetting(bool enabled) async {
     emit(state.copyWith(isSaving: true, error: null));
     try {
-      final updatedSettings = state.settings.copyWith(biometricEnabled: enabled);
+      final updatedSettings =
+          state.settings.copyWith(biometricEnabled: enabled);
       await _userService.updateSettings(
         biometricEnabled: updatedSettings.biometricEnabled,
         biometricType: updatedSettings.biometricType,

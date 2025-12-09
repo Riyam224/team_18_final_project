@@ -98,8 +98,8 @@ class ProfileForm extends StatelessWidget {
                     disabledForegroundColor:
                         buttonForeground.withValues(alpha: 0.7),
                   ),
-                  child:
-                      Text(saving ? AppStrings.processing : AppStrings.saveChanges),
+                  child: Text(
+                      saving ? AppStrings.processing : AppStrings.saveChanges),
                 ),
               ),
             ],

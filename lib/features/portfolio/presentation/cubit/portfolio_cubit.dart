@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/cubit/portfolio_state.dart';
@@ -45,7 +44,8 @@ class PortfolioCubit extends Cubit<PortfolioState> {
     final totalChange = overview.totalChangeUsd;
     final changePercent = totalValue == AppPortfolioConstants.zeroValue
         ? AppPortfolioConstants.zeroValue.toDouble()
-        : (totalChange / totalValue) * AppPortfolioConstants.percentageMultiplier;
+        : (totalChange / totalValue) *
+            AppPortfolioConstants.percentageMultiplier;
 
     final allocations = holdings
         .map((h) => AllocationSegment(
@@ -94,7 +94,8 @@ class PortfolioCubit extends Cubit<PortfolioState> {
     if (total == AppPortfolioConstants.zeroValue) {
       return AppPortfolioConstants.zeroValue.toDouble();
     }
-    return (holding.valueUsd / total) * AppPortfolioConstants.percentageMultiplier;
+    return (holding.valueUsd / total) *
+        AppPortfolioConstants.percentageMultiplier;
   }
 
   String _formatAllocationLabel(PortfolioHolding holding) {

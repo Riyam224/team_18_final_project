@@ -55,16 +55,14 @@ class CoinDetailsScreen extends StatelessWidget {
                   child: Align(
                     alignment: AlignmentDirectional.bottomStart,
                     child: Text(AppStrings.statics,
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineSmall!
-                            .copyWith(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18.sp,
-                              color: isDark
-                                  ? AppColors.textWhite
-                                  : AppColors.primary,
-                            )),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall!.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  fontSize: 18.sp,
+                                  color: isDark
+                                      ? AppColors.textWhite
+                                      : AppColors.primary,
+                                )),
                   ),
                 ),
               ],

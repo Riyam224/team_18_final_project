@@ -13,8 +13,10 @@ class SecurityConfig {
   static const int autoLockTimeoutSeconds = TimingConfig.autoLockTimeoutSeconds;
   static const Duration autoLockTimeout = TimingConfig.autoLockTimeout;
 
-  static const String defaultBiometricReason = BiometricConfig.defaultAuthReason;
-  static const String biometricVerifyReason = BiometricConfig.verifyIdentityReason;
+  static const String defaultBiometricReason =
+      BiometricConfig.defaultAuthReason;
+  static const String biometricVerifyReason =
+      BiometricConfig.verifyIdentityReason;
 
   static const int maxAuditLogEntries = AuditLogConfig.maxAuditLogEntries;
 

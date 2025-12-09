@@ -41,7 +41,8 @@ void main() {
     test('should encrypt and cache session data', () async {
       when(() => mockEncryptionService.encrypt(any()))
           .thenAnswer((_) async => const Right('encrypted_data'));
-      when(() => mockSecureStorage.write(key: any(named: 'key'), value: any(named: 'value')))
+      when(() => mockSecureStorage.write(
+              key: any(named: 'key'), value: any(named: 'value')))
           .thenAnswer((_) async => const Right(null));
 
       await dataSource.cacheSession(tSession);
@@ -62,9 +63,10 @@ void main() {
     });
 
     test('should use original value if encryption fails', () async {
-      when(() => mockEncryptionService.encrypt(any()))
-          .thenAnswer((_) async => const Left(CacheFailure(message: 'Encryption failed')));
-      when(() => mockSecureStorage.write(key: any(named: 'key'), value: any(named: 'value')))
+      when(() => mockEncryptionService.encrypt(any())).thenAnswer(
+          (_) async => const Left(CacheFailure(message: 'Encryption failed')));
+      when(() => mockSecureStorage.write(
+              key: any(named: 'key'), value: any(named: 'value')))
           .thenAnswer((_) async => const Right(null));
 
       await dataSource.cacheSession(tSession);
@@ -77,9 +79,11 @@ void main() {
   });
 
   group('getLastSession', () {
-    test('should return session when data exists and decryption succeeds', () async {
+    test('should return session when data exists and decryption succeeds',
+        () async {
       const encryptedData = 'encrypted_session';
-      const decryptedData = 'user123|token123||2024-01-01T00:00:00.000|2024-01-01T00:00:00.000';
+      const decryptedData =
+          'user123|token123||2024-01-01T00:00:00.000|2024-01-01T00:00:00.000';
 
       when(() => mockSecureStorage.read(key: StorageKeysConfig.sessionId))
           .thenAnswer((_) async => const Right(encryptedData));
@@ -119,10 +123,16 @@ void main() {
 
       await dataSource.clearSession();
 
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.sessionId)).called(1);
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.authToken)).called(1);
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.sessionActive)).called(1);
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.lastActivityTime)).called(1);
+      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.sessionId))
+          .called(1);
+      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.authToken))
+          .called(1);
+      verify(() =>
+              mockSecureStorage.delete(key: StorageKeysConfig.sessionActive))
+          .called(1);
+      verify(() =>
+              mockSecureStorage.delete(key: StorageKeysConfig.lastActivityTime))
+          .called(1);
     });
   });
 
@@ -137,13 +147,16 @@ void main() {
     test('should encrypt and cache biometric credentials', () async {
       when(() => mockEncryptionService.encrypt(any()))
           .thenAnswer((_) async => const Right('encrypted_value'));
-      when(() => mockSecureStorage.write(key: any(named: 'key'), value: any(named: 'value')))
+      when(() => mockSecureStorage.write(
+              key: any(named: 'key'), value: any(named: 'value')))
           .thenAnswer((_) async => const Right(null));
 
       await dataSource.cacheBiometricCredentials(tCredentials);
 
       verify(() => mockEncryptionService.encrypt(tCredentials.email)).called(1);
-      verify(() => mockEncryptionService.encrypt(tCredentials.encryptedPassword)).called(1);
+      verify(() =>
+              mockEncryptionService.encrypt(tCredentials.encryptedPassword))
+          .called(1);
       verify(() => mockSecureStorage.write(
             key: StorageKeysConfig.biometricEmail,
             value: 'encrypted_value',
@@ -180,10 +193,13 @@ void main() {
   });
 
   group('getBiometricCredentials', () {
-    test('should return credentials when all data exists and decryption succeeds', () async {
+    test(
+        'should return credentials when all data exists and decryption succeeds',
+        () async {
       when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricEmail))
           .thenAnswer((_) async => const Right('encrypted_email'));
-      when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricPassword))
+      when(() =>
+              mockSecureStorage.read(key: StorageKeysConfig.biometricPassword))
           .thenAnswer((_) async => const Right('encrypted_password'));
       when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricType))
           .thenAnswer((_) async => const Right('fingerprint'));
@@ -203,7 +219,8 @@ void main() {
     test('should return null when email is missing', () async {
       when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricEmail))
           .thenAnswer((_) async => const Right(null));
-      when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricPassword))
+      when(() =>
+              mockSecureStorage.read(key: StorageKeysConfig.biometricPassword))
           .thenAnswer((_) async => const Right('encrypted_password'));
       when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricType))
           .thenAnswer((_) async => const Right('fingerprint'));
@@ -218,12 +235,13 @@ void main() {
     test('should return null when decryption fails', () async {
       when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricEmail))
           .thenAnswer((_) async => const Right('encrypted_email'));
-      when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricPassword))
+      when(() =>
+              mockSecureStorage.read(key: StorageKeysConfig.biometricPassword))
           .thenAnswer((_) async => const Right('encrypted_password'));
       when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricType))
           .thenAnswer((_) async => const Right('fingerprint'));
-      when(() => mockEncryptionService.decrypt('encrypted_email'))
-          .thenAnswer((_) async => const Left(CacheFailure(message: 'Decryption failed')));
+      when(() => mockEncryptionService.decrypt('encrypted_email')).thenAnswer(
+          (_) async => const Left(CacheFailure(message: 'Decryption failed')));
       when(() => mockEncryptionService.decrypt('encrypted_password'))
           .thenAnswer((_) async => const Right('password123'));
 
@@ -240,11 +258,19 @@ void main() {
 
       await dataSource.clearBiometricCredentials();
 
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.biometricEmail)).called(1);
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.biometricPassword)).called(1);
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.biometricType)).called(1);
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.biometricCredentialsStored)).called(1);
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.biometricEnabled)).called(1);
+      verify(() =>
+              mockSecureStorage.delete(key: StorageKeysConfig.biometricEmail))
+          .called(1);
+      verify(() => mockSecureStorage.delete(
+          key: StorageKeysConfig.biometricPassword)).called(1);
+      verify(() =>
+              mockSecureStorage.delete(key: StorageKeysConfig.biometricType))
+          .called(1);
+      verify(() => mockSecureStorage.delete(
+          key: StorageKeysConfig.biometricCredentialsStored)).called(1);
+      verify(() =>
+              mockSecureStorage.delete(key: StorageKeysConfig.biometricEnabled))
+          .called(1);
     });
   });
 
@@ -258,7 +284,8 @@ void main() {
     );
 
     test('should cache user data with all fields', () async {
-      when(() => mockSecureStorage.write(key: any(named: 'key'), value: any(named: 'value')))
+      when(() => mockSecureStorage.write(
+              key: any(named: 'key'), value: any(named: 'value')))
           .thenAnswer((_) async => const Right(null));
 
       await dataSource.cacheUser(tUser);
@@ -292,7 +319,8 @@ void main() {
       };
       final userJson = jsonEncode(userMap);
 
-      when(() => mockSecureStorage.read(key: '${StorageKeysConfig.userId}_data'))
+      when(() =>
+              mockSecureStorage.read(key: '${StorageKeysConfig.userId}_data'))
           .thenAnswer((_) async => Right(userJson));
 
       final result = await dataSource.getCachedUser();
@@ -304,7 +332,8 @@ void main() {
     });
 
     test('should return null when no user data exists', () async {
-      when(() => mockSecureStorage.read(key: '${StorageKeysConfig.userId}_data'))
+      when(() =>
+              mockSecureStorage.read(key: '${StorageKeysConfig.userId}_data'))
           .thenAnswer((_) async => const Right(null));
 
       final result = await dataSource.getCachedUser();
@@ -313,7 +342,8 @@ void main() {
     });
 
     test('should return null when JSON decoding fails', () async {
-      when(() => mockSecureStorage.read(key: '${StorageKeysConfig.userId}_data'))
+      when(() =>
+              mockSecureStorage.read(key: '${StorageKeysConfig.userId}_data'))
           .thenAnswer((_) async => const Right('invalid json'));
 
       final result = await dataSource.getCachedUser();
@@ -332,7 +362,8 @@ void main() {
     );
 
     test('should cache user settings', () async {
-      when(() => mockSecureStorage.write(key: any(named: 'key'), value: any(named: 'value')))
+      when(() => mockSecureStorage.write(
+              key: any(named: 'key'), value: any(named: 'value')))
           .thenAnswer((_) async => const Right(null));
 
       await dataSource.cacheUserSettings(tSettings);
@@ -350,7 +381,8 @@ void main() {
 
   group('isBiometricEnabled', () {
     test('should return true when biometric is enabled', () async {
-      when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricEnabled))
+      when(() =>
+              mockSecureStorage.read(key: StorageKeysConfig.biometricEnabled))
           .thenAnswer((_) async => const Right('true'));
 
       final result = await dataSource.isBiometricEnabled();
@@ -359,7 +391,8 @@ void main() {
     });
 
     test('should return false when biometric is disabled', () async {
-      when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricEnabled))
+      when(() =>
+              mockSecureStorage.read(key: StorageKeysConfig.biometricEnabled))
           .thenAnswer((_) async => const Right('false'));
 
       final result = await dataSource.isBiometricEnabled();
@@ -368,7 +401,8 @@ void main() {
     });
 
     test('should return false when read fails', () async {
-      when(() => mockSecureStorage.read(key: StorageKeysConfig.biometricEnabled))
+      when(() =>
+              mockSecureStorage.read(key: StorageKeysConfig.biometricEnabled))
           .thenAnswer((_) async => const Left(StorageReadFailure()));
 
       final result = await dataSource.isBiometricEnabled();
@@ -379,7 +413,8 @@ void main() {
 
   group('setBiometricEnabled', () {
     test('should store biometric enabled status as string', () async {
-      when(() => mockSecureStorage.write(key: any(named: 'key'), value: any(named: 'value')))
+      when(() => mockSecureStorage.write(
+              key: any(named: 'key'), value: any(named: 'value')))
           .thenAnswer((_) async => const Right(null));
 
       await dataSource.setBiometricEnabled(true);
@@ -398,11 +433,18 @@ void main() {
 
       await dataSource.clearAllCache();
 
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.sessionId)).called(1);
-      verify(() => mockSecureStorage.delete(key: '${StorageKeysConfig.userId}_data')).called(1);
-      verify(() => mockSecureStorage.delete(key: '${StorageKeysConfig.userId}_settings')).called(1);
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.authToken)).called(2);
-      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.refreshToken)).called(1);
+      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.sessionId))
+          .called(1);
+      verify(() =>
+              mockSecureStorage.delete(key: '${StorageKeysConfig.userId}_data'))
+          .called(1);
+      verify(() => mockSecureStorage.delete(
+          key: '${StorageKeysConfig.userId}_settings')).called(1);
+      verify(() => mockSecureStorage.delete(key: StorageKeysConfig.authToken))
+          .called(2);
+      verify(() =>
+              mockSecureStorage.delete(key: StorageKeysConfig.refreshToken))
+          .called(1);
     });
   });
 
@@ -413,10 +455,15 @@ void main() {
 
       await dataSource.clearUserDataOnly();
 
-      verify(() => mockSecureStorage.delete(key: '${StorageKeysConfig.userId}_data')).called(1);
-      verify(() => mockSecureStorage.delete(key: '${StorageKeysConfig.userId}_settings')).called(1);
-      verifyNever(() => mockSecureStorage.delete(key: StorageKeysConfig.biometricEmail));
-      verifyNever(() => mockSecureStorage.delete(key: StorageKeysConfig.biometricPassword));
+      verify(() =>
+              mockSecureStorage.delete(key: '${StorageKeysConfig.userId}_data'))
+          .called(1);
+      verify(() => mockSecureStorage.delete(
+          key: '${StorageKeysConfig.userId}_settings')).called(1);
+      verifyNever(() =>
+          mockSecureStorage.delete(key: StorageKeysConfig.biometricEmail));
+      verifyNever(() =>
+          mockSecureStorage.delete(key: StorageKeysConfig.biometricPassword));
     });
   });
 }

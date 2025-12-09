@@ -3,8 +3,6 @@ import 'package:team_18_final_project/features/auth/domain/validation/name_valid
 
 void main() {
   group('NameValidator', () {
-
-
     group('validate', () {
       test('should return valid result for simple name', () {
         const name = 'John';

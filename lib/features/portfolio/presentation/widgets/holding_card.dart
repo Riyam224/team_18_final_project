@@ -35,7 +35,8 @@ class HoldingCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = context.isDark();
-    final cardColor = isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final cardColor =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
     final titleColor = isDark ? AppColors.textWhite : AppColors.textGray;
     final subtitleColor = isDark ? AppColors.textGrayLight : AppColors.gray3;
 

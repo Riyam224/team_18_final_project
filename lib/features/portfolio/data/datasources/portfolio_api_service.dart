@@ -13,8 +13,10 @@ abstract class PortfolioApiService {
   @GET(ApiEndpoints.simplePrice)
   Future<Map<String, SimplePriceModel>> getSimplePrice({
     @Query(ApiQueryParams.ids) required String ids,
-    @Query(ApiQueryParams.vsCurrencies) String vsCurrencies = ApiDefaults.currency,
-    @Query(ApiQueryParams.include24hrChange) bool include24hChange = ApiDefaults.include24hrChange,
+    @Query(ApiQueryParams.vsCurrencies)
+    String vsCurrencies = ApiDefaults.currency,
+    @Query(ApiQueryParams.include24hrChange)
+    bool include24hChange = ApiDefaults.include24hrChange,
   });
 
   @GET(ApiEndpoints.marketChart)

@@ -89,7 +89,8 @@ void main() {
       );
     });
 
-    test('lock() and unlock() should update flag and emit stream events', () async {
+    test('lock() and unlock() should update flag and emit stream events',
+        () async {
       when(() => mockSecureStorage.write(
             key: any(named: 'key'),
             value: any(named: 'value'),
