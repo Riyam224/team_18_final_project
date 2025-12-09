@@ -4,7 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
-import 'package:team_18_final_project/core/config/app_constants.dart';
 import 'package:team_18_final_project/core/config/validation_config.dart';
 import 'package:team_18_final_project/core/config/validation_messages_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
@@ -14,9 +13,7 @@ import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
-import 'package:team_18_final_project/features/auth/domain/repositories/auth_repository.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_cubit.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_state.dart';
 import 'package:team_18_final_project/features/auth/presentation/widgets/auth_background.dart';
@@ -51,15 +48,11 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
   bool _rememberMe = false;
 
   late final IAppLockService _appLockService;
-  late final IBiometricService _biometricService;
-  late final AuthRepository _authRepository;
 
   @override
   void initState() {
     super.initState();
     _appLockService = sl<IAppLockService>();
-    _biometricService = sl<IBiometricService>();
-    _authRepository = sl<AuthRepository>();
   }
 
   @override
@@ -76,47 +69,6 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
             _passwordController.text,
           );
     }
-  }
-
-  Future<void> _handleBiometricTap(String route) async {
-    if (!AppConstants.enableBiometricAuth) {
-      _showBiometricUnavailableDialog();
-      return;
-    }
-
-    final enabledResult = await _authRepository.isBiometricEnabled();
-    final availableResult = await _biometricService.isAvailable();
-    final enrolledResult = await _biometricService.isEnrolled();
-
-    final enabled = enabledResult.fold((_) => false, (value) => value);
-    final available = availableResult.fold((_) => false, (value) => value);
-    final enrolled = enrolledResult.fold((_) => false, (value) => value);
-
-    final ready = enabled && available && enrolled;
-
-    if (!mounted) return;
-
-    if (ready) {
-      context.push(route);
-    } else {
-      _showBiometricUnavailableDialog();
-    }
-  }
-
-  void _showBiometricUnavailableDialog() {
-    showDialog<void>(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text(AppStrings.biometricLoginTitle),
-        content: const Text(AppStrings.biometricLoginNotAvailable),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(dialogContext).pop(),
-            child: const Text(AppStrings.ok),
-          ),
-        ],
-      ),
-    );
   }
 
   String? _validateEmail(String? value) {
@@ -150,22 +102,12 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) async {
             if (state is AuthLoginSuccess) {
-              // Prevent immediate app-lock, start session, then route to biometric verification
               await _appLockService.resetLock();
-              if (context.mounted) {
-                final biometricsEnabled =
-                    AppConstants.enableBiometricAuth && state.biometricEnabled;
-                if (biometricsEnabled) {
-                  final type = (state.biometricType ?? '').toLowerCase();
-                  final targetRoute = type == 'face'
-                      ? AppRoutes.faceIdScanningLogin
-                      : AppRoutes.verifyFingerprintLogin;
-                  context.go(targetRoute);
-                } else {
-                  context.go(AppRoutes.home);
-                }
-              }
-            } else if (state is AuthError) {
+              if (!context.mounted) return;
+              context.go(AppRoutes.home);
+            }
+
+            if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
@@ -264,11 +206,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                             ],
                           ),
                           GestureDetector(
-                            onTap: isLoading
-                                ? null
-                                : () {
-                                    // TODO: navigate to forget password
-                                  },
+                            onTap: isLoading ? null : () {},
                             child: Text(
                               AppStrings.forgetPassword,
                               style: AppTextStyles.bodyMedium.copyWith(
@@ -339,9 +277,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                           GestureDetector(
                             onTap: isLoading
                                 ? null
-                                : () => _handleBiometricTap(
-                                      AppRoutes.verifyFingerprintLogin,
-                                    ),
+                                : () => context
+                                    .read<AuthCubit>()
+                                    .loginWithBiometric(),
                             child: SizedBox(
                               width: AppSizing.biometricIconSmall,
                               height: AppSizing.biometricIconSmall,
@@ -367,9 +305,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                           GestureDetector(
                             onTap: isLoading
                                 ? null
-                                : () => _handleBiometricTap(
-                                      AppRoutes.faceIdScanningLogin,
-                                    ),
+                                : () => context
+                                    .read<AuthCubit>()
+                                    .loginWithBiometric(),
                             child: SizedBox(
                               width: AppSizing.biometricIconSmall,
                               height: AppSizing.biometricIconSmall,

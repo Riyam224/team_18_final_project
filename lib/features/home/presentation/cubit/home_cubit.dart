@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/features/home/domain/usecases/get_market_overview_usecase.dart';
 import 'package:team_18_final_project/features/home/domain/usecases/get_portfolio_balance_usecase.dart';
@@ -5,26 +6,32 @@ import 'package:team_18_final_project/features/home/domain/usecases/get_top_gain
 import 'package:team_18_final_project/features/home/domain/usecases/get_trending_coins_usecase.dart';
 import 'home_state.dart';
 
-/// Manages home screen state by coordinating multiple use cases
 class HomeCubit extends Cubit<HomeState> {
   final GetMarketOverviewUseCase getMarketOverviewUseCase;
   final GetTrendingCoinsUseCase getTrendingCoinsUseCase;
   final GetTopGainersUseCase getTopGainersUseCase;
   final GetPortfolioBalanceUseCase getPortfolioBalanceUseCase;
+  bool _isLoading = false;
 
   HomeCubit({
     required this.getMarketOverviewUseCase,
     required this.getTrendingCoinsUseCase,
     required this.getTopGainersUseCase,
     required this.getPortfolioBalanceUseCase,
-  }) : super(HomeInitial());
+  }) : super(HomeInitial()) {
+    debugPrint('[HomeCubit] created');
+  }
 
-  /// Loads all home screen data by executing use cases sequentially with delays
   Future<void> loadHomeData() async {
+    if (_isLoading) {
+      debugPrint('[HomeCubit] loadHomeData skipped - already loading');
+      return;
+    }
+    _isLoading = true;
+    debugPrint('[HomeCubit] loadHomeData start');
     emit(HomeLoading());
 
     try {
-      // Execute requests sequentially with delays to avoid rate limiting
       final marketOverviewResult = await getMarketOverviewUseCase();
       if (isClosed) return;
 
@@ -40,7 +47,6 @@ class HomeCubit extends Cubit<HomeState> {
       final portfolioBalanceResult = await getPortfolioBalanceUseCase();
       if (isClosed) return;
 
-      // Extract failures or values from each result
       final marketOverviewFailure = marketOverviewResult.fold((f) => f, (_) => null);
       if (marketOverviewFailure != null) {
         if (!isClosed) emit(HomeError(message: marketOverviewFailure.message));
@@ -65,7 +71,6 @@ class HomeCubit extends Cubit<HomeState> {
         return;
       }
 
-      // All succeeded - extract the actual data
       final marketOverview = marketOverviewResult.fold((_) => null, (data) => data);
       final trendingCoins = trendingCoinsResult.fold((_) => null, (data) => data);
       final topGainers = topGainersResult.fold((_) => null, (data) => data);
@@ -79,10 +84,14 @@ class HomeCubit extends Cubit<HomeState> {
           portfolioBalance: portfolioBalance!,
         ));
       }
+      debugPrint('[HomeCubit] loadHomeData success');
     } catch (e) {
       if (!isClosed) {
         emit(HomeError(message: 'An unexpected error occurred: $e'));
       }
+      debugPrint('[HomeCubit] loadHomeData error: $e');
+    } finally {
+      _isLoading = false;
     }
   }
 

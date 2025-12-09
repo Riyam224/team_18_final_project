@@ -1,203 +1,90 @@
-# Fintech App - Team 18 Final Project
+# Fintech App – Team 18
 
-A modern Flutter fintech application with enterprise-grade security features, real-time cryptocurrency market data, and clean architecture implementation.
+Enterprise-grade Flutter fintech app with clean architecture, Cubit state management, and a hardened security stack (biometrics, secure storage, auto-lock, screenshot protection, jailbreak/root awareness).
 
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Flutter SDK 3.0+
-- Dart 3.0+
-- Firebase account (for authentication)
-
-### Installation
-
-```bash
-# Clone repository
-git clone <repository-url>
-cd team_18_final_project
-
-# Install dependencies
-flutter pub get
-
-# Run the app
-flutter run
-```
-
-### With CoinGecko API Key (Optional)
-
-For full market data features:
-
-```bash
-flutter run --dart-define=COINGECKO_API_KEY=your_api_key_here
-```
-
-Get your free API key: [CoinGecko API](https://www.coingecko.com/en/api/pricing)
+![Build](https://img.shields.io/badge/build-local-green) ![Tests](https://img.shields.io/badge/tests-flutter%20test-blue) ![Coverage](https://img.shields.io/badge/coverage--pending-lightgrey) ![Platform](https://img.shields.io/badge/platforms-iOS%20|%20Android%20|%20Web-lightblue)
 
 ---
 
-## ✨ Key Features
+## Quick Start
+- Prerequisites: Flutter 3.0+, Dart 3.0+, Firebase project (for auth)
+- Install & run:
+  ```bash
+  git clone <repository-url>
+  cd team_18_final_project
+  flutter pub get
+  flutter run \
+    --dart-define=COINGECKO_API_KEY=<optional_api_key>
+  ```
+- Environments: `main(env: AppEnvironment.prod)` by default; tests use `AppEnvironment.test` with security fakes (`test/test_config.dart`).
 
-### 🔐 Security Features
-- **Biometric Authentication** - Face ID / Touch ID / Fingerprint login
-- **End-to-End Encryption** - AES-256 encryption for sensitive data
-- **Session Management** - Auto-expiring secure sessions
-- **App Lock** - Automatic locking after inactivity
-- **Screenshot Prevention** - Blocks screenshots on sensitive screens
-- **Root/Jailbreak Detection** - Security warnings on compromised devices
-- **Audit Logging** - Security event tracking
+## What’s Inside
+- Security: biometrics (`local_auth`), AES-256 encryption, secure storage, auto-lock, background blur/screenshot prevention, jailbreak/root detection, audit logging.
+- Product: live market overview (CoinGecko), trending coins, top gainers, portfolio simulator, encrypted transaction history, onboarding, account/profile.
+- Architecture: strict Clean Architecture + GetIt DI; Cubit-driven presentation; Retrofit/Dio data layer; `secure_application` + route observer for privacy controls.
 
-### 💰 Finance Features
-- **Live Market Data** - Real-time cryptocurrency prices via CoinGecko API
-- **Portfolio Tracking** - Monitor your crypto holdings
-- **Transaction History** - Encrypted transaction records
-- **Market Overview** - Global crypto market statistics
-- **Trending Coins** - Discover popular cryptocurrencies
-- **Top Gainers** - Track best performing coins
-
-### 🎨 User Experience
-- **Clean Architecture** - Maintainable and testable codebase
-- **Modern UI** - Material Design 3 with light/dark themes
-- **Responsive Design** - Optimized for all screen sizes
-- **Smooth Navigation** - GoRouter with declarative routing
-- **Onboarding Flow** - Welcoming first-time user experience
-
-### 🛂 Auth & Security Overview
-- **Auth Flow**: Splash → Onboarding (first-time) → Login/Register → optional biometric verify (Face/Touch/Fingerprint) using `local_auth`.
-- **Session Management**: `ISessionManager` stores tokens securely, tracks activity, and guards protected routes; auto-lock via `IAppLockService`.
-- **Biometrics**: Setup and login flows with shared `TimingConfig` delays and stored biometric credentials; falls back to password on failure.
-- **Root/Screenshot Protection**: Root/JB checks on startup; screenshot/recording blocked on sensitive routes via platform channel blur/`FLAG_SECURE`.
-- **Data Protection**: AES encryption for sensitive storage, secure storage keys centralized; audit logging for security events.
-
----
-
-## 🏗️ Architecture
-
-This project follows **Clean Architecture** principles:
-
-```
-┌─────────────────────────────────────┐
-│     Presentation Layer              │  ← UI, Screens, Cubits
-├─────────────────────────────────────┤
-│        Domain Layer                 │  ← Business Logic, Use Cases
-├─────────────────────────────────────┤
-│         Data Layer                  │  ← API, Database, Repositories
-├─────────────────────────────────────┤
-│         Core Layer                  │  ← DI, Security, Networking
-└─────────────────────────────────────┘
-```
-
-**→ [Read Architecture Guide](docs/ARCHITECTURE.md)**
-
----
-
-## 📁 Project Structure
-
+## Folder Structure (high level)
 ```
 lib/
-├── core/                   # Infrastructure & shared code
-│   ├── config/            # App configuration
-│   ├── di/                # Dependency injection
-│   ├── networking/        # HTTP client setup
-│   ├── routing/           # Navigation
-│   └── security/          # Security services
-│
-├── features/              # Feature modules (Clean Architecture)
-│   ├── auth/             # Authentication & security
-│   ├── home/             # Dashboard & market overview
-│   ├── market/           # Crypto market & trading
-│   ├── portfolio/        # Portfolio management
-│   ├── profile/          # User profile
-│   ├── settings/         # App settings
-│   └── transactions/     # Transaction history
-│
-└── main.dart             # App entry point
-
-docs/                     # Comprehensive documentation
-test/                     # Unit & widget tests
-integration_test/         # Integration tests
+├─ core/                 # DI, config, routing, security services, networking
+└─ features/             # Clean modules
+   ├─ auth/              # Firebase auth, biometrics, sessions
+   ├─ home/              # Dashboard + market overview (CoinGecko)
+   ├─ market/            # Coin detail UI + trade simulator
+   ├─ portfolio/         # Portfolio simulator + charts
+   ├─ transactions/      # Encrypted transaction log
+   ├─ profile/           # My account + security tiles
+   ├─ settings/          # App settings shell
+   ├─ onboarding/        # First-run tour
+   └─ splash/            # Startup & gating
+docs/                    # Architecture, flows, security, testing, features
+test/                    # Unit/widget tests + security fakes
+integration_test/        # End-to-end harness
 ```
 
-**→ [See detailed structure in Architecture Guide](docs/ARCHITECTURE.md)**
+## Screenshots / Demos
+- Add captures to `docs/images/` and reference them below once available:
+  - Home dashboard
+  - Biometric login success
+  - Portfolio allocation chart
+  - App-lock screen + blur overlay
 
----
+## Tech Stack
+- Framework: Flutter (Material 3), Dart 3
+- Networking: Dio + Retrofit (CoinGecko)
+- State: Cubit (flutter_bloc)
+- DI: GetIt service locator
+- Security: flutter_secure_storage, encrypt (AES), local_auth, secure_application, platform channels for screenshot prevention
+- Navigation: go_router with guarded routes
+- Analytics/Backend: Firebase Auth/Firestore/Storage
 
-## 📚 Documentation
+## Documentation
+- Architecture: `docs/ARCHITECTURE.md`
+- State management: `docs/STATE_MANAGEMENT.md`
+- Auth + biometrics: `docs/AUTH_FLOW.md`
+- Security layers: `docs/SECURITY_FEATURES_OVERVIEW.md`
+- Testing: `docs/TESTING.md`
+- CI/CD: `docs/CI_CD.md`
+- Feature specs: `docs/FEATURE_DOCUMENTS/`
 
-Comprehensive documentation is available in the [`docs/`](docs/) folder:
-
-| Document | Description |
-|----------|-------------|
-| **[Architecture Guide](docs/ARCHITECTURE.md)** | Clean Architecture implementation |
-| **[Core Architecture](docs/CORE_ARCHITECTURE_GUIDE.md)** | Core layer deep dive (DI, Security, Config) |
-| **[Features Guide](docs/FEATURES_COMPLETE_GUIDE.md)** | All app features explained |
-| **[Security Features](docs/SECURITY_FEATURES_OVERVIEW.md)** | Complete security reference |
-| **[Authentication Flow](docs/AUTH_FLOW.md)** | Auth & biometric implementation |
-| **[API Integration](docs/API_INTEGRATION.md)** | CoinGecko API & networking |
-| **[Testing Guide](docs/TESTING_GUIDE.md)** | Testing strategy & guides |
-| **[Test Coverage](docs/TEST_COVERAGE.md)** | Coverage reports & analysis |
-
----
-
-## 🧪 Testing
-
-### Run Tests
-
+## Testing
 ```bash
-# Unit tests
-flutter test
-
-# Integration tests
-flutter test integration_test/
-
-# With coverage
-flutter test --coverage
+flutter test                    # unit/widget
+flutter test integration_test   # E2E harness
+flutter test --coverage         # coverage -> coverage/lcov.info
 ```
+- Tests bootstrap DI with in-memory security fakes (`test/test_config.dart`, `test/support/test_security_fakes.dart`).
+- Platform-dependent suites (biometrics, screenshot prevention, root detection) may be skipped until platform channels are mocked.
 
-> Notes:
-> - Hardware/platform-dependent suites (app lock, session manager, root detection, biometrics, screenshot prevention) are currently `@Skip`ped until platform mocks are added.
-> - Tests bootstrap a test-safe DI graph (in-memory/no-op security services) via `test/test_config.dart`; integration tests launch `main(env: AppEnvironment.test, securityOverrides: createTestSecurityOverrides())`.
+## Configuration
+- Market data (optional): `--dart-define=COINGECKO_API_KEY=<key>`
+- Security timing: `lib/core/config/timing_config.dart`
+- Sensitive routes: `lib/core/config/routes_config.dart`
 
-### Test Structure
-
-- `test/` - Unit and widget tests
-- `integration_test/` - End-to-end tests
-- Test coverage reports available
-
-**→ [Testing Guide](docs/TESTING_GUIDE.md)** | **[Coverage Guide](docs/TEST_COVERAGE.md)** | **[Tests Overview](docs/TESTS_OVERVIEW.md)**
-
----
-
-## 💻 Tech Stack
-
-### Core
-- **Flutter** - Cross-platform framework
-- **Dart 3.0+** - Programming language
-- **Firebase** - Authentication & Firestore
-
-### Key Packages
-- **flutter_bloc** - State management
-- **dio** - HTTP client
-- **go_router** - Navigation
-- **get_it** - Dependency injection
-- **flutter_secure_storage** - Secure data storage
-- **local_auth** - Biometric authentication
-- **encrypt** - AES encryption
-
-**→ [View pubspec.yaml](pubspec.yaml)**
-
----
-
-## 🔧 Configuration
-
-### Environment Variables
-
-```bash
-# CoinGecko API (optional)
---dart-define=COINGECKO_API_KEY=your_key
-```
+## Contributing
+- Run `flutter analyze && flutter format` before PRs.
+- Keep feature modules self-contained (data → domain → presentation).
+- Update docs when adding features; never delete `docs/SECURITY_FEATURES_OVERVIEW.md`.
 
 ### Firebase Setup
 

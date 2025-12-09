@@ -79,7 +79,8 @@ class TrendingCryptoCard extends StatelessWidget {
             ),
           ),
 
-          const Spacer(),
+          /// FIXED (removed Spacer)
+          SizedBox(height: AppSizing.h12),
 
           /// Price & Percentage
           Row(

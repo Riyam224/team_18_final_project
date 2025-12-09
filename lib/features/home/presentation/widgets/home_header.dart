@@ -20,12 +20,15 @@ class HomeHeader extends StatelessWidget {
 
   ImageProvider _buildAvatarProvider() {
     if (avatarPath != null && avatarPath!.isNotEmpty) {
+      if (avatarPath!.startsWith('assets/')) {
+        return AssetImage(avatarPath!);
+      }
       if (avatarPath!.startsWith('http')) {
         return NetworkImage(avatarPath!);
       }
       return FileImage(File(avatarPath!));
     }
-    return AssetImage(AppAssets.profile);
+    return const AssetImage(AppAssets.profileGirl);
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:team_18_final_project/core/networking/dio_client.dart';
 import 'package:team_18_final_project/core/security/implementations/app_lock_service_impl.dart';
@@ -21,6 +22,7 @@ import 'package:team_18_final_project/core/security/interfaces/i_root_detection_
 import 'package:team_18_final_project/core/security/interfaces/i_screenshot_prevention_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
+
 import 'package:team_18_final_project/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:team_18_final_project/features/auth/data/datasources/auth_local_datasource_impl.dart';
 import 'package:team_18_final_project/features/auth/data/datasources/auth_remote_datasource.dart';
@@ -61,7 +63,6 @@ import 'package:team_18_final_project/features/portfolio/presentation/cubit/port
 
 final sl = GetIt.instance;
 
-/// App environment to allow a test-safe DI graph.
 enum AppEnvironment { prod, test }
 
 class SecurityOverrides {
@@ -102,7 +103,6 @@ Future<void> setupDependencies({
   await _setupTransactions();
 }
 
-/// Reset all dependencies - MUST be called on logout for security
 Future<void> resetDependencies({
   AppEnvironment env = AppEnvironment.prod,
   SecurityOverrides? securityOverrides,
@@ -149,14 +149,13 @@ Future<void> _setupAuth() async {
     ),
   );
 
-  // Legacy services (for backward compatibility - will be removed)
   sl.registerLazySingleton<FirebaseUserService>(
     () => FirebaseUserService(
       secureStorage: sl<ISecureStorage>(),
+      firebaseStorage: FirebaseStorage.instance,
     ),
   );
 
-  // Repository (Clean Architecture)
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       remoteDataSource: sl<AuthRemoteDataSource>(),
@@ -164,14 +163,12 @@ Future<void> _setupAuth() async {
     ),
   );
 
-  // Use Cases
   sl.registerLazySingleton(() => LoginUserUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUserUseCase(sl()));
   sl.registerLazySingleton(() => StoreUserCredentialsUseCase(sl()));
   sl.registerLazySingleton(() => StoreBiometricSettingsUseCase(sl()));
   sl.registerLazySingleton(() => BiometricLoginUseCase(sl(), sl<IBiometricService>()));
 
-  // Cubits
   sl.registerFactory(
     () => AuthCubit(
       loginUseCase: sl(),
@@ -180,13 +177,14 @@ Future<void> _setupAuth() async {
       biometricLoginUseCase: sl(),
       repository: sl(),
       sessionManager: sl<ISessionManager>(),
+      biometricService: sl<IBiometricService>(),
     ),
   );
 
   sl.registerFactory(
     () => BiometricSetupCubit(
       storeSettings: sl(),
-      secureStorage: sl<ISecureStorage>(),
+      localDataSource: sl<AuthLocalDataSource>(),
     ),
   );
 
@@ -208,18 +206,15 @@ Future<void> _setupHome() async {
     () => HomeApiService(sl<Dio>()),
   );
 
-  // Repository
   sl.registerLazySingleton<HomeRepository>(
     () => HomeRepositoryImpl(sl<HomeApiService>()),
   );
 
-  // Use cases
   sl.registerLazySingleton(() => GetMarketOverviewUseCase(sl<HomeRepository>()));
   sl.registerLazySingleton(() => GetTrendingCoinsUseCase(sl<HomeRepository>()));
   sl.registerLazySingleton(() => GetTopGainersUseCase(sl<HomeRepository>()));
   sl.registerLazySingleton(() => GetPortfolioBalanceUseCase(sl<HomeRepository>()));
 
-  // Cubit
   sl.registerFactory(
     () => HomeCubit(
       getMarketOverviewUseCase: sl<GetMarketOverviewUseCase>(),
@@ -231,12 +226,10 @@ Future<void> _setupHome() async {
 }
 
 Future<void> _setupPortfolio() async {
-  // API Service
   sl.registerLazySingleton<PortfolioApiService>(
     () => PortfolioApiService(sl<Dio>()),
   );
 
-  // Data Sources
   sl.registerLazySingleton<PortfolioLocalDataSource>(
     () => PortfolioLocalDataSource(),
   );
@@ -245,7 +238,6 @@ Future<void> _setupPortfolio() async {
     () => PortfolioRemoteDataSource(api: sl<PortfolioApiService>()),
   );
 
-  // Repository
   sl.registerLazySingleton<PortfolioRepository>(
     () => PortfolioRepositoryImpl(
       remote: sl<PortfolioRemoteDataSource>(),
@@ -253,12 +245,10 @@ Future<void> _setupPortfolio() async {
     ),
   );
 
-  // Use Cases
   sl.registerLazySingleton<GetPortfolioOverviewUseCase>(
     () => GetPortfolioOverviewUseCase(repository: sl<PortfolioRepository>()),
   );
 
-  // Cubit
   sl.registerFactory<PortfolioCubit>(
     () => PortfolioCubit(getPortfolioOverview: sl<GetPortfolioOverviewUseCase>()),
   );

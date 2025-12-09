@@ -31,13 +31,11 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       value: sessionPayload,
     );
 
-    // Also cache user ID separately for quick access
     await _secureStorage.write(
       key: StorageKeysConfig.userId,
       value: session.userId,
     );
 
-    // Cache token
     final encryptedToken = await _encryptionService.encrypt(session.token);
     await _secureStorage.write(
       key: StorageKeysConfig.authToken,
@@ -78,14 +76,24 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     final encryptedPassword =
         await _encryptionService.encrypt(credentials.encryptedPassword);
 
+    final emailToStore = encryptedEmail.fold(
+      (failure) => throw Exception('Failed to encrypt biometric email: ${failure.message}'),
+      (encrypted) => encrypted,
+    );
+
+    final passwordToStore = encryptedPassword.fold(
+      (failure) => throw Exception('Failed to encrypt biometric password: ${failure.message}'),
+      (encrypted) => encrypted,
+    );
+
     await _secureStorage.write(
       key: StorageKeysConfig.biometricEmail,
-      value: encryptedEmail.getOrElse(() => credentials.email),
+      value: emailToStore,
     );
 
     await _secureStorage.write(
       key: StorageKeysConfig.biometricPassword,
-      value: encryptedPassword.getOrElse(() => credentials.encryptedPassword),
+      value: passwordToStore,
     );
 
     await _secureStorage.write(
@@ -111,13 +119,15 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       key: StorageKeysConfig.biometricType,
     );
 
-    // Check if all required fields are present
     final email = await emailResult.fold(
       (l) async => null,
       (value) async {
         if (value == null) return null;
         final decrypted = await _encryptionService.decrypt(value);
-        return decrypted.fold((_) => value, (v) => v);
+        return decrypted.fold(
+          (failure) => null,
+          (decryptedValue) => decryptedValue,
+        );
       },
     );
     final password = await passwordResult.fold(
@@ -125,7 +135,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       (value) async {
         if (value == null) return null;
         final decrypted = await _encryptionService.decrypt(value);
-        return decrypted.fold((_) => value, (v) => v);
+        return decrypted.fold(
+          (failure) => null,
+          (decryptedValue) => decryptedValue,
+        );
       },
     );
     final typeStr = typeResult.fold((l) => null, (r) => r);
@@ -138,7 +151,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       email: email,
       encryptedPassword: password,
       biometricType: SettingsMapper.biometricTypeFromString(typeStr),
-      storedAt: DateTime.now(), // We don't store this, so use current time
+      storedAt: DateTime.now(),
     );
   }
 
@@ -149,6 +162,14 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     await _secureStorage.delete(key: StorageKeysConfig.biometricType);
     await _secureStorage.delete(key: StorageKeysConfig.biometricCredentialsStored);
     await _secureStorage.delete(key: StorageKeysConfig.biometricEnabled);
+  }
+
+  @override
+  Future<void> storeUserEmail(String email) async {
+    await _secureStorage.write(
+      key: StorageKeysConfig.userEmail,
+      value: email,
+    );
   }
 
   @override
@@ -169,7 +190,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       value: jsonEncode(userMap),
     );
 
-    // Cache individual fields for quick access
     await _secureStorage.write(
       key: StorageKeysConfig.userId,
       value: user.id,
@@ -239,7 +259,6 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       value: jsonEncode(settingsMap),
     );
 
-    // Cache individual settings for quick access
     await _secureStorage.write(
       key: StorageKeysConfig.biometricEnabled,
       value: settings.biometricEnabled.toString(),
@@ -292,13 +311,27 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<void> clearAllCache() async {
     await clearSession();
-    await clearBiometricCredentials();
+    await _secureStorage.delete(key: '${StorageKeysConfig.userId}_data');
+    await _secureStorage.delete(key: '${StorageKeysConfig.userId}_settings');
+    await _secureStorage.delete(key: StorageKeysConfig.userDisplayName);
+    await _secureStorage.delete(key: StorageKeysConfig.userPhotoUrl);
+    await _secureStorage.delete(key: StorageKeysConfig.userFirstName);
+    await _secureStorage.delete(key: StorageKeysConfig.userLastName);
+    await _secureStorage.delete(key: StorageKeysConfig.userPhoneNumber);
+    await _secureStorage.delete(key: StorageKeysConfig.authToken);
+    await _secureStorage.delete(key: StorageKeysConfig.refreshToken);
+  }
+
+  @override
+  Future<void> clearUserDataOnly() async {
+    await clearSession();
     await _secureStorage.delete(key: '${StorageKeysConfig.userId}_data');
     await _secureStorage.delete(key: '${StorageKeysConfig.userId}_settings');
     await _secureStorage.delete(key: StorageKeysConfig.userId);
-    await _secureStorage.delete(key: StorageKeysConfig.userEmail);
     await _secureStorage.delete(key: StorageKeysConfig.userDisplayName);
     await _secureStorage.delete(key: StorageKeysConfig.userPhotoUrl);
+    await _secureStorage.delete(key: StorageKeysConfig.userFirstName);
+    await _secureStorage.delete(key: StorageKeysConfig.userLastName);
     await _secureStorage.delete(key: StorageKeysConfig.userPhoneNumber);
   }
 

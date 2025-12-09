@@ -3,6 +3,7 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 import 'package:team_18_final_project/features/auth/data/models/user_model.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/auth_session_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/failures/auth_failure.dart';
@@ -21,6 +22,7 @@ class MockStoreUserCredentialsUseCase extends Mock implements StoreUserCredentia
 class MockBiometricLoginUseCase extends Mock implements BiometricLoginUseCase {}
 class MockAuthRepository extends Mock implements AuthRepository {}
 class MockSessionManager extends Mock implements ISessionManager {}
+class MockBiometricService extends Mock implements IBiometricService {}
 
 void main() {
   late AuthCubit cubit;
@@ -30,6 +32,7 @@ void main() {
   late MockBiometricLoginUseCase mockBiometricLoginUseCase;
   late MockAuthRepository mockRepository;
   late MockSessionManager mockSessionManager;
+  late MockBiometricService mockBiometricService;
 
   setUp(() {
     mockLoginUseCase = MockLoginUserUseCase();
@@ -38,6 +41,7 @@ void main() {
     mockBiometricLoginUseCase = MockBiometricLoginUseCase();
     mockRepository = MockAuthRepository();
     mockSessionManager = MockSessionManager();
+    mockBiometricService = MockBiometricService();
 
     cubit = AuthCubit(
       loginUseCase: mockLoginUseCase,
@@ -46,6 +50,7 @@ void main() {
       biometricLoginUseCase: mockBiometricLoginUseCase,
       repository: mockRepository,
       sessionManager: mockSessionManager,
+      biometricService: mockBiometricService,
     );
   });
 
@@ -101,6 +106,8 @@ void main() {
         when(() => mockSessionManager.startSession(userId: any(named: 'userId'), token: any(named: 'token')))
             .thenAnswer((_) async => const Right(null));
         when(() => mockRepository.storeCredentialsForBiometric(email: any(named: 'email'), password: any(named: 'password')))
+            .thenAnswer((_) async => const Right(null));
+        when(() => mockRepository.storeUserEmail(any()))
             .thenAnswer((_) async => const Right(null));
         when(() => mockRepository.getUserFirstName())
             .thenAnswer((_) async => const Right('John'));
@@ -170,6 +177,8 @@ void main() {
             .thenAnswer((_) async => const Right(null));
         when(() => mockRepository.storeCredentialsForBiometric(email: any(named: 'email'), password: any(named: 'password')))
             .thenAnswer((_) async => const Right(null));
+        when(() => mockRepository.storeUserEmail(any()))
+            .thenAnswer((_) async => const Right(null));
         when(() => mockRepository.getUserFirstName())
             .thenAnswer((_) async => const Right('John'));
         when(() => mockRepository.isBiometricEnabled())
@@ -199,6 +208,12 @@ void main() {
             .thenAnswer((_) async => const Right(null));
         when(() => mockRepository.storeCredentialsForBiometric(email: any(named: 'email'), password: any(named: 'password')))
             .thenAnswer((_) async => const Right(null));
+        when(() => mockRepository.storeUserEmail(any()))
+            .thenAnswer((_) async => const Right(null));
+        when(() => mockBiometricService.isAvailable())
+            .thenAnswer((_) async => const Right(false));
+        when(() => mockBiometricService.isEnrolled())
+            .thenAnswer((_) async => const Right(false));
         return cubit;
       },
       act: (cubit) => cubit.register(tUser),
@@ -251,6 +266,14 @@ void main() {
             .thenAnswer((_) async => const Right(true));
         when(() => mockRepository.getBiometricType())
             .thenAnswer((_) async => const Right('fingerprint'));
+        when(() => mockRepository.getStoredEmail())
+            .thenAnswer((_) async => const Right(tEmail));
+        when(() => mockRepository.getStoredPassword())
+            .thenAnswer((_) async => const Right(tPassword));
+        when(() => mockRepository.storeCredentialsForBiometric(email: any(named: 'email'), password: any(named: 'password')))
+            .thenAnswer((_) async => const Right(null));
+        when(() => mockRepository.storeUserEmail(any()))
+            .thenAnswer((_) async => const Right(null));
         return cubit;
       },
       act: (cubit) => cubit.loginWithBiometric(),

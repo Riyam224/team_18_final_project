@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
+import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/features/home/presentation/cubit/home_cubit.dart';
 import 'package:team_18_final_project/features/home/presentation/cubit/home_state.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/view_all.dart';
@@ -20,10 +20,7 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => sl<HomeCubit>()..loadHomeData(),
-      child: const HomeScreenContent(),
-    );
+    return const HomeScreenContent();
   }
 }
 
@@ -48,41 +45,45 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
   }
 
   Future<void> _loadUserProfile() async {
-    // Load user first name
-    final firstNameResult = await _secureStorage.read(
-      key: StorageKeysConfig.userDisplayName,
-    );
-    final firstName = firstNameResult.fold(
-      (failure) => null,
-      (value) => value,
-    );
+    try {
+      // Load user first name
+      final firstNameResult = await _secureStorage.read(
+        key: StorageKeysConfig.userDisplayName,
+      );
+      final firstName = firstNameResult.fold(
+        (failure) => null,
+        (value) => value,
+      );
 
-    // Fallback to email username if no stored display name
-    final emailResult = await _secureStorage.read(
-      key: StorageKeysConfig.userEmail,
-    );
-    final email = emailResult.fold(
-      (failure) => null,
-      (value) => value,
-    );
+      // Fallback to email username if no stored display name
+      final emailResult = await _secureStorage.read(
+        key: StorageKeysConfig.userEmail,
+      );
+      final email = emailResult.fold(
+        (failure) => null,
+        (value) => value,
+      );
 
-    // Load avatar path
-    final avatarResult = await _secureStorage.read(
-      key: StorageKeysConfig.avatarUrl,
-    );
-    final avatarPath = avatarResult.fold(
-      (failure) => null,
-      (value) => value,
-    );
+      // Load avatar path
+      final avatarResult = await _secureStorage.read(
+        key: StorageKeysConfig.avatarUrl,
+      );
+      final avatarPath = avatarResult.fold(
+        (failure) => null,
+        (value) => value,
+      );
 
-    if (!mounted) return;
+      if (!mounted) return;
 
-    setState(() {
-      _userName = _extractFirstName(firstName) ??
-          _extractFirstName(email) ??
-          _userName;
-      _avatarPath = avatarPath;
-    });
+      setState(() {
+        _userName =
+            _extractFirstName(firstName) ?? _extractFirstName(email) ?? _userName;
+        _avatarPath = avatarPath;
+      });
+    } catch (e) {
+      // Silently handle any errors and keep default values
+      debugPrint('Error loading user profile: $e');
+    }
   }
 
   String? _extractFirstName(String? value) {
@@ -98,6 +99,12 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     final first = parts.first;
     if (first.isEmpty) return null;
     return first;
+  }
+
+  @override
+  void dispose() {
+    // Clean up resources if needed
+    super.dispose();
   }
 
   @override
@@ -139,47 +146,53 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
 
             if (state is HomeLoaded) {
               return RefreshIndicator(
-                onRefresh: () => context.read<HomeCubit>().refreshHomeData(),
-                child: SingleChildScrollView(
+                onRefresh: () async {
+                  try {
+                    await context.read<HomeCubit>().refreshHomeData();
+                  } catch (e) {
+                    debugPrint('Error refreshing home data: $e');
+                  }
+                },
+                child: ListView(
+                  physics: const AlwaysScrollableScrollPhysics(),
                   padding: AppSpacing.paddingH16V8,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      HomeHeader(
-                        userName: _userName,
-                        avatarPath: _avatarPath,
-                      ),
-                      AppSpacing.gapH16,
-                      BalanceCard(
-                        totalBalance: state.portfolioBalance.totalBalance,
-                        weeklyChangePercentage:
-                            state.portfolioBalance.weeklyChangePercentage,
-                      ),
-                      AppSpacing.gapH24,
-                      const SectionTitle(title: "Market Overview"),
-                      AppSpacing.gapH12,
-                      MarketOverviewGrid(marketOverview: state.marketOverview),
-                      AppSpacing.gapH24,
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const SectionTitle(
+                  children: [
+                    HomeHeader(
+                      userName: _userName,
+                      avatarPath: _avatarPath,
+                    ),
+                    AppSpacing.gapH16,
+                    BalanceCard(
+                      totalBalance: state.portfolioBalance.totalBalance,
+                      weeklyChangePercentage:
+                          state.portfolioBalance.weeklyChangePercentage,
+                    ),
+                    AppSpacing.gapH24,
+                    const SectionTitle(title: "Market Overview"),
+                    AppSpacing.gapH12,
+                    MarketOverviewGrid(marketOverview: state.marketOverview),
+                    AppSpacing.gapH24,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Expanded(
+                          child: SectionTitle(
                             title: "Trending Now",
                           ),
-                          const ViewAll(
-                            title: "view all",
-                          ),
-                        ],
-                      ),
-                      AppSpacing.gapH12,
-                      TrendingNowList(trendingCoins: state.trendingCoins),
-                      AppSpacing.gapH24,
-                      const SectionTitle(title: "Top Gainers"),
-                      AppSpacing.gapH12,
-                      TopGainersList(topGainers: state.topGainers),
-                      AppSpacing.gapH24,
-                    ],
-                  ),
+                        ),
+                        const ViewAll(
+                          title: "view all",
+                        ),
+                      ],
+                    ),
+                    AppSpacing.gapH12,
+                    TrendingNowList(trendingCoins: state.trendingCoins),
+                    AppSpacing.gapH24,
+                    const SectionTitle(title: "Top Gainers"),
+                    AppSpacing.gapH12,
+                    TopGainersList(topGainers: state.topGainers),
+                    AppSpacing.gapH24,
+                  ],
                 ),
               );
             }

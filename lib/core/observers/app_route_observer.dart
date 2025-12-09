@@ -22,46 +22,35 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   })  : _appLockService = appLockService,
         _screenshotService = screenshotService;
 
-  /// Routes that MUST block screenshot + blur UI (financial data)
-  /// Delegated to RoutesConfig to avoid duplication
   final List<String> sensitiveRoutes = RoutesConfig.sensitiveRoutes;
 
-  /// Routes that must NEVER blur or block screenshots
   final List<String> nonBlurRoutes = [
-    // Splash & Onboarding
     AppRoutes.splash,
     AppRoutes.onboarding,
 
-    // Authentication
     AppRoutes.login,
     AppRoutes.register,
 
-    // Face ID register
     AppRoutes.setFaceIDRegister,
     AppRoutes.faceIdScanningRegister,
     AppRoutes.faceIdSuccessRegister,
 
-    // Fingerprint register
     AppRoutes.setFingerprintRegister,
     AppRoutes.fingerprintSuccessRegister,
 
-    // Face ID login
     AppRoutes.faceIdScanningLogin,
     AppRoutes.faceIdVerifiedSuccessLogin,
 
-    // Fingerprint login
     AppRoutes.verifyFingerprintLogin,
     AppRoutes.verifyFingerprintLoginSuccess,
 
-    // Security screens
     AppRoutes.appLock,
     AppRoutes.lock,
     AppRoutes.biometric,
 
-    // Non-sensitive functional screens
     AppRoutes.market,
     AppRoutes.settings,
-    AppRoutes.profile,
+    AppRoutes.myAccount,
     AppRoutes.rootWarning,
     AppRoutes.biometricTest,
     AppRoutes.debugBiometrics,
@@ -69,7 +58,7 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
 
   void attachController(SecureApplicationController controller) {
     _controller = controller;
-    _controller?.open(); // Start with no blur
+    _controller?.open();
   }
 
   bool _isSensitive(String? name) =>
@@ -93,7 +82,6 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
       return;
     }
 
-    // Default behavior
     _controller!.open();
     _screenshotService.disable();
   }
@@ -101,10 +89,8 @@ class AppRouteObserver extends RouteObserver<PageRoute<dynamic>> {
   void _handleSecurity(Route<dynamic>? route) {
     final name = route?.settings.name;
 
-    // Always update activity (for lock timer)
     _appLockService.updateActivity();
 
-    // Apply screenshot + blur logic
     _applySecurity(name);
   }
 

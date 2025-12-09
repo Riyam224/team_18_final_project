@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import '../../../data/models/user_model.dart';
 import '../../../domain/entities/register_user_entity.dart';
@@ -9,6 +10,7 @@ import '../../../domain/usecases/login_user_usecase.dart';
 import '../../../domain/usecases/register_user_usecase.dart';
 import '../../../domain/usecases/store_user_credentials_usecase.dart';
 import 'auth_state.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final LoginUserUseCase loginUseCase;
@@ -17,6 +19,7 @@ class AuthCubit extends Cubit<AuthState> {
   final BiometricLoginUseCase biometricLoginUseCase;
   final AuthRepository repository;
   final ISessionManager sessionManager;
+  final IBiometricService biometricService;
 
   AuthCubit({
     required this.loginUseCase,
@@ -25,6 +28,7 @@ class AuthCubit extends Cubit<AuthState> {
     required this.biometricLoginUseCase,
     required this.repository,
     required this.sessionManager,
+    required this.biometricService,
   }) : super(AuthInitial());
 
   Future<void> login(String email, String password) async {
@@ -39,26 +43,17 @@ class AuthCubit extends Cubit<AuthState> {
           userId: session.userId,
           token: session.token,
         );
+
         await sessionManager.startSession(
           userId: session.userId,
           token: session.token,
         );
 
-        // Store credentials for biometric login
-        await repository.storeCredentialsForBiometric(
-          email: email,
-          password: password,
-        );
+        await _persistBiometricCredentials(email, password);
 
-        // Check if we already have user data stored
-        final existingFirstNameResult = await repository.getUserFirstName();
+        final firstNameResult = await repository.getUserFirstName();
+        final existingFirstName = firstNameResult.fold((_) => null, (v) => v);
 
-        final existingFirstName = existingFirstNameResult.fold(
-          (failure) => null,
-          (value) => value,
-        );
-
-        // If no user data exists (first time login), extract name from email
         if (existingFirstName == null || existingFirstName.isEmpty) {
           final firstName = _extractFirstNameFromEmail(email);
 
@@ -70,15 +65,15 @@ class AuthCubit extends Cubit<AuthState> {
             password: password,
             biometricEnabled: false,
           );
+
           await repository.storeUserData(loginUser);
         }
 
-        final enabledResult = await repository.isBiometricEnabled();
-        final typeResult = await repository.getBiometricType();
+        final enabled = (await repository.isBiometricEnabled())
+            .fold((_) => false, (v) => v);
 
-        final enabled =
-            enabledResult.fold((failure) => false, (value) => value);
-        final type = typeResult.fold((failure) => null, (value) => value);
+        final type =
+            (await repository.getBiometricType()).fold((_) => null, (v) => v);
 
         emit(AuthLoginSuccess(
           biometricEnabled: enabled,
@@ -88,7 +83,6 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  /// Register a new user - accepts UserModel from UI and converts to domain entity
   Future<void> register(UserModel userModel) async {
     emit(AuthLoading());
 
@@ -113,7 +107,10 @@ class AuthCubit extends Cubit<AuthState> {
           );
 
           await repository.storeUserData(user);
-          await repository.storeCredentialsForBiometric(
+
+          await _persistBiometricCredentials(user.email, user.password);
+
+          await _autoEnableBiometricIfAvailable(
             email: user.email,
             password: user.password,
           );
@@ -143,17 +140,26 @@ class AuthCubit extends Cubit<AuthState> {
           userId: session.userId,
           token: session.token,
         );
+
         await sessionManager.startSession(
           userId: session.userId,
           token: session.token,
         );
 
-        final enabledResult = await repository.isBiometricEnabled();
-        final typeResult = await repository.getBiometricType();
+        final storedEmail =
+            (await repository.getStoredEmail()).fold((_) => null, (v) => v);
 
-        final enabled =
-            enabledResult.fold((failure) => false, (value) => value);
-        final type = typeResult.fold((failure) => null, (value) => value);
+        final storedPassword =
+            (await repository.getStoredPassword()).fold((_) => null, (v) => v);
+
+        if (storedEmail != null && storedPassword != null) {
+          await _persistBiometricCredentials(storedEmail, storedPassword);
+        }
+
+        final enabled = (await repository.isBiometricEnabled())
+            .fold((_) => false, (v) => v);
+        final type =
+            (await repository.getBiometricType()).fold((_) => null, (v) => v);
 
         emit(AuthLoginSuccess(
           biometricEnabled: enabled,
@@ -163,7 +169,6 @@ class AuthCubit extends Cubit<AuthState> {
     );
   }
 
-  /// Extracts first name from email by taking username part and capitalizing
   String _extractFirstNameFromEmail(String email) {
     final username = email.split('@').first;
     return username.isNotEmpty
@@ -171,24 +176,66 @@ class AuthCubit extends Cubit<AuthState> {
         : 'User';
   }
 
-  /// Maps domain failures to user-friendly error messages
+  Future<void> _autoEnableBiometricIfAvailable({
+    required String email,
+    required String password,
+  }) async {
+    final available =
+        (await biometricService.isAvailable()).fold((_) => false, (v) => v);
+    final enrolled =
+        (await biometricService.isEnrolled()).fold((_) => false, (v) => v);
+
+    if (!available || !enrolled) return;
+
+    final typesResult = await biometricService.getAvailableBiometrics();
+    final typeString = typesResult.fold(
+      (_) => 'none',
+      (types) {
+        if (types.contains(AvailableBiometricType.face)) return 'face';
+        if (types.contains(AvailableBiometricType.fingerprint))
+          return 'fingerprint';
+        return 'none';
+      },
+    );
+
+    if (typeString != 'none') {
+      await repository.storeBiometricSettings(
+        email: email,
+        password: password,
+        biometricType: typeString,
+      );
+    }
+  }
+
+  Future<void> _persistBiometricCredentials(
+      String email, String password) async {
+    if (email.isEmpty || password.isEmpty) return;
+
+    await repository.storeCredentialsForBiometric(
+      email: email,
+      password: password,
+    );
+
+    await repository.storeUserEmail(email);
+  }
+
   String _mapFailureToMessage(AuthFailure failure) {
     if (failure is UserNotFoundFailure) {
-      return 'No account found with this email. Please check your credentials.';
+      return AppStrings.authNoAccountFound;
     } else if (failure is InvalidCredentialsFailure) {
-      return 'Invalid email or password. Please try again.';
+      return AppStrings.authInvalidCredentials;
     } else if (failure is EmailAlreadyExistsFailure) {
-      return 'An account with this email already exists.';
+      return AppStrings.authEmailExists;
     } else if (failure is WeakPasswordFailure) {
-      return 'Password is too weak. Please use a stronger password.';
+      return failure.message ?? AppStrings.authWeakPassword;
     } else if (failure is InvalidEmailFailure) {
-      return 'Please enter a valid email address.';
+      return failure.message ?? AppStrings.authInvalidEmail;
     } else if (failure is AuthNetworkFailure) {
-      return 'Network error. Please check your connection.';
+      return AppStrings.authNetworkError;
     } else if (failure is TooManyRequestsFailure) {
-      return 'Too many attempts. Please try again later.';
+      return AppStrings.authTooManyRequests;
     } else if (failure is AccountDisabledFailure) {
-      return 'This account has been disabled.';
+      return AppStrings.authAccountDisabled;
     }
     return failure.message;
   }

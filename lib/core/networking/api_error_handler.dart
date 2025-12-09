@@ -34,10 +34,8 @@ class ApiErrorHandler {
     final data = response?.data;
 
     if (data is Map<String, dynamic>) {
-      // todo If API returns a "message" field
       if (data.containsKey('message')) return data['message'];
 
-      //todo  If API returns structured validation errors
       if (data['errors'] is Map<String, dynamic>) {
         final errors = data['errors'];
 

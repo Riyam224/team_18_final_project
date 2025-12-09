@@ -3,11 +3,9 @@ import 'package:team_18_final_project/core/config/security_config.dart';
 import 'package:team_18_final_project/features/auth/data/models/user_settings.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/user_settings_entity.dart';
 
-/// Mapper class to convert between UserSettings (data) and UserSettingsEntity (domain)
 class SettingsMapper {
   const SettingsMapper._();
 
-  /// Converts BiometricType enum to string
   static String biometricTypeToString(BiometricType type) {
     switch (type) {
       case BiometricType.fingerprint:
@@ -19,7 +17,6 @@ class SettingsMapper {
     }
   }
 
-  /// Converts string to BiometricType enum
   static BiometricType biometricTypeFromString(String? type) {
     switch (type?.toLowerCase()) {
       case 'fingerprint':
@@ -31,30 +28,27 @@ class SettingsMapper {
     }
   }
 
-  /// Converts UserSettings model to UserSettingsEntity
   static UserSettingsEntity fromModel(UserSettings model, String userId) {
     return UserSettingsEntity(
       userId: userId,
       biometricEnabled: model.biometricEnabled,
       biometricType: biometricTypeFromString(model.biometricType),
       sessionTimeoutMinutes: model.sessionTimeoutMinutes,
-      autoLockTimeoutSeconds: model.autoLockTimeoutMinutes * 60, // Convert minutes to seconds
-      avatarUrl: model.avatarPath,
+      autoLockTimeoutSeconds: model.autoLockTimeoutMinutes * 60,
+      avatarUrl: model.avatarUrl,
     );
   }
 
-  /// Converts UserSettingsEntity to UserSettings model
   static UserSettings toModel(UserSettingsEntity entity) {
     return UserSettings(
       biometricEnabled: entity.biometricEnabled,
       biometricType: biometricTypeToString(entity.biometricType),
       sessionTimeoutMinutes: entity.sessionTimeoutMinutes,
-      autoLockTimeoutMinutes: entity.autoLockTimeoutSeconds ~/ 60, // Convert seconds to minutes
-      avatarPath: entity.avatarUrl,
+      autoLockTimeoutMinutes: entity.autoLockTimeoutSeconds ~/ 60,
+      avatarUrl: entity.avatarUrl,
     );
   }
 
-  /// Converts UserSettingsEntity to Firestore Map
   static Map<String, dynamic> toFirestore(UserSettingsEntity entity) {
     return {
       FirebaseConfig.biometricEnabledField: entity.biometricEnabled,
@@ -66,7 +60,6 @@ class SettingsMapper {
     };
   }
 
-  /// Converts Firestore Map to UserSettingsEntity
   static UserSettingsEntity fromFirestore(String userId, Map<String, dynamic> data) {
     return UserSettingsEntity(
       userId: userId,

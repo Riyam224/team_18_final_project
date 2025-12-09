@@ -40,6 +40,7 @@ dependencies:
   equatable: ^2.0.7
   firebase_auth: ^6.1.2
   firebase_core: ^4.2.1
+  firebase_storage: ^13.0.4
   fl_chart: ^1.1.1
   flutter:
     sdk: flutter
@@ -51,6 +52,7 @@ dependencies:
   formz: ^0.7.0
   get_it: ^8.2.0
   go_router: ^16.2.4
+  image_picker: ^1.2.1
   intl: ^0.20.0
   json_annotation: ^4.9.0
   lifecycle: ^0.10.0

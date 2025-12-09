@@ -1,5 +1,3 @@
-/// Secure storage keys configuration
-/// Centralized location for all storage keys used in the app
 class StorageKeysConfig {
   const StorageKeysConfig._();
 
