@@ -8,10 +8,7 @@ import 'package:team_18_final_project/features/auth/domain/entities/user_setting
 import 'package:team_18_final_project/features/auth/domain/failures/auth_failure.dart';
 import 'package:team_18_final_project/features/auth/domain/failures/biometric_failure.dart';
 
-/// Repository interface for authentication operations
-/// Uses Either pattern for error handling and domain entities
 abstract class AuthRepository {
-  // Authentication operations
   Future<Either<AuthFailure, AuthSessionEntity>> login(
     String email,
     String password,
@@ -25,13 +22,11 @@ abstract class AuthRepository {
 
   Future<Either<AuthFailure, UserEntity?>> getCurrentUser();
 
-  // Credentials storage
   Future<Either<AuthFailure, void>> storeUserCredentials({
     required String userId,
     required String token,
   });
 
-  // Biometric operations
   Future<Either<BiometricFailure, void>> storeBiometricSettings({
     required String email,
     required String password,
@@ -43,6 +38,8 @@ abstract class AuthRepository {
     required String password,
   });
 
+  Future<Either<AuthFailure, void>> storeUserEmail(String email);
+
   Future<Either<BiometricFailure, BiometricCredentialsEntity?>>
       getBiometricCredentials();
 
@@ -50,19 +47,18 @@ abstract class AuthRepository {
 
   Future<Either<AuthFailure, String?>> getBiometricType();
 
-  // User profile operations
   Future<Either<AuthFailure, UserProfileEntity>> getUserProfile(String userId);
 
-  Future<Either<AuthFailure, void>> updateUserProfile(UserProfileEntity profile);
+  Future<Either<AuthFailure, void>> updateUserProfile(
+      UserProfileEntity profile);
 
-  // User settings operations
-  Future<Either<AuthFailure, UserSettingsEntity>> getUserSettings(String userId);
+  Future<Either<AuthFailure, UserSettingsEntity>> getUserSettings(
+      String userId);
 
   Future<Either<AuthFailure, void>> updateUserSettings(
     UserSettingsEntity settings,
   );
 
-  // Legacy data access (for backward compatibility - to be removed)
   Future<Either<AuthFailure, String?>> getStoredEmail();
 
   Future<Either<AuthFailure, String?>> getStoredPassword();

@@ -23,15 +23,13 @@ class TradeBottomBar extends StatelessWidget {
             textColor: AppColors.alertRed,
             width: 145.w,
             height: 45.h,
-            backgroundColor:
-                isDark ? AppColors.darkBrown : AppColors.lightPink,
+            backgroundColor: isDark ? AppColors.darkBrown : AppColors.lightPink,
             borderRadiusGeometry: BorderRadius.circular(31),
             text: AppStrings.sell,
             onPressed: () {},
           ),
           BottomActionButton.text(
-            textColor:
-                isDark ? AppColors.darkBackground : AppColors.textWhite,
+            textColor: isDark ? AppColors.darkBackground : AppColors.textWhite,
             width: 145.w,
             height: 45.h,
             backgroundColor:

@@ -169,8 +169,8 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            const Color.fromARGB(255, 35, 35, 86),
-            const Color(0xff001133).withOpacity(0.5),
+            AppColors.chartBackground,
+            AppColors.chartBackground.withValues(alpha: 0.5),
             Colors.transparent
           ],
         ),

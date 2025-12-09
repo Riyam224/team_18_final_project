@@ -3,8 +3,6 @@ import 'package:team_18_final_project/features/auth/domain/validation/password_v
 
 void main() {
   group('PasswordValidator', () {
-
-
     group('validate', () {
       test('should return valid result for strong password', () {
         const password = 'StrongP@ss123';
@@ -13,7 +11,8 @@ void main() {
         expect(result.error, null);
       });
 
-      test('should return valid result for password with all character types', () {
+      test('should return valid result for password with all character types',
+          () {
         const password = 'Abc123!@#';
         final result = PasswordValidator.validate(password);
         expect(result.isValid, true);
@@ -26,7 +25,8 @@ void main() {
         expect(result.error, isNotNull);
       });
 
-      test('should return invalid result for password less than minimum length', () {
+      test('should return invalid result for password less than minimum length',
+          () {
         const password = 'Abc1!';
         final result = PasswordValidator.validate(password);
         expect(result.isValid, false);
@@ -50,7 +50,9 @@ void main() {
         expect(result.isValid, false);
       });
 
-      test('should return invalid result for password without special character', () {
+      test(
+          'should return invalid result for password without special character',
+          () {
         const password = 'Password123';
         final result = PasswordValidator.validate(password);
         expect(result.isValid, false);
@@ -62,7 +64,9 @@ void main() {
         expect(result.isValid, true);
       });
 
-      test('should return valid result for password with multiple special characters', () {
+      test(
+          'should return valid result for password with multiple special characters',
+          () {
         const password = 'P@ssw0rd!#%';
         final result = PasswordValidator.validate(password);
         expect(result.isValid, true);

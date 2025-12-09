@@ -32,7 +32,6 @@ class BitcoinNameWithImage extends StatelessWidget {
                     color: isDark ? AppColors.textWhite : AppColors.primary,
                   )),
         ],
-        // Text
       ),
     );
   }

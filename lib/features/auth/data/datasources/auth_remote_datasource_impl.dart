@@ -9,7 +9,6 @@ import 'package:team_18_final_project/features/auth/domain/entities/user_entity.
 import 'package:team_18_final_project/features/auth/domain/entities/user_profile_entity.dart';
 import 'package:team_18_final_project/features/auth/domain/entities/user_settings_entity.dart';
 
-/// Implementation of AuthRemoteDataSource using Firebase
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final firebase_auth.FirebaseAuth _firebaseAuth;
   final FirebaseFirestore _firestore;
@@ -37,7 +36,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
     }
 
-    // Update last login in Firestore
     await _updateLastLogin(userCredential.user!.uid, email);
 
     return UserMapper.fromFirebaseUser(userCredential.user!);
@@ -64,12 +62,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     final user = userCredential.user!;
 
-    // Update display name if provided
     if (displayName != null) {
       await user.updateDisplayName(displayName);
     }
 
-    // Create user document in Firestore
     await createUserDocument(
       userId: user.uid,
       email: email,
@@ -77,7 +73,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       phoneNumber: phoneNumber,
     );
 
-    // Reload user to get updated data
     await user.reload();
     final updatedUser = _firebaseAuth.currentUser;
 
@@ -125,7 +120,8 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
     }
 
-    final profileData = data[FirebaseConfig.profileField] as Map<String, dynamic>;
+    final profileData =
+        data[FirebaseConfig.profileField] as Map<String, dynamic>;
     return ProfileMapper.fromFirestore(userId, profileData);
   }
 
@@ -159,11 +155,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     final data = doc.data();
     if (data == null || !data.containsKey(FirebaseConfig.settingsField)) {
-      // Return default settings if not found
       return UserSettingsEntity(userId: userId);
     }
 
-    final settingsData = data[FirebaseConfig.settingsField] as Map<String, dynamic>;
+    final settingsData =
+        data[FirebaseConfig.settingsField] as Map<String, dynamic>;
     return SettingsMapper.fromFirestore(userId, settingsData);
   }
 
@@ -206,7 +202,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       FirebaseConfig.updatedAtField: FieldValue.serverTimestamp(),
     }, SetOptions(merge: true));
 
-    // Create default settings
     final defaultSettings = UserSettingsEntity(userId: userId);
     await updateUserSettings(defaultSettings);
   }
@@ -221,13 +216,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       );
     }
 
-    // Delete Firestore document
     await _firestore
         .collection(FirebaseConfig.usersCollection)
         .doc(user.uid)
         .delete();
 
-    // Delete authentication account
     await user.delete();
   }
 
@@ -248,7 +241,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
     await user.verifyBeforeUpdateEmail(newEmail);
 
-    // Update email in Firestore
     await _firestore
         .collection(FirebaseConfig.usersCollection)
         .doc(user.uid)
@@ -292,7 +284,6 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     await user.reauthenticateWithCredential(credential);
   }
 
-  /// Updates last login timestamp in Firestore
   Future<void> _updateLastLogin(String userId, String email) async {
     await _firestore
         .collection(FirebaseConfig.usersCollection)

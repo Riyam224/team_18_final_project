@@ -21,8 +21,7 @@ class ProfileMapper {
     // Extract first and last name from displayName
     final nameParts = entity.displayName?.split(' ') ?? [];
     final firstName = nameParts.isNotEmpty ? nameParts.first : '';
-    final lastName =
-        nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+    final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
     return UserProfile(
       firstName: firstName,
@@ -37,8 +36,7 @@ class ProfileMapper {
     // Extract first and last name from displayName
     final nameParts = entity.displayName?.split(' ') ?? [];
     final firstName = nameParts.isNotEmpty ? nameParts.first : '';
-    final lastName =
-        nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
+    final lastName = nameParts.length > 1 ? nameParts.sublist(1).join(' ') : '';
 
     return {
       FirebaseConfig.emailField: entity.email,
@@ -53,13 +51,12 @@ class ProfileMapper {
   }
 
   /// Converts Firestore Map to UserProfileEntity
-  static UserProfileEntity fromFirestore(String userId, Map<String, dynamic> data) {
+  static UserProfileEntity fromFirestore(
+      String userId, Map<String, dynamic> data) {
     final firstName = data['firstName'] as String? ?? '';
     final lastName = data['lastName'] as String? ?? '';
-    final displayName = [firstName, lastName]
-        .where((e) => e.isNotEmpty)
-        .join(' ')
-        .trim();
+    final displayName =
+        [firstName, lastName].where((e) => e.isNotEmpty).join(' ').trim();
 
     return UserProfileEntity(
       userId: userId,

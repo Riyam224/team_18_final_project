@@ -16,8 +16,7 @@ class TestData {
   static const String invalidEmail = 'invalid-email';
   static const String emptyString = '';
   static const String shortPassword = '12345';
-  static final String longPassword =
-      'a' * 129; // Exceeds max length of 128
+  static final String longPassword = 'a' * 129; // Exceeds max length of 128
   static const String invalidPhone = 'abc123';
 
   // Edge cases

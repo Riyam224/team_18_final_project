@@ -154,7 +154,8 @@ void main() {
 
     test('should match performSecurityCheck result', () async {
       // Act
-      final securityCheckResult = await rootDetectionService.performSecurityCheck();
+      final securityCheckResult =
+          await rootDetectionService.performSecurityCheck();
       final isSecureResult = await rootDetectionService.isDeviceSecure();
 
       // Assert

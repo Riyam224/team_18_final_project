@@ -15,22 +15,37 @@ class HomeRepositoryImpl implements HomeRepository {
 
   HomeRepositoryImpl(this._apiService);
 
-  // Cache for global data to avoid duplicate calls
   dynamic _cachedGlobalData;
   DateTime? _cacheTimestamp;
+  DateTime? _lastRequestTime;
 
-  /// Fetches global data with caching to prevent duplicate API calls
+  Future<void> _applyRequestDebounce() async {
+    const debounceDuration = Duration(milliseconds: 300);
+
+    if (_lastRequestTime == null) {
+      _lastRequestTime = DateTime.now();
+      return;
+    }
+
+    final elapsed = DateTime.now().difference(_lastRequestTime!);
+    if (elapsed < debounceDuration) {
+      await Future.delayed(debounceDuration - elapsed);
+    }
+
+    _lastRequestTime = DateTime.now();
+  }
+
   Future<dynamic> _getGlobalDataCached() async {
     final now = DateTime.now();
 
-    // Return cached data if it's still valid
     if (_cachedGlobalData != null &&
         _cacheTimestamp != null &&
-        now.difference(_cacheTimestamp!) < AppConstants.marketDataCacheDuration) {
+        now.difference(_cacheTimestamp!) <
+            AppConstants.marketDataCacheDuration) {
       return _cachedGlobalData;
     }
 
-    // Fetch fresh data
+    await _applyRequestDebounce();
     final response = await _apiService.getGlobalData();
     _cachedGlobalData = response.data;
     _cacheTimestamp = now;
@@ -43,15 +58,12 @@ class HomeRepositoryImpl implements HomeRepository {
     try {
       final data = await _getGlobalDataCached();
 
-      // Format market cap
       final marketCapUsd = data.totalMarketCap['usd'] ?? 0;
       final marketCapFormatted = _formatCurrency(marketCapUsd);
 
-      // Format volume
       final volumeUsd = data.totalVolume['usd'] ?? 0;
       final volumeFormatted = _formatCurrency(volumeUsd);
 
-      // Get BTC dominance
       final btcDominance = data.marketCapPercentage['btc'] ?? 0;
       final btcDominanceFormatted = '${btcDominance.toStringAsFixed(1)}%';
 
@@ -73,12 +85,12 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<Either<Failure, List<TrendingCoinEntity>>> getTrendingCoins() async {
     try {
+      await _applyRequestDebounce();
       final response = await _apiService.getTrendingCoins();
 
       final trendingCoins = response.coins.map((coinItem) {
         final coin = coinItem.item;
 
-        // Handle price change percentage safely
         double priceChangeUsd = 0.0;
         if (coin.data.priceChangePercentage24h != null) {
           final usdValue = coin.data.priceChangePercentage24h!['usd'];
@@ -88,7 +100,6 @@ class HomeRepositoryImpl implements HomeRepository {
           }
         }
 
-        // Handle price - convert to string if it's a number
         String priceStr;
         if (coin.data.price is String) {
           priceStr = coin.data.price as String;
@@ -118,9 +129,9 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<Either<Failure, List<TopGainerEntity>>> getTopGainers() async {
     try {
+      await _applyRequestDebounce();
       final response = await _apiService.getTopGainers();
 
-      // Filter and sort by price change percentage
       final gainers = response
           .where((coin) =>
               coin.priceChangePercentage24h != null &&
@@ -129,7 +140,6 @@ class HomeRepositoryImpl implements HomeRepository {
         ..sort((a, b) => (b.priceChangePercentage24h ?? 0)
             .compareTo(a.priceChangePercentage24h ?? 0));
 
-      // Take top 10
       final topGainers = gainers.take(10).map((coin) {
         return TopGainerEntity(
           id: coin.id,
@@ -153,15 +163,9 @@ class HomeRepositoryImpl implements HomeRepository {
     try {
       final data = await _getGlobalDataCached();
 
-      // Simulate portfolio balance based on market data
-      // In a real app, this would come from user's actual portfolio
       final marketCapChangePercentage = data.marketCapChangePercentage24hUsd;
-
-      // Simulated portfolio value (this would be real user data in production)
       const double baseBalance = AppConstants.defaultDemoBalance;
 
-      // Calculate weekly change based on market performance
-      // Using market cap change as a proxy for portfolio performance
       final weeklyChange =
           marketCapChangePercentage * AppConstants.weeklyChangeMultiplier;
 

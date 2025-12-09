@@ -18,7 +18,9 @@ void main() {
         expect(phoneInput.isPure, false);
       });
 
-      test('should create dirty PhoneInput with empty string if no value provided', () {
+      test(
+          'should create dirty PhoneInput with empty string if no value provided',
+          () {
         const phoneInput = PhoneInput.dirty();
         expect(phoneInput.value, '');
         expect(phoneInput.isPure, false);

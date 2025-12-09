@@ -17,14 +17,18 @@ class BiometricConfig {
 
   // Error Messages
   static const String authenticationFailed = 'Authentication failed';
-  static const String fingerprintAuthFailed = 'Fingerprint authentication failed';
+  static const String fingerprintAuthFailed =
+      'Fingerprint authentication failed';
   static const String faceIdAuthFailed = 'Face ID authentication failed';
-  static const String biometricNotAvailable = 'Biometric authentication is not available';
-  static const String biometricNotEnrolled = 'No biometric credentials enrolled';
+  static const String biometricNotAvailable =
+      'Biometric authentication is not available';
+  static const String biometricNotEnrolled =
+      'No biometric credentials enrolled';
 
   // Success Messages
   static const String authenticationSuccess = 'Authentication successful';
-  static const String biometricSetupSuccess = 'Biometric authentication setup successfully';
+  static const String biometricSetupSuccess =
+      'Biometric authentication setup successfully';
 
   // Biometric Storage Keys (duplicated from StorageKeysConfig for clarity)
   static const String enabledKey = 'biometric_enabled';

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // ===== Primary Brand =====
-  static const Color primary = Color(0xFF1D3A70); // main brand blue
-  static const Color secondary = Color(0xFFF56C2A); // orange accent
+  static const Color primary = Color(0xFF1D3A70);
+  static const Color secondary = Color(0xFFF56C2A);
 
-  // ===== Accent Colors =====
+  // Accent Colors
   static const Color accentBlue = Color(0xFF4766F9);
   static const Color accentBlue2 = Color(0xFF6079FA);
   static const Color accentPurple = Color(0xFF8979FF);
+  static const Color accentCyan = Color(0xFF4DD0E1);
+  static const Color accentCoral = Color(0xFFFF8A80);
 
   // ===== Light Mode =====
   static const Color lightBackground = Color(0xFFF5F8FE);
@@ -38,7 +39,10 @@ class AppColors {
   static const Color darkBackground = Color(0xFF0D0D0D);
   static const Color darkBackground2 = Color(0xFF121212);
   static const Color darkSurface = Color(0xFF1B1B1B);
-  static const Color darkCard = Color(0xFF0D0D0D);
+  static const Color darkCard = Color(0xFF27292A);
+  static const Color balanceCardDark = Color(0xFF0F1C38);
+  static const Color balanceCardLight = Color(0xFF1D3A70);
+  static const Color chartBackground = Color(0xFF001133);
 
   // Dark Text
   static const Color textWhite = Color(0xFFFFFFFF);
@@ -67,6 +71,8 @@ class AppColors {
   static const Color marketValue = Color(0xFF6079FA);
 
   // ===== Cryptocurrency Colors =====
+  static const Color bitcoin = Color(0xFFF7931A);
+  static const Color ethereum = Color(0xFF627EEA);
   static const Color btcOrange = Color(0xFFF7931A);
   static const Color ethBlue = Color(0xFF627EEA);
   static const Color bnbYellow = Color(0xFFF3BA2F);
@@ -75,6 +81,14 @@ class AppColors {
   static const Color solGreen = Color(0xFF14F195);
   static const Color dogeYellow = Color(0xFFC2A633);
   static const Color defaultCoin = Color(0xFF6366F1);
+  static const Color cryptoCardano = Color(0xFF0033AD);
+  static const Color cryptoRipple = Color(0xFF23292F);
+  static const Color cryptoPolkadot = Color(0xFFE6007A);
+  static const Color cryptoBinance = Color(0xFFF3BA2F);
+  static const Color cryptoSolana = Color(0xFF14F195);
+  static const Color cryptoDogecoin = Color(0xFFC3A634);
+  static const Color cryptoPolygon = Color(0xFF8247E5);
+  static const Color cryptoDefault = Color(0xFF757575);
 
   // ===== Common UI Colors =====
   static const Color white = Color(0xFFFFFFFF);

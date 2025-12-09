@@ -115,7 +115,8 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, isA<GenericAuthFailure>());
-          expect(failure.message, contains('No stored credentials found'));
+          expect(
+              failure.message, contains('No email found in biometric storage'));
         },
         (_) => fail('Should return failure'),
       );
@@ -146,7 +147,8 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, isA<GenericAuthFailure>());
-          expect(failure.message, contains('No stored credentials found'));
+          expect(failure.message,
+              contains('No password found in biometric storage'));
         },
         (_) => fail('Should return failure'),
       );
@@ -172,7 +174,8 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, isA<GenericAuthFailure>());
-          expect(failure.message, contains('No stored credentials found'));
+          expect(
+              failure.message, contains('No email found in biometric storage'));
         },
         (_) => fail('Should return failure'),
       );
@@ -198,7 +201,8 @@ void main() {
       result.fold(
         (failure) {
           expect(failure, isA<GenericAuthFailure>());
-          expect(failure.message, contains('No stored credentials found'));
+          expect(failure.message,
+              contains('No password found in biometric storage'));
         },
         (_) => fail('Should return failure'),
       );

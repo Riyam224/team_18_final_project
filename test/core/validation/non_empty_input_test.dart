@@ -18,7 +18,9 @@ void main() {
         expect(input.isPure, false);
       });
 
-      test('should create dirty NonEmptyInput with empty string if no value provided', () {
+      test(
+          'should create dirty NonEmptyInput with empty string if no value provided',
+          () {
         const input = NonEmptyInput.dirty();
         expect(input.value, '');
         expect(input.isPure, false);

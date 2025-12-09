@@ -104,7 +104,8 @@ class FlutterSecureStorageImpl implements ISecureStorage {
   }
 
   @override
-  Future<Either<StorageFailure, bool>> containsKey({required String key}) async {
+  Future<Either<StorageFailure, bool>> containsKey(
+      {required String key}) async {
     try {
       final contains = await _storage.containsKey(key: key);
       return Right(contains);

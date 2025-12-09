@@ -19,9 +19,6 @@ class ScreenshotPreventionServiceImpl implements IScreenshotPreventionService {
     required ISecureStorage secureStorage,
   }) : _secureStorage = secureStorage;
 
-  bool _isAndroid() =>
-      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
-
   bool _isIOS() => !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS;
 
   @override

@@ -51,7 +51,8 @@ void main() {
       verify(() => mockRepository.register(tUser)).called(1);
     });
 
-    test('should return AuthSessionEntity when registration is successful', () async {
+    test('should return AuthSessionEntity when registration is successful',
+        () async {
       // Arrange
       when(() => mockRepository.register(any()))
           .thenAnswer((_) async => Right(tAuthSession));
@@ -63,7 +64,9 @@ void main() {
       expect(result, equals(Right(tAuthSession)));
     });
 
-    test('should return EmailAlreadyExistsFailure when email is already registered', () async {
+    test(
+        'should return EmailAlreadyExistsFailure when email is already registered',
+        () async {
       // Arrange
       const tFailure = EmailAlreadyExistsFailure();
       when(() => mockRepository.register(any()))
@@ -89,7 +92,8 @@ void main() {
       expect(result, equals(const Left(tFailure)));
     });
 
-    test('should return InvalidEmailFailure when email format is invalid', () async {
+    test('should return InvalidEmailFailure when email format is invalid',
+        () async {
       // Arrange
       const tFailure = InvalidEmailFailure();
       when(() => mockRepository.register(any()))

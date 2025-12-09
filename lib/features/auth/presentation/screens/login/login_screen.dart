@@ -102,18 +102,12 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
         child: BlocConsumer<AuthCubit, AuthState>(
           listener: (context, state) async {
             if (state is AuthLoginSuccess) {
-              // Prevent immediate app-lock, start session, then route to biometric verification
               await _appLockService.resetLock();
-              // Note: ISessionManager.startSession requires userId and token parameters
-              // These should come from the AuthLoginSuccess state
-              if (context.mounted) {
-                final type = (state.biometricType ?? '').toLowerCase();
-                final targetRoute = type == 'face'
-                    ? AppRoutes.faceIdScanningLogin
-                    : AppRoutes.verifyFingerprintLogin;
-                context.go(targetRoute);
-              }
-            } else if (state is AuthError) {
+              if (!context.mounted) return;
+              context.go(AppRoutes.home);
+            }
+
+            if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message),
@@ -212,11 +206,7 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                             ],
                           ),
                           GestureDetector(
-                            onTap: isLoading
-                                ? null
-                                : () {
-                                    // TODO: navigate to forget password
-                                  },
+                            onTap: isLoading ? null : () {},
                             child: Text(
                               AppStrings.forgetPassword,
                               style: AppTextStyles.bodyMedium.copyWith(
@@ -287,10 +277,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                           GestureDetector(
                             onTap: isLoading
                                 ? null
-                                : () {
-                                    context
-                                        .push(AppRoutes.verifyFingerprintLogin);
-                                  },
+                                : () => context
+                                    .read<AuthCubit>()
+                                    .loginWithBiometric(),
                             child: SizedBox(
                               width: AppSizing.biometricIconSmall,
                               height: AppSizing.biometricIconSmall,
@@ -316,9 +305,9 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                           GestureDetector(
                             onTap: isLoading
                                 ? null
-                                : () {
-                                    context.push(AppRoutes.faceIdScanningLogin);
-                                  },
+                                : () => context
+                                    .read<AuthCubit>()
+                                    .loginWithBiometric(),
                             child: SizedBox(
                               width: AppSizing.biometricIconSmall,
                               height: AppSizing.biometricIconSmall,

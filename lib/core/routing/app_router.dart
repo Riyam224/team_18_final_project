@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_nav_shell.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
@@ -25,15 +26,15 @@ import 'package:team_18_final_project/features/market/presentation/screens/marke
 import 'package:team_18_final_project/features/market/presentation/screens/payment_screen.dart';
 import 'package:team_18_final_project/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/screens/portfolio_screen.dart';
-import 'package:team_18_final_project/features/profile/presentation/screens/profile_screen.dart';
+import 'package:team_18_final_project/features/profile/presentation/screens/my_account_screen.dart';
 import 'package:team_18_final_project/features/settings/presentation/screens/settings_screen.dart';
 import 'package:team_18_final_project/features/splash/presentation/screens/splash_screen.dart';
 import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/features/home/presentation/cubit/home_cubit.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 
 import '../../features/auth/presentation/debug/biometric_test_screen.dart';
 
-// Needed for app-lock navigation
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
 class RouteGenerator {
@@ -42,24 +43,18 @@ class RouteGenerator {
     observers: [appRouteObserver],
     errorBuilder: (context, state) =>
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
-    initialLocation: AppRoutes.payment,
-
-    // ==============================
-    // 🔐 REDIRECT FIXED HERE
-    // ==============================
+    initialLocation: AppRoutes.splash,
     redirect: (context, state) async {
-      // 1️⃣ Never block root warning
       if (state.matchedLocation.startsWith(AppRoutes.rootWarning)) {
         return null;
       }
 
-      // 2️⃣ Protected routes require authentication
       final protected = <String>{
         AppRoutes.home,
         AppRoutes.market,
         AppRoutes.portfolio,
         AppRoutes.settings,
-        AppRoutes.profile,
+        AppRoutes.myAccount,
         AppRoutes.appLock,
       };
 
@@ -69,7 +64,6 @@ class RouteGenerator {
 
       if (!isProtected) return null;
 
-      // 3️⃣ Check session
       final sessionManager = sl<ISessionManager>();
       final isValidResult = await sessionManager.isSessionValid();
       final authed = isValidResult.fold((_) => false, (valid) => valid);
@@ -78,11 +72,7 @@ class RouteGenerator {
 
       return null;
     },
-
     routes: [
-      // ==========================
-      // SPLASH, ONBOARDING, AUTH
-      // ==========================
       GoRoute(
         path: AppRoutes.splash,
         builder: (_, __) => const SplashScreen(),
@@ -99,10 +89,6 @@ class RouteGenerator {
         path: AppRoutes.register,
         builder: (_, __) => RegisterScreen(),
       ),
-
-      // ==========================
-      // REGISTER BIOMETRIC
-      // ==========================
       GoRoute(
         path: AppRoutes.setFingerprintRegister,
         builder: (_, __) => const SetFingerprintRegisterScreen(),
@@ -123,10 +109,6 @@ class RouteGenerator {
         path: AppRoutes.faceIdSuccessRegister,
         builder: (_, __) => const FaceidSuccessRegisterScreen(),
       ),
-
-      // ==========================
-      // LOGIN BIOMETRIC
-      // ==========================
       GoRoute(
         path: AppRoutes.verifyFingerprintLogin,
         builder: (_, __) => const VerifyFingerprintLoginScreen(),
@@ -143,10 +125,6 @@ class RouteGenerator {
         path: AppRoutes.faceIdVerifiedSuccessLogin,
         builder: (_, __) => const FaceIDVerifySuccessLoginScreen(),
       ),
-
-      // ==========================
-      // 🔒 APP LOCK
-      // ==========================
       GoRoute(
         path: AppRoutes.appLock,
         builder: (_, __) => const AppLockScreen(),
@@ -155,10 +133,6 @@ class RouteGenerator {
         path: AppRoutes.rootWarning,
         builder: (_, __) => const RootWarningScreen(),
       ),
-
-      // ==========================
-      // DEBUG SCREENS
-      // ==========================
       GoRoute(
         path: AppRoutes.biometricTest,
         builder: (_, __) => const BiometricTestScreen(),
@@ -167,12 +141,11 @@ class RouteGenerator {
         path: AppRoutes.debugBiometrics,
         builder: (_, __) => BiometricDebugScreen(),
       ),
-
-      // ==========================
-      // BOTTOM NAVIGATION
-      // ==========================
       ShellRoute(
-        builder: (context, state, child) => BottomNavShell(child: child),
+        builder: (context, state, child) => BlocProvider(
+          create: (_) => sl<HomeCubit>()..loadHomeData(),
+          child: BottomNavShell(child: child),
+        ),
         routes: [
           GoRoute(
             path: AppRoutes.home,
@@ -191,15 +164,11 @@ class RouteGenerator {
             builder: (_, __) => const SettingsScreen(),
           ),
           GoRoute(
-            path: AppRoutes.profile,
-            builder: (_, __) => const ProfileScreen(),
+            path: AppRoutes.myAccount,
+            builder: (_, __) => const MyAccountScreen(),
           ),
         ],
       ),
-
-      // ==========================
-      // DETAILS (NO BOTTOM NAV)
-      // ==========================
       GoRoute(
         path: '${AppRoutes.coinDetails}/:id',
         builder: (_, state) {
