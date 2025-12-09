@@ -31,7 +31,6 @@ class TrendingCryptoCard extends StatelessWidget {
 
     return Container(
       width: AppSizing.w192,
-      height: AppSizing.h110,
       padding: AppSpacing.paddingH16V14,
       decoration: BoxDecoration(
         color: theme.cardColor,
@@ -39,23 +38,26 @@ class TrendingCryptoCard extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          /// Name & Icon
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                name,
-                style: theme.textTheme.titleSmall!.copyWith(
-                  color: theme.brightness == Brightness.dark
-                      ? AppColors.lightSurface
-                      : AppColors.marketItem,
-                  height: 1.43,
-                  fontWeight: FontWeight.w500,
+              Expanded(
+                child: Text(
+                  name,
+                  style: theme.textTheme.titleSmall!.copyWith(
+                    color: theme.brightness == Brightness.dark
+                        ? AppColors.lightSurface
+                        : AppColors.marketItem,
+                    height: 1.2,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
-
-              /// Icon
+              AppSpacing.gapW8,
               Container(
                 height: AppSizing.h32,
                 width: AppSizing.w32,
@@ -67,38 +69,35 @@ class TrendingCryptoCard extends StatelessWidget {
               ),
             ],
           ),
-
-          /// Symbol
-          AppSpacing.gapH2,
+          AppSpacing.gapH4,
           Text(
             symbol,
             style: theme.textTheme.labelMedium!.copyWith(
-              height: 1.33,
+              height: 1.2,
               fontWeight: FontWeight.w400,
               color: theme.textTheme.bodySmall!.color!.withOpacity(0.6),
             ),
           ),
-
-          /// FIXED (removed Spacer)
-          SizedBox(height: AppSizing.h12),
-
-          /// Price & Percentage
+          const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              /// Price
-              Text(
-                price,
-                style: theme.textTheme.headlineMedium!.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: theme.brightness == Brightness.dark
-                      ? AppColors.lightSurface
-                      : AppColors.marketItem,
+              Flexible(
+                child: Text(
+                  price,
+                  style: theme.textTheme.headlineMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: theme.brightness == Brightness.dark
+                        ? AppColors.lightSurface
+                        : AppColors.marketItem,
+                    height: 1.0,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
-
-              /// Percentage
+              AppSpacing.gapW8,
               Row(
                 children: [
                   Text(
@@ -106,6 +105,7 @@ class TrendingCryptoCard extends StatelessWidget {
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.accentBlue,
                       fontWeight: FontWeight.w600,
+                      height: 1.0,
                     ),
                   ),
                   Text(
@@ -113,6 +113,7 @@ class TrendingCryptoCard extends StatelessWidget {
                     style: AppTextStyles.bodySmall.copyWith(
                       color: AppColors.accentBlue,
                       fontWeight: FontWeight.w400,
+                      height: 1.0,
                     ),
                   ),
                 ],
