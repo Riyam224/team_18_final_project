@@ -1,18 +1,17 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
-import 'package:team_18_final_project/core/config/storage_keys_config.dart';
+import '../../../data/datasources/auth_local_datasource.dart';
 import '../../../domain/usecases/store_biometric_settings_usecase.dart';
 import '../../../domain/failures/biometric_failure.dart';
 import 'biometric_setup_state.dart';
 
 class BiometricSetupCubit extends Cubit<BiometricSetupState> {
   final StoreBiometricSettingsUseCase storeSettings;
-  final ISecureStorage _secureStorage;
+  final AuthLocalDataSource _localDataSource;
 
   BiometricSetupCubit({
     required this.storeSettings,
-    required ISecureStorage secureStorage,
-  })  : _secureStorage = secureStorage,
+    required AuthLocalDataSource localDataSource,
+  })  : _localDataSource = localDataSource,
         super(BiometricSetupInitial());
 
   Future<void> saveBiometric({
@@ -22,21 +21,17 @@ class BiometricSetupCubit extends Cubit<BiometricSetupState> {
   }) async {
     emit(BiometricSetupSaving());
 
-    // Get stored credentials using ISecureStorage
-    final resolvedEmail = email ??
-      await _secureStorage.read(key: StorageKeysConfig.biometricEmail).then(
-        (result) => result.fold((_) => null, (value) => value),
-      );
+    final credentials = await _localDataSource.getBiometricCredentials();
 
-    final resolvedPassword = password ??
-      await _secureStorage.read(key: StorageKeysConfig.biometricPassword).then(
-        (result) => result.fold((_) => null, (value) => value),
-      );
+    final resolvedEmail = email ?? credentials?.email;
+    final resolvedPassword = password ?? credentials?.encryptedPassword;
 
-    // Validate that we have credentials
-    if (resolvedEmail == null || resolvedEmail.isEmpty ||
-        resolvedPassword == null || resolvedPassword.isEmpty) {
-      emit(BiometricSetupError('No stored credentials found for biometric setup.'));
+    if (resolvedEmail == null ||
+        resolvedEmail.isEmpty ||
+        resolvedPassword == null ||
+        resolvedPassword.isEmpty) {
+      emit(BiometricSetupError(
+          'No stored credentials found for biometric setup. Please log in first.'));
       return;
     }
 

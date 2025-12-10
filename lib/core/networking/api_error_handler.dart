@@ -3,7 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:team_18_final_project/core/error/auth_error_msg.dart';
 
 class ApiErrorHandler {
-  /// Converts Dio errors or generic exceptions into readable messages
+  /// Converts Dio errors or  generic exceptions into readable messages
   static String handleError(dynamic error) {
     if (error is DioException) {
       switch (error.type) {
@@ -25,7 +25,6 @@ class ApiErrorHandler {
           return ErrorMessages.unexpectedError;
       }
     } else {
-      // Handle non-Dio exceptions (logic, parsing, etc.)
       return ErrorMessages.getErrorMessage(error);
     }
   }
@@ -35,10 +34,8 @@ class ApiErrorHandler {
     final data = response?.data;
 
     if (data is Map<String, dynamic>) {
-      // todo If API returns a "message" field
       if (data.containsKey('message')) return data['message'];
 
-      //todo  If API returns structured validation errors
       if (data['errors'] is Map<String, dynamic>) {
         final errors = data['errors'];
 
@@ -58,7 +55,6 @@ class ApiErrorHandler {
       }
     }
 
-    // ✅ Handle based on status code
     switch (response?.statusCode) {
       case 400:
         return ErrorMessages.badRequest;

@@ -3,8 +3,6 @@ import 'package:team_18_final_project/features/auth/domain/validation/phone_vali
 
 void main() {
   group('PhoneValidator', () {
-
-
     group('validate', () {
       test('should return valid result for 10-digit phone number', () {
         const phone = '1234567890';

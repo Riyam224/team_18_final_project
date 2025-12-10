@@ -17,14 +17,17 @@ class SectionTitle extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(
-          title,
-          style: theme.textTheme.headlineSmall!.copyWith(
-            fontWeight: FontWeight.w600,
-            fontSize: 20.sp,
-            color: theme.brightness == Brightness.dark
-                ? AppColors.textWhite
-                : AppColors.primary,
+        Flexible(
+          child: Text(
+            title,
+            style: theme.textTheme.headlineSmall!.copyWith(
+              fontWeight: FontWeight.w600,
+              fontSize: 20.sp,
+              color: theme.brightness == Brightness.dark
+                  ? AppColors.textWhite
+                  : AppColors.primary,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
       ],

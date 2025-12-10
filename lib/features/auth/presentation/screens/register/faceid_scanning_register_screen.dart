@@ -72,7 +72,7 @@ class _FaceIDScanningRegisterContentState
 
       if (authenticated && mounted) {
         // Save biometric settings
-                context.read<BiometricSetupCubit>().saveBiometric(type: 'face');
+        context.read<BiometricSetupCubit>().saveBiometric(type: 'face');
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -125,7 +125,8 @@ class _FaceIDScanningRegisterContentState
         final isLoading = state is BiometricSetupSaving;
 
         return Scaffold(
-          backgroundColor: isDark ? const Color(0xFF0A1128) : const Color(0xFFF5F5F5),
+          backgroundColor:
+              isDark ? const Color(0xFF0A1128) : const Color(0xFFF5F5F5),
           body: Container(
             width: AppSizing.screenWidth,
             height: AppSizing.screenHeight,

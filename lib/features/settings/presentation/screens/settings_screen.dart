@@ -19,6 +19,7 @@ import 'package:team_18_final_project/core/security/interfaces/i_biometric_servi
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/features/auth/domain/repositories/auth_repository.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -39,6 +40,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   late final IAppLockService _appLockService;
   late final IAuditLogService _auditLogService;
   late final ISessionManager _sessionManager;
+  late final AuthRepository _authRepository;
 
   @override
   void initState() {
@@ -48,21 +50,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _appLockService = sl<IAppLockService>();
     _auditLogService = sl<IAuditLogService>();
     _sessionManager = sl<ISessionManager>();
+    _authRepository = sl<AuthRepository>();
     _loadData();
   }
 
   Future<void> _loadData() async {
     // Load avatar path
-    final avatarResult = await _secureStorage.read(key: StorageKeysConfig.avatarUrl);
+    final avatarResult =
+        await _secureStorage.read(key: StorageKeysConfig.avatarUrl);
     final avatar = avatarResult.fold((failure) => null, (value) => value);
 
     // Load biometric enabled
-    final enabledResult = await _secureStorage.read(key: StorageKeysConfig.biometricEnabled);
-    final enabled = enabledResult.fold((failure) => false, (value) => value == 'true');
+    final enabledResult =
+        await _secureStorage.read(key: StorageKeysConfig.biometricEnabled);
+    final enabled =
+        enabledResult.fold((failure) => false, (value) => value == 'true');
 
     // Check biometric availability
     final availableResult = await _biometricService.isAvailable();
-    final available = availableResult.fold((failure) => false, (value) => value);
+    final available =
+        availableResult.fold((failure) => false, (value) => value);
 
     // Get auto-lock timeout
     final timeoutResult = await _appLockService.getAutoLockTimeout();
@@ -86,12 +93,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   ImageProvider _avatarProvider() {
     if (_avatarPath != null && _avatarPath!.isNotEmpty) {
+      if (_avatarPath!.startsWith('assets/')) {
+        return AssetImage(_avatarPath!);
+      }
       if (_avatarPath!.startsWith('http')) {
         return NetworkImage(_avatarPath!);
       }
       return FileImage(File(_avatarPath!));
     }
-    return AssetImage(AppAssets.profile);
+    return const AssetImage(AppAssets.profileGirl);
   }
 
   Future<void> _toggleBiometric(bool value) async {
@@ -127,7 +137,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
 
     await _auditLogService.log(
-      event: 'Auto-lock timeout set to ${seconds == 0 ? 'Never' : '${seconds}s'}',
+      event:
+          'Auto-lock timeout set to ${seconds == 0 ? 'Never' : '${seconds}s'}',
       metadata: {'type': 'security'},
     );
 
@@ -169,7 +180,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           ),
                         ),
                         TextButton(
-                          onPressed: () => context.push(AppRoutes.profile),
+                          onPressed: () => context.push(AppRoutes.myAccount),
                           child: const Text('View / edit profile'),
                         ),
                       ],
@@ -235,17 +246,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ElevatedButton(
                   onPressed: () async {
                     final messenger = ScaffoldMessenger.of(context);
-
-                    await _sessionManager.endSession();
+                    final router = GoRouter.of(context);
 
                     await _auditLogService.log(
                       event: 'User logged out from settings',
                       metadata: {'type': 'auth'},
                     );
 
+                    // Sign out: clears session and user data while preserving biometric credentials
+                    await _authRepository.signOut();
+                    await _sessionManager.endSession();
+
+                    // Reset DI container AFTER signing out
+                    // This ensures biometric credentials are preserved before DI reset
+                    await resetDependencies();
+
                     if (!mounted) return;
+                    router.go(AppRoutes.login);
                     messenger.showSnackBar(
-                      const SnackBar(content: Text('Session ended')),
+                      const SnackBar(content: Text('Logged out successfully')),
                     );
                   },
                   child: const Text('Logout'),

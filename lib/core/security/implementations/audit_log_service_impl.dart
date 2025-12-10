@@ -72,7 +72,8 @@ class AuditLogServiceImpl implements IAuditLogService {
   }
 
   @override
-  Future<Either<Failure, List<AuditLogEntry>>> getRecent({int limit = 50}) async {
+  Future<Either<Failure, List<AuditLogEntry>>> getRecent(
+      {int limit = 50}) async {
     try {
       final logs = await _readLogs();
       final recentLogs = logs.take(limit).toList();
@@ -155,7 +156,8 @@ class AuditLogServiceImpl implements IAuditLogService {
         try {
           final List<dynamic> decoded = jsonDecode(jsonString);
           return decoded
-              .map((json) => AuditLogEntry.fromJson(json as Map<String, dynamic>))
+              .map((json) =>
+                  AuditLogEntry.fromJson(json as Map<String, dynamic>))
               .toList();
         } catch (e) {
           return [];

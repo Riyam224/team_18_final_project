@@ -28,8 +28,8 @@ class CryptoPriceDisplay extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(AppStrings.btc,
-                style:
-                    theme.textTheme.labelLarge!.copyWith(color: AppColors.gray2)),
+                style: theme.textTheme.labelLarge!
+                    .copyWith(color: AppColors.gray2)),
           ],
         ),
         investmentGrowthButton(context)
@@ -45,8 +45,8 @@ class CryptoPriceDisplay extends StatelessWidget {
         style: ButtonStyle(
             shape: WidgetStateProperty.all(RoundedRectangleBorder(
                 borderRadius: BorderRadiusGeometry.circular(8.r))),
-            backgroundColor:
-                WidgetStateProperty.all(isDark ? AppColors.lightSurface : AppColors.primary),
+            backgroundColor: WidgetStateProperty.all(
+                isDark ? AppColors.lightSurface : AppColors.primary),
             padding: WidgetStateProperty.all<EdgeInsets>(
                 EdgeInsets.symmetric(horizontal: 8, vertical: 8).r),
             minimumSize: WidgetStateProperty.all<Size>(Size(70.w, 32.h)),
@@ -56,12 +56,15 @@ class CryptoPriceDisplay extends StatelessWidget {
           children: [
             Icon(Icons.arrow_outward_rounded,
                 fontWeight: FontWeight.w700,
-                color: isDark ? AppColors.darkBackground : AppColors.lightSurface),
+                color:
+                    isDark ? AppColors.darkBackground : AppColors.lightSurface),
             AppSpacing.horizontal(4),
             Text(AppStrings.percentage,
                 style: theme.textTheme.labelLarge?.copyWith(
                     fontSize: 12.sp,
-                    color: isDark ? AppColors.darkBackground : AppColors.lightSurface)),
+                    color: isDark
+                        ? AppColors.darkBackground
+                        : AppColors.lightSurface)),
           ],
         ));
   }

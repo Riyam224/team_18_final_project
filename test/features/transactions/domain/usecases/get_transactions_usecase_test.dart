@@ -56,8 +56,7 @@ void main() {
 
     test('should return empty list when no transactions exist', () async {
       // Arrange
-      when(() => mockRepository.getTransactions())
-          .thenAnswer((_) async => []);
+      when(() => mockRepository.getTransactions()).thenAnswer((_) async => []);
 
       // Act
       final result = await useCase();
