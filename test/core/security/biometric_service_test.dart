@@ -26,60 +26,60 @@ void main() {
         when(() => mockLocalAuth.canCheckBiometrics)
             .thenAnswer((_) async => true);
         when(() => mockLocalAuth.isDeviceSupported())
-          .thenAnswer((_) async => true);
+            .thenAnswer((_) async => true);
 
-      // Act
-      final result = await biometricService.isAvailable();
+        // Act
+        final result = await biometricService.isAvailable();
 
-      // Assert
-      expect(result.isRight(), true);
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isAvailable) => expect(isAvailable, isTrue),
-      );
-    });
+        // Assert
+        expect(result.isRight(), true);
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isAvailable) => expect(isAvailable, isTrue),
+        );
+      });
 
-    test('should return false when biometrics are not available', () async {
-      // Arrange
-      when(() => mockLocalAuth.canCheckBiometrics)
-          .thenAnswer((_) async => false);
-      when(() => mockLocalAuth.isDeviceSupported())
-          .thenAnswer((_) async => true);
+      test('should return false when biometrics are not available', () async {
+        // Arrange
+        when(() => mockLocalAuth.canCheckBiometrics)
+            .thenAnswer((_) async => false);
+        when(() => mockLocalAuth.isDeviceSupported())
+            .thenAnswer((_) async => true);
 
-      // Act
-      final result = await biometricService.isAvailable();
+        // Act
+        final result = await biometricService.isAvailable();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isAvailable) => expect(isAvailable, isFalse),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isAvailable) => expect(isAvailable, isFalse),
+        );
+      });
 
-    test('should return false when device is not supported', () async {
-      // Arrange
-      when(() => mockLocalAuth.isDeviceSupported())
-          .thenAnswer((_) async => false);
+      test('should return false when device is not supported', () async {
+        // Arrange
+        when(() => mockLocalAuth.isDeviceSupported())
+            .thenAnswer((_) async => false);
 
-      // Act
-      final result = await biometricService.isAvailable();
+        // Act
+        final result = await biometricService.isAvailable();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isAvailable) => expect(isAvailable, isFalse),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isAvailable) => expect(isAvailable, isFalse),
+        );
+      });
 
-    test('should handle errors and return BiometricFailure', () async {
-      // Arrange
-      when(() => mockLocalAuth.isDeviceSupported())
-          .thenThrow(Exception('Device error'));
+      test('should handle errors and return BiometricFailure', () async {
+        // Arrange
+        when(() => mockLocalAuth.isDeviceSupported())
+            .thenThrow(Exception('Device error'));
 
-      // Act
-      final result = await biometricService.isAvailable();
+        // Act
+        final result = await biometricService.isAvailable();
 
-      // Assert
+        // Assert
         expect(result.isLeft(), true);
       });
     },
@@ -89,78 +89,79 @@ void main() {
   group(
     'BiometricService - getAvailableBiometrics',
     () {
-    test('should return fingerprint when available', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenAnswer((_) async => [BiometricType.fingerprint]);
+      test('should return fingerprint when available', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenAnswer((_) async => [BiometricType.fingerprint]);
 
-      // Act
-      final result = await biometricService.getAvailableBiometrics();
+        // Act
+        final result = await biometricService.getAvailableBiometrics();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (biometrics) {
-          expect(biometrics.length, 1);
-          expect(biometrics.first, AvailableBiometricType.fingerprint);
-        },
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (biometrics) {
+            expect(biometrics.length, 1);
+            expect(biometrics.first, AvailableBiometricType.fingerprint);
+          },
+        );
+      });
 
-    test('should return face when available', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenAnswer((_) async => [BiometricType.face]);
+      test('should return face when available', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenAnswer((_) async => [BiometricType.face]);
 
-      // Act
-      final result = await biometricService.getAvailableBiometrics();
+        // Act
+        final result = await biometricService.getAvailableBiometrics();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (biometrics) {
-          expect(biometrics.length, 1);
-          expect(biometrics.first, AvailableBiometricType.face);
-        },
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (biometrics) {
+            expect(biometrics.length, 1);
+            expect(biometrics.first, AvailableBiometricType.face);
+          },
+        );
+      });
 
-    test('should return multiple biometric types', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenAnswer((_) async => [
-                BiometricType.fingerprint,
-                BiometricType.face,
-              ]);
+      test('should return multiple biometric types', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenAnswer((_) async => [
+                  BiometricType.fingerprint,
+                  BiometricType.face,
+                ]);
 
-      // Act
-      final result = await biometricService.getAvailableBiometrics();
+        // Act
+        final result = await biometricService.getAvailableBiometrics();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (biometrics) {
-          expect(biometrics.length, 2);
-          expect(biometrics.contains(AvailableBiometricType.fingerprint), true);
-          expect(biometrics.contains(AvailableBiometricType.face), true);
-        },
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (biometrics) {
+            expect(biometrics.length, 2);
+            expect(
+                biometrics.contains(AvailableBiometricType.fingerprint), true);
+            expect(biometrics.contains(AvailableBiometricType.face), true);
+          },
+        );
+      });
 
-    test('should return empty list when no biometrics available', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenAnswer((_) async => []);
+      test('should return empty list when no biometrics available', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenAnswer((_) async => []);
 
-      // Act
-      final result = await biometricService.getAvailableBiometrics();
+        // Act
+        final result = await biometricService.getAvailableBiometrics();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (biometrics) => expect(biometrics.isEmpty, true),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (biometrics) => expect(biometrics.isEmpty, true),
+        );
+      });
     },
     skip: 'Requires device biometrics; skipping in CI for now.',
   );
@@ -168,80 +169,80 @@ void main() {
   group(
     'BiometricService - authenticate',
     () {
-    const localizedReason = 'Verify your identity';
+      const localizedReason = 'Verify your identity';
 
-    test('should authenticate successfully', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenAnswer((_) async => [BiometricType.fingerprint]);
-      when(() => mockLocalAuth.canCheckBiometrics)
-          .thenAnswer((_) async => true);
-      when(() => mockLocalAuth.isDeviceSupported())
-          .thenAnswer((_) async => true);
-      when(() => mockLocalAuth.authenticate(
-            localizedReason: any(named: 'localizedReason'),
-            biometricOnly: any(named: 'biometricOnly'),
-          )).thenAnswer((_) async => true);
+      test('should authenticate successfully', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenAnswer((_) async => [BiometricType.fingerprint]);
+        when(() => mockLocalAuth.canCheckBiometrics)
+            .thenAnswer((_) async => true);
+        when(() => mockLocalAuth.isDeviceSupported())
+            .thenAnswer((_) async => true);
+        when(() => mockLocalAuth.authenticate(
+              localizedReason: any(named: 'localizedReason'),
+              biometricOnly: any(named: 'biometricOnly'),
+            )).thenAnswer((_) async => true);
 
-      // Act
-      final result = await biometricService.authenticate(
-        localizedReason: localizedReason,
-      );
+        // Act
+        final result = await biometricService.authenticate(
+          localizedReason: localizedReason,
+        );
 
-      // Assert
-      expect(result.isRight(), true);
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (authenticated) => expect(authenticated, isTrue),
-      );
-    });
+        // Assert
+        expect(result.isRight(), true);
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (authenticated) => expect(authenticated, isTrue),
+        );
+      });
 
-    test('should return false when authentication fails', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenAnswer((_) async => [BiometricType.fingerprint]);
-      when(() => mockLocalAuth.canCheckBiometrics)
-          .thenAnswer((_) async => true);
-      when(() => mockLocalAuth.isDeviceSupported())
-          .thenAnswer((_) async => true);
-      when(() => mockLocalAuth.authenticate(
-            localizedReason: any(named: 'localizedReason'),
-            biometricOnly: any(named: 'biometricOnly'),
-          )).thenAnswer((_) async => false);
+      test('should return false when authentication fails', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenAnswer((_) async => [BiometricType.fingerprint]);
+        when(() => mockLocalAuth.canCheckBiometrics)
+            .thenAnswer((_) async => true);
+        when(() => mockLocalAuth.isDeviceSupported())
+            .thenAnswer((_) async => true);
+        when(() => mockLocalAuth.authenticate(
+              localizedReason: any(named: 'localizedReason'),
+              biometricOnly: any(named: 'biometricOnly'),
+            )).thenAnswer((_) async => false);
 
-      // Act
-      final result = await biometricService.authenticate(
-        localizedReason: localizedReason,
-      );
+        // Act
+        final result = await biometricService.authenticate(
+          localizedReason: localizedReason,
+        );
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (authenticated) => expect(authenticated, isFalse),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (authenticated) => expect(authenticated, isFalse),
+        );
+      });
 
-    test('should handle authentication errors', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenAnswer((_) async => [BiometricType.fingerprint]);
-      when(() => mockLocalAuth.canCheckBiometrics)
-          .thenAnswer((_) async => true);
-      when(() => mockLocalAuth.isDeviceSupported())
-          .thenAnswer((_) async => true);
-      when(() => mockLocalAuth.authenticate(
-            localizedReason: any(named: 'localizedReason'),
-            biometricOnly: any(named: 'biometricOnly'),
-          )).thenThrow(Exception('Auth error'));
+      test('should handle authentication errors', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenAnswer((_) async => [BiometricType.fingerprint]);
+        when(() => mockLocalAuth.canCheckBiometrics)
+            .thenAnswer((_) async => true);
+        when(() => mockLocalAuth.isDeviceSupported())
+            .thenAnswer((_) async => true);
+        when(() => mockLocalAuth.authenticate(
+              localizedReason: any(named: 'localizedReason'),
+              biometricOnly: any(named: 'biometricOnly'),
+            )).thenThrow(Exception('Auth error'));
 
-      // Act
-      final result = await biometricService.authenticate(
-        localizedReason: localizedReason,
-      );
+        // Act
+        final result = await biometricService.authenticate(
+          localizedReason: localizedReason,
+        );
 
-      // Assert
-      expect(result.isLeft(), true);
-    });
+        // Assert
+        expect(result.isLeft(), true);
+      });
     },
     skip: 'Requires device biometrics; skipping in CI for now.',
   );
@@ -249,48 +250,48 @@ void main() {
   group(
     'BiometricService - isEnrolled',
     () {
-    test('should return true when biometrics are enrolled', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenAnswer((_) async => [BiometricType.fingerprint]);
+      test('should return true when biometrics are enrolled', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenAnswer((_) async => [BiometricType.fingerprint]);
 
-      // Act
-      final result = await biometricService.isEnrolled();
+        // Act
+        final result = await biometricService.isEnrolled();
 
-      // Assert
-      expect(result.isRight(), true);
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isEnrolled) => expect(isEnrolled, isTrue),
-      );
-    });
+        // Assert
+        expect(result.isRight(), true);
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isEnrolled) => expect(isEnrolled, isTrue),
+        );
+      });
 
-    test('should return false when no biometrics are enrolled', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenAnswer((_) async => []);
+      test('should return false when no biometrics are enrolled', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenAnswer((_) async => []);
 
-      // Act
-      final result = await biometricService.isEnrolled();
+        // Act
+        final result = await biometricService.isEnrolled();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isEnrolled) => expect(isEnrolled, isFalse),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isEnrolled) => expect(isEnrolled, isFalse),
+        );
+      });
 
-    test('should handle errors when checking enrollment', () async {
-      // Arrange
-      when(() => mockLocalAuth.getAvailableBiometrics())
-          .thenThrow(Exception('Enrollment check error'));
+      test('should handle errors when checking enrollment', () async {
+        // Arrange
+        when(() => mockLocalAuth.getAvailableBiometrics())
+            .thenThrow(Exception('Enrollment check error'));
 
-      // Act
-      final result = await biometricService.isEnrolled();
+        // Act
+        final result = await biometricService.isEnrolled();
 
-      // Assert
-      expect(result.isLeft(), true);
-    });
+        // Assert
+        expect(result.isLeft(), true);
+      });
     },
     skip: 'Requires device biometrics; skipping in CI for now.',
   );
@@ -298,29 +299,29 @@ void main() {
   group(
     'BiometricService - stopAuthentication',
     () {
-    test('should call stopAuthentication on localAuth', () async {
-      // Arrange
-      when(() => mockLocalAuth.stopAuthentication())
-          .thenAnswer((_) async => true);
+      test('should call stopAuthentication on localAuth', () async {
+        // Arrange
+        when(() => mockLocalAuth.stopAuthentication())
+            .thenAnswer((_) async => true);
 
-      // Act
-      await biometricService.stopAuthentication();
+        // Act
+        await biometricService.stopAuthentication();
 
-      // Assert
-      verify(() => mockLocalAuth.stopAuthentication()).called(1);
-    });
+        // Assert
+        verify(() => mockLocalAuth.stopAuthentication()).called(1);
+      });
 
-    test('should handle errors during stop authentication', () async {
-      // Arrange
-      when(() => mockLocalAuth.stopAuthentication())
-          .thenThrow(Exception('Stop error'));
+      test('should handle errors during stop authentication', () async {
+        // Arrange
+        when(() => mockLocalAuth.stopAuthentication())
+            .thenThrow(Exception('Stop error'));
 
-      // Act & Assert - should not throw
-      expect(
-        () => biometricService.stopAuthentication(),
-        returnsNormally,
-      );
-    });
+        // Act & Assert - should not throw
+        expect(
+          () => biometricService.stopAuthentication(),
+          returnsNormally,
+        );
+      });
     },
     skip: 'Requires device biometrics; skipping in CI for now.',
   );

@@ -54,6 +54,14 @@
 	<key>NSFaceIDUsageDescription</key>
 	<string>Your face data is used to securely authenticate you.</string>
 
+	<!-- Photos/Camera access for avatar upload -->
+	<key>NSCameraUsageDescription</key>
+	<string>Allow access to take a profile photo.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow access to choose a profile photo.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Allow saving your selected profile photo.</string>
+
 	<!-- 🟩 ADDED: Needed for encrypted secure storage & biometrics -->
 	<key>KeychainAccessGroups</key>
 	<array>

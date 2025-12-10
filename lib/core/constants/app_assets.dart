@@ -1,5 +1,4 @@
 class AppAssets {
-  // Splash & Onboarding
   static const splashBg = 'assets/images/splash_bg.png';
   static const splashDarkIcon = 'assets/icons/splash_dark_icon.svg';
   static const splashLightIcon = 'assets/icons/splash_light_icon.svg';
@@ -7,9 +6,9 @@ class AppAssets {
   static const onboarding2 = 'assets/images/onboarding_image2.png';
   static const onboarding3 = 'assets/images/onboarding_image3.png';
   static const onboarding4 = 'assets/images/onboarding_image4.png';
-  static const profile = 'assets/images/profile.png';
+  static const profileMan = 'assets/images/profile_man.png';
+  static const profileGirl = 'assets/images/profile_girl.png';
 
-  // Navigation Icons
   static const home = 'assets/icons/home.svg';
   static const homeFilled = 'assets/icons/home_filled.svg';
 
@@ -23,10 +22,8 @@ class AppAssets {
   static const settingsFilled = 'assets/icons/settings_filled.svg';
 
 
-
-
   // rahma settings
-  static const settingsAccount = 'assets/icons/my_account.svg';
+    static const settingsAccount = 'assets/icons/my_account.svg';
     static const settingsBilling = 'assets/icons/Wallet.svg';
     static const settingsFAQ = 'assets/icons/Frame.svg';
     static const settingsLanguage = 'assets/icons/Discovery.svg';
@@ -56,7 +53,6 @@ class AppAssets {
   static const outlinedCircleDark = 'assets/icons/outlined_circle_dark.svg';
   static const outlinedCircleWhite = 'assets/icons/outlined_circle_white.svg';
 
-  // Market/Crypto SVG Icons
   static const String infoOutline = "assets/icons/info_outline.svg";
   static const String bitcoinIcon = 'assets/icons/bitcoin.svg';
   static const String ethLight = 'assets/icons/eth_light.svg';
@@ -75,7 +71,6 @@ class AppAssets {
       'assets/icons/keyboard_arrow_left.svg';
   static const String keyboardArrowUp = 'assets/icons/keyboard_arrow_up.svg';
 
-  //PNG
   static const String eMVChip = 'assets/images/emv_chip.png';
   static const String appleCard = 'assets/images/apple_card.png';
   static const String googlePayLogo = 'assets/images/google_pay_logo.png';

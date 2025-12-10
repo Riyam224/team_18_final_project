@@ -38,7 +38,8 @@ void main() {
         expect(result.isValid, true);
       });
 
-      test('should return valid result for email with dots and underscores', () {
+      test('should return valid result for email with dots and underscores',
+          () {
         // Arrange
         const email = 'user.name_test@example.com';
 

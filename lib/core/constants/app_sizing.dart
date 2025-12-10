@@ -19,6 +19,8 @@ class AppSizing {
   static double get h30 => 30.h;
   static double get h32 => 32.h;
   static double get h33 => 33.h;
+  static double get h36 => 36.h;
+  static double get h38 => 38.h;
   static double get h40 => 40.h;
   static double get h44 => 44.h;
   static double get h45 => 45.h;
@@ -69,6 +71,8 @@ class AppSizing {
   static double get w25 => 25.w;
   static double get w28 => 28.w;
   static double get w32 => 32.w;
+  static double get w36 => 36.w;
+  static double get w38 => 38.w;
   static double get w39 => 39.w;
   static double get w40 => 40.w;
   static double get w48 => 48.w;
@@ -113,6 +117,7 @@ class AppSizing {
   static double get radiusXSmall => 4.r;
   static double get radiusSmall => 10.r;
   static double get radius12 => 12.r;
+  static double get radius14 => 14.r;
   static double get radius16 => 16.r;
   static double get radius20 => 20.r;
   static double get radius22 => 22.r;
@@ -148,12 +153,17 @@ class AppSizing {
   static double get borderThin => 1.w;
   static double get borderMedium => 1.6.w;
   static double get borderThick => 2.w;
+  static double get borderDonut => 18.w;
   static double get dividerThickness => 1.h;
 
   // ========= SHADOWS =========
 
   static double get shadowBlurRadius => 2.r;
   static double get shadowOffsetY => 1.h;
+  static double get shadowBlurMedium => 10.r;
+  static double get shadowBlurLarge => 12.r;
+  static double get shadowOffsetMedium => 6.h;
+  static double get shadowOffsetLarge => 8.h;
 
   // ========= SPECIAL POSITIONS (Auth feature specific) =========
 

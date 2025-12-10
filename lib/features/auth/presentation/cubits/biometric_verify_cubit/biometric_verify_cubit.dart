@@ -27,7 +27,8 @@ class BiometricVerifyCubit extends Cubit<BiometricVerifyState> {
 
   Future<void> verify() async {
     if (_hasStarted) {
-      debugPrint('BiometricVerifyCubit.verify already started, skipping duplicate call');
+      debugPrint(
+          'BiometricVerifyCubit.verify already started, skipping duplicate call');
       return;
     }
     if (isClosed) return;

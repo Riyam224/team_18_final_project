@@ -29,8 +29,10 @@ class AuditLogConfig {
   static const String appUnlockedMessage = 'App unlocked';
   static const String userLoggedInMessage = 'User logged in';
   static const String userLoggedOutMessage = 'User logged out';
-  static const String biometricAuthSuccessMessage = 'Biometric authentication successful';
-  static const String biometricAuthFailedMessage = 'Biometric authentication failed';
+  static const String biometricAuthSuccessMessage =
+      'Biometric authentication successful';
+  static const String biometricAuthFailedMessage =
+      'Biometric authentication failed';
   static const String passwordChangedMessage = 'Password changed';
   static const String settingsChangedMessage = 'Settings changed';
 

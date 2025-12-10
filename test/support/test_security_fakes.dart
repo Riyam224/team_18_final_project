@@ -48,7 +48,8 @@ class InMemorySecureStorage implements ISecureStorage {
   }
 
   @override
-  Future<Either<StorageFailure, bool>> containsKey({required String key}) async {
+  Future<Either<StorageFailure, bool>> containsKey(
+      {required String key}) async {
     return Right(_store.containsKey(key));
   }
 
@@ -67,8 +68,7 @@ class NoopBiometricService implements IBiometricService {
 
   @override
   Future<Either<BiometricFailure, List<AvailableBiometricType>>>
-      getAvailableBiometrics() async =>
-          const Right([]);
+      getAvailableBiometrics() async => const Right([]);
 
   @override
   Future<Either<BiometricFailure, bool>> isAvailable() async =>
@@ -140,7 +140,8 @@ class InMemorySessionManager implements ISessionManager {
   }
 
   @override
-  Future<Either<SessionFailure, void>> extendSession({Duration? extension}) async {
+  Future<Either<SessionFailure, void>> extendSession(
+      {Duration? extension}) async {
     if (_session == null) return const Right(null);
     _timeout += extension ?? const Duration(minutes: 5);
     return const Right(null);
@@ -197,8 +198,7 @@ class InMemoryAppLockService implements IAppLockService {
   Future<Either<Failure, void>> disableAutoLock() async => const Right(null);
 
   @override
-  Future<Either<Failure, bool>> isAutoLockEnabled() async =>
-      const Right(true);
+  Future<Either<Failure, bool>> isAutoLockEnabled() async => const Right(true);
 
   @override
   Future<Either<Failure, Duration>> getAutoLockTimeout() async =>
@@ -230,7 +230,8 @@ class NoopAuditLogService implements IAuditLogService {
       const Right(<AuditLogEntry>[]);
 
   @override
-  Future<Either<Failure, List<AuditLogEntry>>> getRecent({int limit = 50}) async =>
+  Future<Either<Failure, List<AuditLogEntry>>> getRecent(
+          {int limit = 50}) async =>
       const Right(<AuditLogEntry>[]);
 
   @override
@@ -241,8 +242,7 @@ class NoopAuditLogService implements IAuditLogService {
       const Right(null);
 }
 
-class NoopScreenshotPreventionService
-    implements IScreenshotPreventionService {
+class NoopScreenshotPreventionService implements IScreenshotPreventionService {
   @override
   Future<Either<Failure, void>> disable() async => const Right(null);
 
@@ -267,12 +267,10 @@ class NoopScreenshotPreventionService
 
 class NoopRootDetectionService implements IRootDetectionService {
   @override
-  Future<Either<Failure, bool>> isDeviceRooted() async =>
-      const Right(false);
+  Future<Either<Failure, bool>> isDeviceRooted() async => const Right(false);
 
   @override
-  Future<Either<Failure, bool>> isOnEmulator() async =>
-      const Right(false);
+  Future<Either<Failure, bool>> isOnEmulator() async => const Right(false);
 
   @override
   Future<Either<Failure, bool>> isMockLocationEnabled() async =>
@@ -290,8 +288,7 @@ class NoopRootDetectionService implements IRootDetectionService {
       ));
 
   @override
-  Future<Either<Failure, bool>> isDeviceSecure() async =>
-      const Right(true);
+  Future<Either<Failure, bool>> isDeviceSecure() async => const Right(true);
 }
 
 class NoopBlurService implements IBlurService {

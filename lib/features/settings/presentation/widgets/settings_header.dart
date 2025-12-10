@@ -25,7 +25,7 @@ class SettingsHeader extends StatelessWidget {
               backgroundColor: isDark ? AppColors.darkBackAvatar : AppColors.backAvatar,
               child: ClipOval(
                 child: Image.asset(
-                  AppAssets.profile, 
+                  AppAssets.profileMan, 
                   fit: BoxFit.cover,
                   width: AppSizing.w92,
                   height: AppSizing.h92,

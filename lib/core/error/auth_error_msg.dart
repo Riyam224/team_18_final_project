@@ -1,3 +1,5 @@
+import 'package:team_18_final_project/core/config/validation_messages_config.dart';
+
 class ErrorMessages {
   // Network Errors
   static const timeout = 'Connection timed out. Please try again.';
@@ -15,12 +17,11 @@ class ErrorMessages {
   static const registrationSuccess = 'Registration successful!';
   static const loginSuccess = 'Login successful!';
 
-  // Validation Messages
-  static const emptyFields = 'Please fill all fields';
-  static const invalidEmail = 'Please enter a valid email address';
-  static const weakPassword = 'Password is too weak';
-  static const invalidUsername =
-      'Please enter your full name (first and last name)';
+  // Validation Messages - Delegated to ValidationMessagesConfig
+  static const emptyFields = ValidationMessagesConfig.allFieldsRequired;
+  static const invalidEmail = ValidationMessagesConfig.emailInvalid;
+  static const weakPassword = ValidationMessagesConfig.passwordTooWeak;
+  static const invalidUsername = ValidationMessagesConfig.fullNameRequired;
 
   static String getErrorMessage(dynamic error) => error.toString();
 
@@ -47,20 +48,20 @@ class ErrorMessages {
       return emptyFields;
     }
 
-    if (password.length < 8) {
-      return 'Password must be at least 8 characters';
+    if (password.length < ValidationMessagesConfig.passwordMinLength) {
+      return ValidationMessagesConfig.passwordTooShort;
     }
 
     if (!password.contains(RegExp(r'[A-Z]'))) {
-      return 'Password must contain at least one uppercase letter';
+      return ValidationMessagesConfig.passwordMissingUppercase;
     }
 
     if (!password.contains(RegExp(r'[0-9]'))) {
-      return 'Password must contain at least one number';
+      return ValidationMessagesConfig.passwordMissingNumber;
     }
 
     if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
-      return 'Password must contain at least one special character';
+      return ValidationMessagesConfig.passwordMissingSpecialChar;
     }
 
     return null;

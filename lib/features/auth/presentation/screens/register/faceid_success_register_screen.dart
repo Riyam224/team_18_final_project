@@ -21,7 +21,8 @@ class FaceidSuccessRegisterScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
-      backgroundColor: isDark ? const Color(0xFF0A1128) : const Color(0xFFF5F5F5),
+      backgroundColor:
+          isDark ? const Color(0xFF0A1128) : const Color(0xFFF5F5F5),
       body: Container(
         width: AppSizing.screenWidth,
         height: AppSizing.screenHeight,

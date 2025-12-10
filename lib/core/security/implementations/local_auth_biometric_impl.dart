@@ -109,8 +109,9 @@ class LocalAuthBiometricImpl implements IBiometricService {
 
       // Attempt authentication
       final authenticated = await _localAuth.authenticate(
-        localizedReason:
-            localizedReason.isEmpty ? SecurityConfig.defaultBiometricReason : localizedReason,
+        localizedReason: localizedReason.isEmpty
+            ? SecurityConfig.defaultBiometricReason
+            : localizedReason,
         biometricOnly: true,
       );
 
@@ -154,8 +155,8 @@ class LocalAuthBiometricImpl implements IBiometricService {
       return availableBiometricsResult.fold(
         (failure) => Left(failure),
         (types) {
-          final hasEnrolled = types.isNotEmpty &&
-              !types.contains(AvailableBiometricType.none);
+          final hasEnrolled =
+              types.isNotEmpty && !types.contains(AvailableBiometricType.none);
           return Right(hasEnrolled);
         },
       );

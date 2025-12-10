@@ -16,8 +16,6 @@ import 'package:team_18_final_project/features/auth/domain/repositories/auth_rep
 import 'package:team_18_final_project/features/auth/domain/validation/email_validator.dart';
 import 'package:team_18_final_project/features/auth/domain/validation/password_validator.dart';
 
-/// Clean Architecture implementation of AuthRepository
-/// Coordinates between remote (Firebase) and local (secure storage) data sources
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
   final AuthLocalDataSource _localDataSource;
@@ -34,7 +32,6 @@ class AuthRepositoryImpl implements AuthRepository {
     String password,
   ) async {
     try {
-      // Validate inputs
       final emailValidation = EmailValidator.validate(email);
       if (!emailValidation.isValid) {
         return Left(InvalidEmailFailure(message: emailValidation.error!));
@@ -45,20 +42,17 @@ class AuthRepositoryImpl implements AuthRepository {
         return const Left(InvalidCredentialsFailure());
       }
 
-      // Sign in with Firebase
       final user = await _remoteDataSource.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Create session entity
       final session = AuthSessionEntity(
         userId: user.id,
-        token: user.id, // In production, use actual JWT token
+        token: user.id,
         startedAt: DateTime.now(),
       );
 
-      // Cache session and user data locally
       await _localDataSource.cacheSession(session);
       await _localDataSource.cacheUser(user);
 
@@ -77,21 +71,21 @@ class AuthRepositoryImpl implements AuthRepository {
     RegisterUserEntity registerUser,
   ) async {
     try {
-      // Validate inputs
       final emailValidation = EmailValidator.validate(registerUser.email);
       if (!emailValidation.isValid) {
         return Left(InvalidEmailFailure(message: emailValidation.error!));
       }
 
-      final passwordValidation = PasswordValidator.validate(registerUser.password);
+      final passwordValidation =
+          PasswordValidator.validate(registerUser.password);
       if (!passwordValidation.isValid) {
         return Left(
           WeakPasswordFailure(message: passwordValidation.error!),
         );
       }
 
-      // Register with Firebase
-      final displayName = '${registerUser.firstName} ${registerUser.lastName}'.trim();
+      final displayName =
+          '${registerUser.firstName} ${registerUser.lastName}'.trim();
       final user = await _remoteDataSource.registerWithEmailAndPassword(
         email: registerUser.email,
         password: registerUser.password,
@@ -99,18 +93,15 @@ class AuthRepositoryImpl implements AuthRepository {
         phoneNumber: registerUser.phone.isNotEmpty ? registerUser.phone : null,
       );
 
-      // Create session entity
       final session = AuthSessionEntity(
         userId: user.id,
         token: user.id,
         startedAt: DateTime.now(),
       );
 
-      // Cache session and user data locally
       await _localDataSource.cacheSession(session);
       await _localDataSource.cacheUser(user);
 
-      // Cache user settings with biometric preference
       final settings = UserSettingsEntity(
         userId: user.id,
         biometricEnabled: registerUser.biometricEnabled,
@@ -169,6 +160,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
       await _localDataSource.cacheBiometricCredentials(credentials);
       await _localDataSource.setBiometricEnabled(true);
+      await _localDataSource.storeUserEmail(email);
 
       return const Right(null);
     } catch (e) {
@@ -240,15 +232,29 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  @override
+  Future<Either<AuthFailure, void>> storeUserEmail(String email) async {
+    try {
+      await _localDataSource.storeUserEmail(email);
+      return const Right(null);
+    } catch (e) {
+      return Left(
+        GenericAuthFailure(
+          message: 'Failed to store user email',
+          details: e.toString(),
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Either<AuthFailure, UserEntity?>> getCurrentUser() async {
     try {
-      // Try to get from cache first
       final cachedUser = await _localDataSource.getCachedUser();
       if (cachedUser != null) {
         return Right(cachedUser);
       }
 
-      // Get from Firebase
       final user = await _remoteDataSource.getCurrentUser();
       if (user != null) {
         await _localDataSource.cacheUser(user);
@@ -263,7 +269,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<AuthFailure, void>> signOut() async {
     try {
       await _remoteDataSource.signOut();
-      await _localDataSource.clearAllCache();
+      await _localDataSource.clearUserDataOnly();
       return const Right(null);
     } on firebase_auth.FirebaseAuthException catch (e) {
       return Left(_mapFirebaseAuthException(e));
@@ -280,12 +286,13 @@ class AuthRepositoryImpl implements AuthRepository {
     try {
       final credentials = BiometricCredentialsEntity(
         email: email,
-        encryptedPassword: password, // Should be encrypted in production
+        encryptedPassword: password,
         biometricType: BiometricType.none,
         storedAt: DateTime.now(),
       );
 
       await _localDataSource.cacheBiometricCredentials(credentials);
+      await _localDataSource.storeUserEmail(email);
       return const Right(null);
     } catch (e) {
       return Left(
@@ -338,7 +345,6 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  // Legacy methods for backward compatibility
   @override
   Future<Either<AuthFailure, String?>> getStoredEmail() async {
     try {
@@ -369,7 +375,6 @@ class AuthRepositoryImpl implements AuthRepository {
         final stored = await _localDataSource.getUserFirstName();
         return Right(stored);
       }
-      // Extract first name from display name
       final firstName = user.displayName!.split(' ').first;
       return Right(firstName);
     } catch (e) {
@@ -378,9 +383,11 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<AuthFailure, void>> storeUserData(RegisterUserEntity registerUser) async {
+  Future<Either<AuthFailure, void>> storeUserData(
+      RegisterUserEntity registerUser) async {
     try {
-      final displayName = '${registerUser.firstName} ${registerUser.lastName}'.trim();
+      final displayName =
+          '${registerUser.firstName} ${registerUser.lastName}'.trim();
       final user = UserEntity(
         id: '', // Will be set after authentication
         email: registerUser.email,
@@ -389,7 +396,6 @@ class AuthRepositoryImpl implements AuthRepository {
       );
 
       await _localDataSource.cacheUser(user);
-      // Also persist basic profile fields to secure storage for UI reads
       await _localDataSource.storeUserFirstName(registerUser.firstName);
       await _localDataSource.storeUserLastName(registerUser.lastName);
       await _localDataSource.storeUserPhone(registerUser.phone);
@@ -399,7 +405,6 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  /// Maps FirebaseAuthException to AuthFailure
   AuthFailure _mapFirebaseAuthException(firebase_auth.FirebaseAuthException e) {
     switch (e.code) {
       case 'user-not-found':
@@ -435,7 +440,6 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
-  /// Maps FirebaseException to AuthFailure
   AuthFailure _mapFirebaseException(FirebaseException e) {
     switch (e.code) {
       case 'not-found':

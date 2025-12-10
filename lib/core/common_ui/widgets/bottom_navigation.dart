@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
@@ -83,5 +81,3 @@ class _BottomNavWidgetState extends State<BottomNavWidget> {
     );
   }
 }
-
-// models/brand.dart

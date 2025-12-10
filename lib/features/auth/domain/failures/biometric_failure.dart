@@ -21,7 +21,8 @@ class BiometricNotAvailableFailure extends BiometricFailure {
 /// Biometric not enrolled failure
 class BiometricNotEnrolledFailure extends BiometricFailure {
   const BiometricNotEnrolledFailure({
-    super.message = 'No biometric credentials enrolled. Please set up biometric authentication in your device settings.',
+    super.message =
+        'No biometric credentials enrolled. Please set up biometric authentication in your device settings.',
     super.code = 'biometric-not-enrolled',
     super.details,
   });
@@ -48,7 +49,8 @@ class BiometricAuthCanceledFailure extends BiometricFailure {
 /// Biometric credentials not stored
 class BiometricCredentialsNotStoredFailure extends BiometricFailure {
   const BiometricCredentialsNotStoredFailure({
-    super.message = 'No biometric credentials stored. Please set up biometric login first.',
+    super.message =
+        'No biometric credentials stored. Please set up biometric login first.',
     super.code = 'biometric-credentials-not-stored',
     super.details,
   });
@@ -57,7 +59,8 @@ class BiometricCredentialsNotStoredFailure extends BiometricFailure {
 /// Biometric lockout failure (too many attempts)
 class BiometricLockoutFailure extends BiometricFailure {
   const BiometricLockoutFailure({
-    super.message = 'Too many failed biometric attempts. Please use your password to log in.',
+    super.message =
+        'Too many failed biometric attempts. Please use your password to log in.',
     super.code = 'biometric-lockout',
     super.details,
   });
@@ -66,7 +69,8 @@ class BiometricLockoutFailure extends BiometricFailure {
 /// Biometric permanent lockout failure
 class BiometricPermanentLockoutFailure extends BiometricFailure {
   const BiometricPermanentLockoutFailure({
-    super.message = 'Biometric authentication is locked. Please use your password.',
+    super.message =
+        'Biometric authentication is locked. Please use your password.',
     super.code = 'biometric-permanent-lockout',
     super.details,
   });

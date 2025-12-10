@@ -18,7 +18,9 @@ void main() {
         expect(passwordInput.isPure, false);
       });
 
-      test('should create dirty PasswordInput with empty string if no value provided', () {
+      test(
+          'should create dirty PasswordInput with empty string if no value provided',
+          () {
         const passwordInput = PasswordInput.dirty();
         expect(passwordInput.value, '');
         expect(passwordInput.isPure, false);
@@ -48,7 +50,8 @@ void main() {
         expect(passwordInput.error, PasswordValidationError.empty);
       });
 
-      test('should return tooShort error for password less than minimum length', () {
+      test('should return tooShort error for password less than minimum length',
+          () {
         const passwordInput = PasswordInput.dirty('Abc1!');
         expect(passwordInput.isNotValid, true);
         expect(passwordInput.error, PasswordValidationError.tooShort);
@@ -79,13 +82,15 @@ void main() {
         expect(passwordInput.isValid, true);
       });
 
-      test('should return null for password with multiple special characters', () {
+      test('should return null for password with multiple special characters',
+          () {
         const passwordInput = PasswordInput.dirty('P@ssw0rd!#%');
         expect(passwordInput.isValid, true);
       });
 
       test('should return null for long password', () {
-        const passwordInput = PasswordInput.dirty('VeryLongP@ssw0rdWithManyCharacters123!');
+        const passwordInput =
+            PasswordInput.dirty('VeryLongP@ssw0rdWithManyCharacters123!');
         expect(passwordInput.isValid, true);
       });
     });

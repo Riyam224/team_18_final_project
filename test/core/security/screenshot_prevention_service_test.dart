@@ -43,68 +43,70 @@ void main() {
   group(
     'ScreenshotPreventionService - isEnabled',
     () {
-    test('should return true when screenshot prevention is enabled', () async {
-      // Arrange
-      when(() => mockSecureStorage.read(key: any(named: 'key')))
-          .thenAnswer((_) async => const Right('true'));
+      test('should return true when screenshot prevention is enabled',
+          () async {
+        // Arrange
+        when(() => mockSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => const Right('true'));
 
-      // Act
-      final result = await screenshotService.isEnabled();
+        // Act
+        final result = await screenshotService.isEnabled();
 
-      // Assert
-      expect(result.isRight(), true);
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isEnabled) => expect(isEnabled, isTrue),
-      );
-    });
+        // Assert
+        expect(result.isRight(), true);
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isEnabled) => expect(isEnabled, isTrue),
+        );
+      });
 
-    test('should return false when screenshot prevention is disabled', () async {
-      // Arrange
-      when(() => mockSecureStorage.read(key: any(named: 'key')))
-          .thenAnswer((_) async => const Right('false'));
+      test('should return false when screenshot prevention is disabled',
+          () async {
+        // Arrange
+        when(() => mockSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => const Right('false'));
 
-      // Act
-      final result = await screenshotService.isEnabled();
+        // Act
+        final result = await screenshotService.isEnabled();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isEnabled) => expect(isEnabled, isFalse),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isEnabled) => expect(isEnabled, isFalse),
+        );
+      });
 
-    test('should return false when no stored value exists', () async {
-      // Arrange
-      when(() => mockSecureStorage.read(key: any(named: 'key')))
-          .thenAnswer((_) async => const Right(null));
+      test('should return false when no stored value exists', () async {
+        // Arrange
+        when(() => mockSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => const Right(null));
 
-      // Act
-      final result = await screenshotService.isEnabled();
+        // Act
+        final result = await screenshotService.isEnabled();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isEnabled) => expect(isEnabled, isFalse),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isEnabled) => expect(isEnabled, isFalse),
+        );
+      });
 
-    test('should return false when storage read fails', () async {
-      // Arrange
-      when(() => mockSecureStorage.read(key: any(named: 'key')))
-          .thenAnswer((_) async => const Left(
-                StorageReadFailure(details: 'Storage error'),
-              ));
+      test('should return false when storage read fails', () async {
+        // Arrange
+        when(() => mockSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => const Left(
+                  StorageReadFailure(details: 'Storage error'),
+                ));
 
-      // Act
-      final result = await screenshotService.isEnabled();
+        // Act
+        final result = await screenshotService.isEnabled();
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isEnabled) => expect(isEnabled, isFalse),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isEnabled) => expect(isEnabled, isFalse),
+        );
+      });
     },
     skip: 'Uses platform channel; skipping hardware-dependent test for now.',
   );
@@ -112,66 +114,66 @@ void main() {
   group(
     'ScreenshotPreventionService - isRouteProtected',
     () {
-    test('should return false for unprotected route', () async {
-      // Arrange
-      when(() => mockSecureStorage.read(key: any(named: 'key')))
-          .thenAnswer((_) async => const Right(null));
+      test('should return false for unprotected route', () async {
+        // Arrange
+        when(() => mockSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => const Right(null));
 
-      // Act
-      final result = await screenshotService.isRouteProtected('/home');
+        // Act
+        final result = await screenshotService.isRouteProtected('/home');
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isProtected) => expect(isProtected, isA<bool>()),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isProtected) => expect(isProtected, isA<bool>()),
+        );
+      });
 
-    test('should return true for sensitive routes', () async {
-      // Arrange
-      when(() => mockSecureStorage.read(key: any(named: 'key')))
-          .thenAnswer((_) async => const Right('/settings'));
+      test('should return true for sensitive routes', () async {
+        // Arrange
+        when(() => mockSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => const Right('/settings'));
 
-      // Act
-      final result = await screenshotService.isRouteProtected('/settings');
+        // Act
+        final result = await screenshotService.isRouteProtected('/settings');
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isProtected) => expect(isProtected, isA<bool>()),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isProtected) => expect(isProtected, isA<bool>()),
+        );
+      });
 
-    test('should handle multiple protected routes', () async {
-      // Arrange
-      when(() => mockSecureStorage.read(key: any(named: 'key')))
-          .thenAnswer((_) async => const Right('/settings,/profile,/wallet'));
+      test('should handle multiple protected routes', () async {
+        // Arrange
+        when(() => mockSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => const Right('/settings,/profile,/wallet'));
 
-      // Act
-      final result1 = await screenshotService.isRouteProtected('/settings');
-      final result2 = await screenshotService.isRouteProtected('/profile');
+        // Act
+        final result1 = await screenshotService.isRouteProtected('/settings');
+        final result2 = await screenshotService.isRouteProtected('/profile');
 
-      // Assert
-      expect(result1.isRight(), true);
-      expect(result2.isRight(), true);
-    });
+        // Assert
+        expect(result1.isRight(), true);
+        expect(result2.isRight(), true);
+      });
 
-    test('should return false on storage error', () async {
-      // Arrange
-      when(() => mockSecureStorage.read(key: any(named: 'key')))
-          .thenAnswer((_) async => const Left(
-                StorageReadFailure(details: 'Storage error'),
-              ));
+      test('should return false on storage error', () async {
+        // Arrange
+        when(() => mockSecureStorage.read(key: any(named: 'key')))
+            .thenAnswer((_) async => const Left(
+                  StorageReadFailure(details: 'Storage error'),
+                ));
 
-      // Act
-      final result = await screenshotService.isRouteProtected('/test');
+        // Act
+        final result = await screenshotService.isRouteProtected('/test');
 
-      // Assert
-      result.fold(
-        (failure) => fail('Should not fail'),
-        (isProtected) => expect(isProtected, isFalse),
-      );
-    });
+        // Assert
+        result.fold(
+          (failure) => fail('Should not fail'),
+          (isProtected) => expect(isProtected, isFalse),
+        );
+      });
     },
     skip: 'Uses platform channel; skipping hardware-dependent test for now.',
   );
@@ -258,8 +260,8 @@ void main() {
             key: any(named: 'key'),
             value: any(named: 'value'),
           )).thenAnswer((_) async => const Left(
-                StorageWriteFailure(details: 'Write error'),
-              ));
+            StorageWriteFailure(details: 'Write error'),
+          ));
 
       // Act
       final result = await screenshotService.enableForRoute('/test');

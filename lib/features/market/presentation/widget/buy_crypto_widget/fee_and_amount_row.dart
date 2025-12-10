@@ -41,8 +41,9 @@ class FeeAndAmountRow extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8).r),
                         child: Center(
                           child: AppSvgWidget(
-                            color:
-                                isDark ? AppColors.darkBackground : AppColors.lightSurface,
+                            color: isDark
+                                ? AppColors.darkBackground
+                                : AppColors.lightSurface,
                             boxFit: BoxFit.fill,
                             assetsName: AppAssets.money,
                             height: 25.h,
@@ -63,8 +64,9 @@ class FeeAndAmountRow extends StatelessWidget {
                           AppStrings.feePercentageText,
                           style: theme.textTheme.titleSmall?.copyWith(
                               fontSize: 16.sp,
-                              color:
-                                  isDark ? AppColors.textWhite : AppColors.primary),
+                              color: isDark
+                                  ? AppColors.textWhite
+                                  : AppColors.primary),
                         )
                       ],
                     ),

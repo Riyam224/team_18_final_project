@@ -9,7 +9,8 @@ import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.
 /// Manages blur overlay state for privacy when app is backgrounded
 class BlurServiceImpl implements IBlurService {
   final ISecureStorage _secureStorage;
-  final StreamController<bool> _blurStateController = StreamController<bool>.broadcast();
+  final StreamController<bool> _blurStateController =
+      StreamController<bool>.broadcast();
 
   bool _isBlurEnabled = false;
   bool _isBlurVisible = false;

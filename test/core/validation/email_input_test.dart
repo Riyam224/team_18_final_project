@@ -18,7 +18,9 @@ void main() {
         expect(emailInput.isPure, false);
       });
 
-      test('should create dirty EmailInput with empty string if no value provided', () {
+      test(
+          'should create dirty EmailInput with empty string if no value provided',
+          () {
         const emailInput = EmailInput.dirty();
         expect(emailInput.value, '');
         expect(emailInput.isPure, false);

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-/// AppSpacing - all padding, margin, and gap values used throughout the app
 class AppSpacing {
-  // ========= PADDING - ALL SIDES =========
-
+  // Padding - All Sides
   static EdgeInsets get paddingAll4 => EdgeInsets.all(4.w);
   static EdgeInsets get paddingAll8 => EdgeInsets.all(8.w);
   static EdgeInsets get paddingAll12 => EdgeInsets.all(12.w);
+  static EdgeInsets get paddingAll14 => EdgeInsets.all(14.w);
   static EdgeInsets get paddingAll16 => EdgeInsets.all(16.w);
   static EdgeInsets get paddingAll20 => EdgeInsets.all(20.w);
   static EdgeInsets get paddingAll24 => EdgeInsets.all(24.w);
 
-  // ========= PADDING - HORIZONTAL =========
+  // Padding - Horizontal
   static EdgeInsets get paddingH8 => EdgeInsets.symmetric(horizontal: 8.w);
   static EdgeInsets get paddingH10 => EdgeInsets.symmetric(horizontal: 10.w);
   static EdgeInsets get paddingH12 => EdgeInsets.symmetric(horizontal: 12.w);
@@ -24,7 +23,8 @@ class AppSpacing {
   static EdgeInsets get paddingH40 => EdgeInsets.symmetric(horizontal: 40.w);
   static EdgeInsets get paddingH19 => EdgeInsets.symmetric(horizontal: 19.w);
 
-  // ========= PADDING - VERTICAL =========
+
+  // Padding - Vertical
   static EdgeInsets get paddingAllH2 => EdgeInsets.all(2.h);
   static EdgeInsets get paddingV4 => EdgeInsets.symmetric(vertical: 4.h);
   static EdgeInsets get paddingV8 => EdgeInsets.symmetric(vertical: 8.h);
@@ -34,7 +34,7 @@ class AppSpacing {
   static EdgeInsets get paddingV20 => EdgeInsets.symmetric(vertical: 20.h);
   static EdgeInsets get paddingV23 => EdgeInsets.symmetric(vertical: 23.h);
 
-  // ========= PADDING - COMBINED HORIZONTAL & VERTICAL =========
+  // Padding - Combined
 
   static EdgeInsets paddingHV({
     required double horizontal,
@@ -66,8 +66,12 @@ class AppSpacing {
       EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h);
   static EdgeInsets get paddingH16V45 =>
       EdgeInsets.symmetric(horizontal: 16.w, vertical: 45.h);
+  static EdgeInsets get paddingH20V16 =>
+      EdgeInsets.symmetric(horizontal: 20.w, vertical: 16.h);
+  static EdgeInsets get paddingH12V8 =>
+      EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h);
 
-  // ========= PADDING - CUSTOM SIDES =========
+  // Padding - Custom
 
   static EdgeInsets paddingOnly({
     double left = 0,
@@ -95,32 +99,31 @@ class AppSpacing {
   static EdgeInsets get paddingT24L19R19B19 =>
       EdgeInsets.only(top: 24, left: 19, right: 19, bottom: 19);
 
-  // ========= MARGIN - ALL SIDES =========
-
+  // Margin - All Sides
   static EdgeInsets get marginAll4 => EdgeInsets.all(4.w);
   static EdgeInsets get marginAll8 => EdgeInsets.all(8.w);
   static EdgeInsets get marginAll12 => EdgeInsets.all(12.w);
   static EdgeInsets get marginAll16 => EdgeInsets.all(16.w);
   static EdgeInsets get marginAll20 => EdgeInsets.all(20.w);
   static EdgeInsets get marginAll24 => EdgeInsets.all(24.w);
+  static EdgeInsets get marginB10 => EdgeInsets.only(bottom: 10.h);
+  static EdgeInsets get marginB14 => EdgeInsets.only(bottom: 14.h);
 
-  // ========= MARGIN - HORIZONTAL =========
-
+  // Margin - Horizontal
   static EdgeInsets get marginH8 => EdgeInsets.symmetric(horizontal: 8.w);
   static EdgeInsets get marginH12 => EdgeInsets.symmetric(horizontal: 12.w);
   static EdgeInsets get marginH16 => EdgeInsets.symmetric(horizontal: 16.w);
   static EdgeInsets get marginH20 => EdgeInsets.symmetric(horizontal: 20.w);
   static EdgeInsets get marginH24 => EdgeInsets.symmetric(horizontal: 24.w);
 
-  // ========= MARGIN - VERTICAL =========
-
+  // Margin - Vertical
   static EdgeInsets get marginV4 => EdgeInsets.symmetric(vertical: 4.h);
   static EdgeInsets get marginV8 => EdgeInsets.symmetric(vertical: 8.h);
   static EdgeInsets get marginV12 => EdgeInsets.symmetric(vertical: 12.h);
   static EdgeInsets get marginV16 => EdgeInsets.symmetric(vertical: 16.h);
   static EdgeInsets get marginV20 => EdgeInsets.symmetric(vertical: 20.h);
 
-  // ========= MARGIN - CUSTOM SIDES =========
+  // Margin - Custom
 
   static EdgeInsets marginOnly({
     double left = 0,
@@ -137,7 +140,7 @@ class AppSpacing {
 
   static EdgeInsets get marginR8 => EdgeInsets.only(right: 8.w);
 
-  // ========= VERTICAL GAPS (SizedBox heights) =========
+  // Vertical Gaps
 
   static SizedBox get gapH2 => SizedBox(height: 2.h);
   static SizedBox get gapH4 => SizedBox(height: 4.h);
@@ -147,8 +150,10 @@ class AppSpacing {
   static SizedBox get gapH16 => SizedBox(height: 16.h);
   static SizedBox get gapH20 => SizedBox(height: 20.h);
   static SizedBox get gapH24 => SizedBox(height: 24.h);
+  static SizedBox get gapH27 => SizedBox(height: 27.h);
   static SizedBox get gapH28 => SizedBox(height: 28.h);
   static SizedBox get gapH30 => SizedBox(height: 30.h);
+  static SizedBox get gapH33 => SizedBox(height: 33.h);
   static SizedBox get gapH32 => SizedBox(height: 32.h);
   static SizedBox get gapH40 => SizedBox(height: 40.h);
   static SizedBox get gapH50 => SizedBox(height: 50.h);
@@ -163,6 +168,7 @@ class AppSpacing {
 
   static SizedBox get gapW4 => SizedBox(width: 4.w);
   static SizedBox get gapW8 => SizedBox(width: 8.w);
+  static SizedBox get gapW10 => SizedBox(width: 10.w);
   static SizedBox get gapW12 => SizedBox(width: 12.w);
   static SizedBox get gapW16 => SizedBox(width: 16.w);
   static SizedBox get gapW20 => SizedBox(width: 20.w);
@@ -223,6 +229,8 @@ class AppSpacing {
   static SizedBox get vSpace100 => gapH100;
 
   static SizedBox get hSpaceXSmall => gapW8;
+  static SizedBox get hSpaceSmall => gapW10;
+  static SizedBox get hSpace12 => gapW12;
   static SizedBox get hSpace16 => gapW16;
   static SizedBox get hSpace20 => gapW20;
   static SizedBox get hSpace48 => gapW48;

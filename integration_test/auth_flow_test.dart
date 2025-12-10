@@ -19,7 +19,8 @@ void main() {
       expect(find.byType(MaterialApp), findsOneWidget);
     });
 
-    testWidgets('should show validation errors for empty login form', (tester) async {
+    testWidgets('should show validation errors for empty login form',
+        (tester) async {
       await app.main(
         env: AppEnvironment.test,
         securityOverrides: createTestSecurityOverrides(),
@@ -27,7 +28,7 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 5));
 
       final loginButton = find.text('Login').last;
-      
+
       if (loginButton.evaluate().isNotEmpty) {
         await tester.tap(loginButton);
         await tester.pumpAndSettle();
@@ -35,7 +36,8 @@ void main() {
       }
     });
 
-    testWidgets('should navigate to register screen from login', (tester) async {
+    testWidgets('should navigate to register screen from login',
+        (tester) async {
       await app.main(
         env: AppEnvironment.test,
         securityOverrides: createTestSecurityOverrides(),
@@ -43,8 +45,10 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 5));
 
       final signUpFinder = find.textContaining('Sign Up', findRichText: true);
-      final registerFinder = find.textContaining('Register', findRichText: true);
-      final createAccountFinder = find.textContaining('Create', findRichText: true);
+      final registerFinder =
+          find.textContaining('Register', findRichText: true);
+      final createAccountFinder =
+          find.textContaining('Create', findRichText: true);
 
       if (signUpFinder.evaluate().isNotEmpty) {
         await tester.tap(signUpFinder.first);

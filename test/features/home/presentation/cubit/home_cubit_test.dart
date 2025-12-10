@@ -14,10 +14,16 @@ import 'package:team_18_final_project/features/home/domain/usecases/get_trending
 import 'package:team_18_final_project/features/home/presentation/cubit/home_cubit.dart';
 import 'package:team_18_final_project/features/home/presentation/cubit/home_state.dart';
 
-class MockGetMarketOverviewUseCase extends Mock implements GetMarketOverviewUseCase {}
-class MockGetTrendingCoinsUseCase extends Mock implements GetTrendingCoinsUseCase {}
+class MockGetMarketOverviewUseCase extends Mock
+    implements GetMarketOverviewUseCase {}
+
+class MockGetTrendingCoinsUseCase extends Mock
+    implements GetTrendingCoinsUseCase {}
+
 class MockGetTopGainersUseCase extends Mock implements GetTopGainersUseCase {}
-class MockGetPortfolioBalanceUseCase extends Mock implements GetPortfolioBalanceUseCase {}
+
+class MockGetPortfolioBalanceUseCase extends Mock
+    implements GetPortfolioBalanceUseCase {}
 
 void main() {
   late HomeCubit cubit;
@@ -108,8 +114,8 @@ void main() {
     blocTest<HomeCubit, HomeState>(
       'should emit [HomeLoading, HomeError] when market overview fails',
       build: () {
-        when(() => mockGetMarketOverviewUseCase())
-            .thenAnswer((_) async => Left(ServerFailure(message: 'Failed to load market overview')));
+        when(() => mockGetMarketOverviewUseCase()).thenAnswer((_) async =>
+            Left(ServerFailure(message: 'Failed to load market overview')));
         when(() => mockGetTrendingCoinsUseCase())
             .thenAnswer((_) async => const Right(tTrendingCoins));
         when(() => mockGetTopGainersUseCase())
@@ -130,8 +136,8 @@ void main() {
       build: () {
         when(() => mockGetMarketOverviewUseCase())
             .thenAnswer((_) async => const Right(tMarketOverview));
-        when(() => mockGetTrendingCoinsUseCase())
-            .thenAnswer((_) async => Left(ServerFailure(message: 'Failed to load trending coins')));
+        when(() => mockGetTrendingCoinsUseCase()).thenAnswer((_) async =>
+            Left(ServerFailure(message: 'Failed to load trending coins')));
         when(() => mockGetTopGainersUseCase())
             .thenAnswer((_) async => const Right(tTopGainers));
         when(() => mockGetPortfolioBalanceUseCase())
@@ -152,8 +158,8 @@ void main() {
             .thenAnswer((_) async => const Right(tMarketOverview));
         when(() => mockGetTrendingCoinsUseCase())
             .thenAnswer((_) async => const Right(tTrendingCoins));
-        when(() => mockGetTopGainersUseCase())
-            .thenAnswer((_) async => Left(ServerFailure(message: 'Failed to load top gainers')));
+        when(() => mockGetTopGainersUseCase()).thenAnswer((_) async =>
+            Left(ServerFailure(message: 'Failed to load top gainers')));
         when(() => mockGetPortfolioBalanceUseCase())
             .thenAnswer((_) async => const Right(tPortfolioBalance));
         return cubit;
@@ -174,8 +180,8 @@ void main() {
             .thenAnswer((_) async => const Right(tTrendingCoins));
         when(() => mockGetTopGainersUseCase())
             .thenAnswer((_) async => const Right(tTopGainers));
-        when(() => mockGetPortfolioBalanceUseCase())
-            .thenAnswer((_) async => Left(ServerFailure(message: 'Failed to load portfolio balance')));
+        when(() => mockGetPortfolioBalanceUseCase()).thenAnswer((_) async =>
+            Left(ServerFailure(message: 'Failed to load portfolio balance')));
         return cubit;
       },
       act: (cubit) => cubit.loadHomeData(),
@@ -201,7 +207,9 @@ void main() {
       act: (cubit) => cubit.loadHomeData(),
       expect: () => [
         HomeLoading(),
-        const HomeError(message: 'An unexpected error occurred: Exception: Unexpected error'),
+        const HomeError(
+            message:
+                'An unexpected error occurred: Exception: Unexpected error'),
       ],
     );
   });

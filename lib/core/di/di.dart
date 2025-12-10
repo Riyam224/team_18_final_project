@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:team_18_final_project/features/settings/logic/language_cubit.dart';
 
@@ -24,6 +25,7 @@ import 'package:team_18_final_project/core/security/interfaces/i_root_detection_
 import 'package:team_18_final_project/core/security/interfaces/i_screenshot_prevention_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
+
 import 'package:team_18_final_project/features/auth/data/datasources/auth_local_datasource.dart';
 import 'package:team_18_final_project/features/auth/data/datasources/auth_local_datasource_impl.dart';
 import 'package:team_18_final_project/features/auth/data/datasources/auth_remote_datasource.dart';
@@ -54,18 +56,25 @@ import 'package:team_18_final_project/features/transactions/domain/repositories/
 import 'package:team_18_final_project/features/transactions/domain/usecases/add_transaction_usecase.dart';
 import 'package:team_18_final_project/features/transactions/domain/usecases/clear_transactions_usecase.dart';
 import 'package:team_18_final_project/features/transactions/domain/usecases/get_transactions_usecase.dart';
+import 'package:team_18_final_project/features/portfolio/data/datasources/portfolio_api_service.dart';
+import 'package:team_18_final_project/features/portfolio/data/datasources/portfolio_local_data_source.dart';
+import 'package:team_18_final_project/features/portfolio/data/datasources/portfolio_remote_data_source.dart';
+import 'package:team_18_final_project/features/portfolio/data/repositories/portfolio_repository_impl.dart';
+import 'package:team_18_final_project/features/portfolio/domain/repositories/portfolio_repository.dart';
+import 'package:team_18_final_project/features/portfolio/domain/usecases/get_portfolio_overview_usecase.dart';
+import 'package:team_18_final_project/features/portfolio/presentation/cubit/portfolio_cubit.dart';
 
 final sl = GetIt.instance;
 
-/// App environment to allow a test-safe DI graph.
 enum AppEnvironment { prod, test }
 
 class SecurityOverrides {
   final ISecureStorage Function() secureStorage;
   final IEncryptionService Function(ISecureStorage secureStorage) encryption;
   final IBiometricService Function() biometric;
-  final ISessionManager Function(ISecureStorage secureStorage,
-      IEncryptionService encryptionService) sessionManager;
+  final ISessionManager Function(
+          ISecureStorage secureStorage, IEncryptionService encryptionService)
+      sessionManager;
   final IAppLockService Function(ISecureStorage secureStorage) appLock;
   final IAuditLogService Function(ISecureStorage secureStorage) auditLog;
   final IScreenshotPreventionService Function(ISecureStorage secureStorage)
@@ -98,8 +107,20 @@ Future<void> setupDependencies({
   await _setupSecurity(env, securityOverrides);
   await _setupAuth();
   await _setupHome();
+  await _setupPortfolio();
   await _setupTransactions();
   await _settings();
+}
+
+Future<void> resetDependencies({
+  AppEnvironment env = AppEnvironment.prod,
+  SecurityOverrides? securityOverrides,
+}) async {
+  await sl.reset();
+  await setupDependencies(
+    env: env,
+    securityOverrides: securityOverrides,
+  );
 }
 
 Future<void> _setupCore() async {
@@ -137,14 +158,13 @@ Future<void> _setupAuth() async {
     ),
   );
 
-  // Legacy services (for backward compatibility - will be removed)
   sl.registerLazySingleton<FirebaseUserService>(
     () => FirebaseUserService(
       secureStorage: sl<ISecureStorage>(),
+      firebaseStorage: FirebaseStorage.instance,
     ),
   );
 
-  // Repository (Clean Architecture)
   sl.registerLazySingleton<AuthRepository>(
     () => AuthRepositoryImpl(
       remoteDataSource: sl<AuthRemoteDataSource>(),
@@ -152,14 +172,13 @@ Future<void> _setupAuth() async {
     ),
   );
 
-  // Use Cases
   sl.registerLazySingleton(() => LoginUserUseCase(sl()));
   sl.registerLazySingleton(() => RegisterUserUseCase(sl()));
   sl.registerLazySingleton(() => StoreUserCredentialsUseCase(sl()));
   sl.registerLazySingleton(() => StoreBiometricSettingsUseCase(sl()));
-  sl.registerLazySingleton(() => BiometricLoginUseCase(sl(), sl<IBiometricService>()));
+  sl.registerLazySingleton(
+      () => BiometricLoginUseCase(sl(), sl<IBiometricService>()));
 
-  // Cubits
   sl.registerFactory(
     () => AuthCubit(
       loginUseCase: sl(),
@@ -168,13 +187,14 @@ Future<void> _setupAuth() async {
       biometricLoginUseCase: sl(),
       repository: sl(),
       sessionManager: sl<ISessionManager>(),
+      biometricService: sl<IBiometricService>(),
     ),
   );
 
   sl.registerFactory(
     () => BiometricSetupCubit(
       storeSettings: sl(),
-      secureStorage: sl<ISecureStorage>(),
+      localDataSource: sl<AuthLocalDataSource>(),
     ),
   );
 
@@ -196,18 +216,17 @@ Future<void> _setupHome() async {
     () => HomeApiService(sl<Dio>()),
   );
 
-  // Repository
   sl.registerLazySingleton<HomeRepository>(
     () => HomeRepositoryImpl(sl<HomeApiService>()),
   );
 
-  // Use cases
-  sl.registerLazySingleton(() => GetMarketOverviewUseCase(sl<HomeRepository>()));
+  sl.registerLazySingleton(
+      () => GetMarketOverviewUseCase(sl<HomeRepository>()));
   sl.registerLazySingleton(() => GetTrendingCoinsUseCase(sl<HomeRepository>()));
   sl.registerLazySingleton(() => GetTopGainersUseCase(sl<HomeRepository>()));
-  sl.registerLazySingleton(() => GetPortfolioBalanceUseCase(sl<HomeRepository>()));
+  sl.registerLazySingleton(
+      () => GetPortfolioBalanceUseCase(sl<HomeRepository>()));
 
-  // Cubit
   sl.registerFactory(
     () => HomeCubit(
       getMarketOverviewUseCase: sl<GetMarketOverviewUseCase>(),
@@ -215,6 +234,36 @@ Future<void> _setupHome() async {
       getTopGainersUseCase: sl<GetTopGainersUseCase>(),
       getPortfolioBalanceUseCase: sl<GetPortfolioBalanceUseCase>(),
     ),
+  );
+}
+
+Future<void> _setupPortfolio() async {
+  sl.registerLazySingleton<PortfolioApiService>(
+    () => PortfolioApiService(sl<Dio>()),
+  );
+
+  sl.registerLazySingleton<PortfolioLocalDataSource>(
+    () => PortfolioLocalDataSource(),
+  );
+
+  sl.registerLazySingleton<PortfolioRemoteDataSource>(
+    () => PortfolioRemoteDataSource(api: sl<PortfolioApiService>()),
+  );
+
+  sl.registerLazySingleton<PortfolioRepository>(
+    () => PortfolioRepositoryImpl(
+      remote: sl<PortfolioRemoteDataSource>(),
+      local: sl<PortfolioLocalDataSource>(),
+    ),
+  );
+
+  sl.registerLazySingleton<GetPortfolioOverviewUseCase>(
+    () => GetPortfolioOverviewUseCase(repository: sl<PortfolioRepository>()),
+  );
+
+  sl.registerFactory<PortfolioCubit>(
+    () =>
+        PortfolioCubit(getPortfolioOverview: sl<GetPortfolioOverviewUseCase>()),
   );
 }
 
