@@ -9,7 +9,9 @@
     "darkModeTitle": "الوضع الداكن",
     "chooseLanguage": "اختر اللغة",
     "cancelButton": "إلغاء",
-    "name": "صوفيا ازابيلا",
     "languageEnglish": "الإنجليزية",
-    "languageArabic": "العربية"
+    "languageArabic": "العربية",
+    "languageSetSuccess": "تم تعيين اللغة إلى {languageName} بنجاح",
+    "languageSetSuccessDescription": "رسالة تظهر عند تغيير لغة التطبيق بنجاح",
+    "defaultGuestName": "ضيف"
 }

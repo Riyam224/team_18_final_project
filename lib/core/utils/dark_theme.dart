@@ -9,14 +9,14 @@ ThemeData buildDarkTheme() {
     brightness: Brightness.dark,
     scaffoldBackgroundColor: AppColors.darkBackground2,
     primaryColor: AppColors.primary,
-    // rahma
+    
     cardColor: AppColors.darkBackground,
     //cardColor: const Color(0xFF0D0D0D), // #0D0D0D
 
 
     colorScheme: const ColorScheme.dark(
       primary: AppColors.primary,
-      //rahma 
+    
       secondary: AppColors.orangeDark,
       //secondary: AppColors.secondary,
       background: AppColors.darkBackground,
@@ -34,7 +34,7 @@ ThemeData buildDarkTheme() {
           AppTextStyles.headlineLarge.copyWith(color: AppColors.textWhite),
       headlineMedium:
           AppTextStyles.headlineMedium.copyWith(color: AppColors.textWhite),
-      //rahma
+      
       headlineSmall: AppTextStyles.headlineSmallBold.copyWith(color: AppColors.textWhite),
       titleLarge: AppTextStyles.titleLarge.copyWith(color: AppColors.textWhite),
 

@@ -36,11 +36,19 @@ class AppLocalizationsAr extends AppLocalizations {
   String get cancelButton => 'إلغاء';
 
   @override
-  String get name => 'صوفيا ازابيلا';
-
-  @override
   String get languageEnglish => 'الإنجليزية';
 
   @override
   String get languageArabic => 'العربية';
+
+  @override
+  String languageSetSuccess(Object languageName) {
+    return 'تم تعيين اللغة إلى $languageName بنجاح';
+  }
+
+  @override
+  String get languageSetSuccessDescription => 'رسالة تظهر عند تغيير لغة التطبيق بنجاح';
+
+  @override
+  String get defaultGuestName => 'ضيف';
 }

@@ -15,6 +15,7 @@ import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_root_detection_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
+import 'package:team_18_final_project/core/utils/app_theme.dart';
 import 'firebase_options.dart';
 
 Future<void> main({
@@ -22,6 +23,18 @@ Future<void> main({
   SecurityOverrides? securityOverrides,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+// New Addition: Set screen orientation once to prevent repeated calls from build()
+  // This centralizes the global system settings.
+    SystemChrome.setPreferredOrientations(
+    AppConstants.allowedOrientations,
+  );
+
+
+  // New Addition: Set initial System UI style (status bar/nav bar colors)
+  // This should only be called once at startup (or in the MaterialApp builder)
+  // We apply the default Light Theme style here to avoid side effects in build.
+  AppTheme.setSystemUIOverlayStyle(ThemeMode.light);
 
   if (env == AppEnvironment.prod) {
     await Firebase.initializeApp(
@@ -196,7 +209,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setPreferredOrientations(AppConstants.allowedOrientations);
+    //SystemChrome.setPreferredOrientations(AppConstants.allowedOrientations);
 
     return SecureApplication(
       secureApplicationController: _secureController,

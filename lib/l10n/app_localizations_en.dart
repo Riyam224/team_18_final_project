@@ -36,11 +36,19 @@ class AppLocalizationsEn extends AppLocalizations {
   String get cancelButton => 'Cancel';
 
   @override
-  String get name => 'Sophia Isabella';
-
-  @override
   String get languageEnglish => 'English';
 
   @override
   String get languageArabic => 'Arabic';
+
+  @override
+  String languageSetSuccess(Object languageName) {
+    return 'Language set to $languageName successfully';
+  }
+
+  @override
+  String get languageSetSuccessDescription => 'Message shown when the app language is successfully changed';
+
+  @override
+  String get defaultGuestName => 'Guest';
 }

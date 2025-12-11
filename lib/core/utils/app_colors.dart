@@ -64,7 +64,7 @@ class AppColors {
 
 
 
-  //rahma
+  
   // Chart Colors
   static const Color chartPurple = Color(0xFF8979FF);
   static const Color chartCyan = Color(0xFF3CC3DF);

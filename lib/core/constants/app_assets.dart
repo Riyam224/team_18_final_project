@@ -22,7 +22,7 @@ class AppAssets {
   static const settingsFilled = 'assets/icons/settings_filled.svg';
 
 
-  // rahma settings
+  //  settings
     static const settingsAccount = 'assets/icons/my_account.svg';
     static const settingsBilling = 'assets/icons/Wallet.svg';
     static const settingsFAQ = 'assets/icons/Frame.svg';

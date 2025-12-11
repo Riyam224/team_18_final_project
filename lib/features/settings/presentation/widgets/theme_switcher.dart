@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
+import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/settings/logic/theme_cubit.dart';
 import 'package:team_18_final_project/features/settings/presentation/widgets/custom_toggle_switch.dart';
@@ -22,17 +23,14 @@ class ThemeSwitcherTile extends StatelessWidget {
       builder: (context, state) {
         final bool isDarkModeActive = state.themeMode == ThemeMode.dark;
 
-        final Color iconColor =
-            isDarkModeActive ? theme.primaryColor : theme.primaryColor;
 
         return SettingsListTile(
           key:  widgetKey, 
-          title: AppLocalizations.of(context)!.darkModeTitle,
+          title: AppLocalizations.of(context)?.darkModeTitle ?? AppStrings.fallbackLocalization,
           titleTextStyle: AppTextStyles.titleLargesemiBold.copyWith(
             color: isDarkModeActive ? AppColors.textWhite : AppColors.primary,
           ),
           iconPath: AppAssets.settingsDarkMode,
-          iconColor: iconColor,
           trailing: CustomToggleSwitch(
             key: const Key('themeToggleButton'),
             value: isDarkModeActive,

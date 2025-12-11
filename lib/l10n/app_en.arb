@@ -9,7 +9,9 @@
     "darkModeTitle": "Dark Mode",
     "chooseLanguage": "Choose Language",
     "cancelButton": "Cancel",
-    "name": "Sophia Isabella",
     "languageEnglish": "English", 
-    "languageArabic": "Arabic"
-}
+    "languageArabic": "Arabic",
+    "languageSetSuccess": "Language set to {languageName} successfully",
+    "languageSetSuccessDescription": "Message shown when the app language is successfully changed",
+    "defaultGuestName": "Guest"
+    }

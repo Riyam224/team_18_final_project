@@ -286,7 +286,7 @@ Future<void> _setupTransactions() async {
 
 
 Future<void> _settings() async {
-  //rahma settings
+  // settings
   sl.registerLazySingleton<ThemeCubit>(
     () => ThemeCubit(),
 );

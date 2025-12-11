@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -26,11 +25,6 @@ class AppProvidersWrapper extends StatelessWidget {
             create: (context) => sl<ThemeCubit>(),
             child: BlocBuilder<ThemeCubit, ThemeState>(
               builder: (context, themeState) {
-                AppTheme.setSystemUIOverlayStyle(themeState.themeMode);
-
-// Set preferred orientations (optional - remove if you want landscape support)
-                SystemChrome.setPreferredOrientations(
-                    AppConstants.allowedOrientations);
 
                 return ScreenUtilInit(
                   designSize: AppConstants.designSize,

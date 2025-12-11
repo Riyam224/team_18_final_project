@@ -149,12 +149,6 @@ abstract class AppLocalizations {
   /// **'Cancel'**
   String get cancelButton;
 
-  /// No description provided for @name.
-  ///
-  /// In en, this message translates to:
-  /// **'Sophia Isabella'**
-  String get name;
-
   /// No description provided for @languageEnglish.
   ///
   /// In en, this message translates to:
@@ -166,6 +160,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Arabic'**
   String get languageArabic;
+
+  /// No description provided for @languageSetSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Language set to {languageName} successfully'**
+  String languageSetSuccess(Object languageName);
+
+  /// No description provided for @languageSetSuccessDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Message shown when the app language is successfully changed'**
+  String get languageSetSuccessDescription;
+
+  /// No description provided for @defaultGuestName.
+  ///
+  /// In en, this message translates to:
+  /// **'Guest'**
+  String get defaultGuestName;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

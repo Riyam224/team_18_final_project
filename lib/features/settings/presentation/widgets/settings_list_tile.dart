@@ -9,7 +9,6 @@ class SettingsListTile extends StatelessWidget {
   final String title;
   final Widget? trailing;
   final VoidCallback? onTap;
-  final Color? iconColor;
   final bool hasChevron;
   final bool showDivider;
   final TextStyle? titleTextStyle;
@@ -22,7 +21,6 @@ class SettingsListTile extends StatelessWidget {
     required this.iconPath,
     this.trailing,
     this.onTap,
-    this.iconColor,
     this.hasChevron = true,
     this.showDivider = true,
     this.titleTextStyle,
@@ -40,9 +38,7 @@ class SettingsListTile extends StatelessWidget {
         isDark ? AppColors.iconDark : theme.primaryColor;
     final Color iconForegroundColor = AppColors.textWhite;
 
-    final defaultTextColor = isDark
-        ? theme.textTheme.titleMedium!.color
-        : theme.textTheme.titleMedium!.color;
+    final defaultTextColor = theme.colorScheme.onSurface;
 
     final Color fixedDividerColor = AppColors.grayDevider;
 
@@ -82,7 +78,7 @@ class SettingsListTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style: theme.textTheme.titleMedium!
+                    style: theme.textTheme.titleMedium ?? const TextStyle()
                         .copyWith(
                           color: defaultTextColor,
                           fontWeight: FontWeight.w500,
@@ -91,7 +87,7 @@ class SettingsListTile extends StatelessWidget {
                   ),
                 ),
 
-                if (trailing != null) trailing!,
+                if (trailing case final Widget t) t,
 
                 if (trailing == null && hasChevron)
                   Builder(builder: (context) {
@@ -102,11 +98,18 @@ class SettingsListTile extends StatelessWidget {
                     final Color finalChevronColor = chevronColor ??
                         (isDark ? AppColors.textWhite : theme.primaryColor);
 
-                    final Widget chevronWidget;
 
-                    if (chevronPath != null) {
+                    Widget chevronWidget = Icon(
+                        Icons.keyboard_arrow_right,
+                        size: AppSizing.w24,
+                        color: finalChevronColor,
+                    );
+
+                    final String? path = chevronPath;
+
+                    if (path != null) {
                       chevronWidget = SvgPicture.asset(
-                        chevronPath!,
+                        path,
                         width: AppSizing.w20,
                         height: AppSizing.w20,
                         colorFilter: ColorFilter.mode(

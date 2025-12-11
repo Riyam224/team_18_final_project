@@ -2,13 +2,37 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
-import 'package:team_18_final_project/l10n/app_localizations.dart';
+import 'dart:io';
 
 class SettingsHeader extends StatelessWidget {
-  const SettingsHeader({super.key});
+  // New: Dynamic user data to mirror HomeHeader
+  final String userName; 
+  final String? avatarPath;
+
+  const SettingsHeader({super.key,
+  required this.userName, 
+    this.avatarPath, 
+  });
+
+
+  ImageProvider _buildAvatarProvider() {
+  if (avatarPath case final String path when path.isNotEmpty) {
+
+    if (path.startsWith('assets/')) {
+      return AssetImage(path);
+    }
+    if (path.startsWith('http')) {
+      return NetworkImage(path);
+    }
+    return FileImage(File(path)); 
+  }
+  
+  return const AssetImage(AppAssets.profileGirl); 
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +47,11 @@ class SettingsHeader extends StatelessWidget {
             CircleAvatar(
               radius: 46.r,
               backgroundColor: isDark ? AppColors.darkBackAvatar : AppColors.backAvatar,
-              child: ClipOval(
-                child: Image.asset(
-                  AppAssets.profileMan, 
-                  fit: BoxFit.cover,
-                  width: AppSizing.w92,
-                  height: AppSizing.h92,
-                ),
-              ),
+              backgroundImage: _buildAvatarProvider(),
             ),
             AppSpacing.gapH24,
             Text(
-              AppLocalizations.of(context)!.name,
+              userName,
               style: AppTextStyles.headlineMedium.copyWith(
                 color: isDark ? AppColors.textWhite : theme.primaryColor,
               ),
