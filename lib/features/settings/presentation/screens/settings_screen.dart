@@ -173,7 +173,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       label: AppStrings.billingPayment,
                       textColor: textColor,
                       isDark: isDark,
-                      onTap: () => context.push(AppRoutes.billingPaymentSettings),
+                      onTap: () =>
+                          context.push(AppRoutes.billingPaymentSettings),
                     ),
                     Divider(color: dividerColor),
                     _SettingsTile(
