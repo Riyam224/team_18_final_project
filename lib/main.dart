@@ -3,16 +3,19 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:secure_application/secure_application.dart';
 
 import 'package:team_18_final_project/core/config/app_config.dart';
+import 'package:team_18_final_project/l10n/app_localizations.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/app_router.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/config/storage_keys_config.dart';
+import 'package:team_18_final_project/core/utils/locale_controller.dart';
 import 'package:team_18_final_project/core/utils/theme_controller.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
@@ -90,6 +93,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   StreamSubscription<bool>? _lockStateSub;
   StreamSubscription<bool>? _sessionStateSub;
   ThemeMode _themeMode = ThemeMode.system;
+  Locale _locale = const Locale('en', '');
 
   @override
   void initState() {
@@ -114,6 +118,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     _listenToSession();
     _checkRootAndWarn();
     _loadThemeMode();
+    _loadLocale();
 
     // Update activity timestamp on app launch
     _appLockService.updateActivity();
@@ -175,6 +180,40 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
         return ThemeMode.system;
       default:
         return null;
+    }
+  }
+
+  Future<void> _loadLocale() async {
+    final storedLocale =
+        await _secureStorage.read(key: StorageKeysConfig.language);
+    final localeString = storedLocale.fold((_) => null, (value) => value);
+    final parsedLocale = _parseLocale(localeString);
+    await _setLocale(parsedLocale, persist: false);
+  }
+
+  Future<void> _setLocale(Locale locale, {bool persist = true}) async {
+    if (!mounted) return;
+
+    setState(() {
+      _locale = locale;
+    });
+
+    if (persist) {
+      await _secureStorage.write(
+        key: StorageKeysConfig.language,
+        value: locale.languageCode,
+      );
+    }
+  }
+
+  Locale _parseLocale(String? localeString) {
+    switch (localeString) {
+      case 'en':
+        return const Locale('en', '');
+      case 'ar':
+        return const Locale('ar', '');
+      default:
+        return const Locale('en', '');
     }
   }
 
@@ -277,20 +316,37 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
             child: ThemeController(
               themeMode: _themeMode,
               setThemeMode: (mode) => _setThemeMode(mode),
-              child: MaterialApp.router(
-                title: AppConstants.appTitle,
-                debugShowCheckedModeBanner: false,
+              child: LocaleController(
+                locale: _locale,
+                setLocale: (locale) => _setLocale(locale),
+                child: MaterialApp.router(
+                  title: AppConstants.appTitle,
+                  debugShowCheckedModeBanner: false,
 
-                // Themes
-                theme: AppTheme.lightTheme,
-                darkTheme: AppTheme.darkTheme,
-                themeMode: _themeMode,
+                  // Localization
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en', ''),
+                    Locale('ar', ''),
+                  ],
+                  locale: _locale,
 
-                // Routing configuration
-                routerConfig: RouteGenerator.mainRoutingInOurApp,
+                  // Themes
+                  theme: AppTheme.lightTheme,
+                  darkTheme: AppTheme.darkTheme,
+                  themeMode: _themeMode,
 
-                // SecureApplication blur/screenshot handling routed via observer
-                builder: (context, child) => child ?? const SizedBox(),
+                  // Routing configuration
+                  routerConfig: RouteGenerator.mainRoutingInOurApp,
+
+                  // SecureApplication blur/screenshot handling routed via observer
+                  builder: (context, child) => child ?? const SizedBox(),
+                ),
               ),
             ),
           ),

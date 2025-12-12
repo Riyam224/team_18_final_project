@@ -7,10 +7,11 @@ import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/core/utils/locale_controller.dart';
 import 'package:team_18_final_project/core/utils/theme_controller.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 
@@ -105,6 +106,87 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
+  Future<void> _showLanguageDialog() async {
+    final localeController = LocaleController.of(context);
+    final currentLocale = localeController.locale;
+
+    await showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        final theme = Theme.of(dialogContext);
+        final isDark = theme.brightness == Brightness.dark;
+
+        return AlertDialog(
+          backgroundColor: isDark ? AppColors.darkCard : AppColors.white,
+          title: Text(
+            'Select Language',
+            style: AppTextStyles.headlineSmall.copyWith(
+              color: isDark ? AppColors.textWhite : AppColors.primary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.language,
+                  color: currentLocale.languageCode == 'en'
+                      ? AppColors.primary
+                      : (isDark ? AppColors.textWhite : AppColors.textGray),
+                ),
+                title: Text(
+                  'English',
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    color: isDark ? AppColors.textWhite : AppColors.textBlack,
+                    fontWeight: currentLocale.languageCode == 'en'
+                        ? FontWeight.w700
+                        : FontWeight.normal,
+                  ),
+                ),
+                trailing: currentLocale.languageCode == 'en'
+                    ? Icon(Icons.check, color: AppColors.primary)
+                    : null,
+                onTap: () async {
+                  await localeController.setLocale(const Locale('en', ''));
+                  if (dialogContext.mounted) {
+                    Navigator.of(dialogContext).pop();
+                  }
+                },
+              ),
+              ListTile(
+                leading: Icon(
+                  Icons.language,
+                  color: currentLocale.languageCode == 'ar'
+                      ? AppColors.primary
+                      : (isDark ? AppColors.textWhite : AppColors.textGray),
+                ),
+                title: Text(
+                  'العربية',
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    color: isDark ? AppColors.textWhite : AppColors.textBlack,
+                    fontWeight: currentLocale.languageCode == 'ar'
+                        ? FontWeight.w700
+                        : FontWeight.normal,
+                  ),
+                ),
+                trailing: currentLocale.languageCode == 'ar'
+                    ? Icon(Icons.check, color: AppColors.primary)
+                    : null,
+                onTap: () async {
+                  await localeController.setLocale(const Locale('ar', ''));
+                  if (dialogContext.mounted) {
+                    Navigator.of(dialogContext).pop();
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -127,7 +209,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppStrings.settings,
+                      context.tr.settings,
                       style: AppTextStyles.headlineLarge.copyWith(
                         color: textColor,
                         fontWeight: FontWeight.w700,
@@ -162,7 +244,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     AppSpacing.gapH12,
                     _SettingsTile(
                       icon: Icons.person,
-                      label: AppStrings.myAccount,
+                      label: context.tr.myAccount,
                       textColor: textColor,
                       isDark: isDark,
                       onTap: () => context.push(AppRoutes.myAccount),
@@ -170,7 +252,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Divider(color: dividerColor),
                     _SettingsTile(
                       icon: Icons.account_balance_wallet_outlined,
-                      label: AppStrings.billingPayment,
+                      label: context.tr.billingPayment,
                       textColor: textColor,
                       isDark: isDark,
                       onTap: () =>
@@ -179,28 +261,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     Divider(color: dividerColor),
                     _SettingsTile(
                       icon: Icons.help_outline_rounded,
-                      label: AppStrings.faqSupport,
+                      label: context.tr.faqSupport,
                       textColor: textColor,
                       isDark: isDark,
                       onTap: () => context.push(AppRoutes.faqSupport),
                     ),
                     AppSpacing.vertical(28),
                     _SectionTitle(
-                      title: AppStrings.settings,
+                      title: context.tr.settings,
                       color: subtitleColor,
                     ),
                     AppSpacing.gapH12,
                     _SettingsTile(
                       icon: Icons.language,
-                      label: AppStrings.language,
+                      label: context.tr.language,
                       textColor: textColor,
                       isDark: isDark,
-                      onTap: _showComingSoon,
+                      onTap: _showLanguageDialog,
                     ),
                     Divider(color: dividerColor),
                     _SettingsTile(
                       icon: Icons.nightlight_round,
-                      label: AppStrings.darkMode,
+                      label: context.tr.darkMode,
                       textColor: textColor,
                       isDark: isDark,
                       trailing: Switch.adaptive(
