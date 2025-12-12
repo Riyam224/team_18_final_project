@@ -279,7 +279,8 @@ class AppStrings {
   static const String themePreferenceKey = 'preferred_theme';
   static const String debugErrorLoadingProfile = 'Error loading user profile in Settings:';
   static const String fallbackGuestName = 'Guest';
-  static const String fallbackLocalization = 'Localization not available';
+  static const String exceptionLocalization = 'AppLocalizations not found in current BuildContext. '
+              'Check your MaterialApp/CupertinoApp setup.';
   static const String fallbackLanguageName = 'Unknown Language';
   static const String debugErrorLoadingTheme = 'Theme Cubit Error loading theme preference:'; 
     static const String debugErrorSavingTheme = 'Theme Cubit Error saving theme preference:';  

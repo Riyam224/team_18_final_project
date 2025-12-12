@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/settings/logic/theme_cubit.dart';
 import 'package:team_18_final_project/features/settings/presentation/widgets/custom_toggle_switch.dart';
 import 'package:team_18_final_project/features/settings/presentation/widgets/settings_list_tile.dart';
-import 'package:team_18_final_project/l10n/app_localizations.dart';
 
 class ThemeSwitcherTile extends StatelessWidget {
   final Key? widgetKey;
@@ -26,7 +25,7 @@ class ThemeSwitcherTile extends StatelessWidget {
 
         return SettingsListTile(
           key:  widgetKey, 
-          title: AppLocalizations.of(context)?.darkModeTitle ?? AppStrings.fallbackLocalization,
+          title: context.tr.darkModeTitle,
           titleTextStyle: AppTextStyles.titleLargesemiBold.copyWith(
             color: isDarkModeActive ? AppColors.textWhite : AppColors.primary,
           ),

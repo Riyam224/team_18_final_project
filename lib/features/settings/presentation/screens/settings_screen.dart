@@ -4,6 +4,7 @@ import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
@@ -113,11 +114,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
 List<Map<String, String>> getAvailableLanguages(BuildContext context) {
   return [
     {
-      'name': AppLocalizations.of(context)?.languageEnglish ?? AppStrings.fallbackLocalization, 
+      'name': context.tr.languageEnglish, 
       'code': 'en'
     },
     {
-      'name': AppLocalizations.of(context)?.languageArabic ?? AppStrings.fallbackLocalization,  
+      'name': context.tr.languageArabic,  
       'code': 'ar'
     },
   ];
@@ -136,7 +137,7 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
       builder: (BuildContext dialogContext) {
         return AlertDialog(
           title: Text(
-            AppLocalizations.of(context)?.chooseLanguage ?? AppStrings.fallbackLocalization,
+            context.tr.chooseLanguage,
             style: theme.textTheme.headlineLarge,
           ),
           content: SizedBox(
@@ -166,9 +167,9 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                           content: Text(
-                              AppLocalizations.of(context)?.languageSetSuccess(
+                            context.tr.languageSetSuccess(
                                   lang['name'] ?? AppStrings.fallbackLanguageName
-                              ) ?? AppStrings.fallbackLocalization, 
+                              ), 
                           ),
                           ),
                     );
@@ -181,7 +182,7 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
             TextButton(
               onPressed: () => Navigator.of(dialogContext).pop(),
               child: Text(
-                AppLocalizations.of(context)?.cancelButton ?? AppStrings.fallbackLocalization,
+                context.tr.cancelButton,
                 style: theme.textTheme.titleLarge,
               ),
             )
@@ -203,7 +204,7 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
       child: Scaffold(
         backgroundColor: theme.scaffoldBackgroundColor,
         appBar: AppBar(
-          title: Text(AppLocalizations.of(context)?.settingsTitle ?? AppStrings.fallbackLocalization,
+          title: Text(context.tr.settingsTitle,
               style: theme.textTheme.headlineLarge),
           backgroundColor: theme.appBarTheme.backgroundColor,
           elevation: 0,
@@ -222,11 +223,11 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(AppLocalizations.of(context)?.generalSection ?? AppStrings.fallbackLocalization,
+                    Text(context.tr.generalSection,
                         style: AppTextStyles.titleLargesemiBold
                             .copyWith(color: sectionTitleColor)),
                     SettingsListTile(
-                      title: AppLocalizations.of(context)?.myAccountTitle ?? AppStrings.fallbackLocalization,
+                      title:context.tr.myAccountTitle,
                       titleTextStyle: AppTextStyles.titleLargesemiBold
                           .copyWith(color: sectionTitleColor),
                       iconPath: AppAssets.settingsAccount,
@@ -236,7 +237,7 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
                       chevronPath: AppAssets.settingsArrow,
                     ),
                     SettingsListTile(
-                      title: AppLocalizations.of(context)?.billingPaymentTitle ?? AppStrings.fallbackLocalization,
+                      title: context.tr.billingPaymentTitle,
                       titleTextStyle: AppTextStyles.titleLargesemiBold
                           .copyWith(color: sectionTitleColor),
                       iconPath: AppAssets.settingsBilling,
@@ -247,7 +248,7 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
                       chevronPath: AppAssets.settingsArrow,
                     ),
                     SettingsListTile(
-                      title: AppLocalizations.of(context)?.faqSupportTitle ?? AppStrings.fallbackLocalization,
+                      title: context.tr.faqSupportTitle,
                       titleTextStyle: AppTextStyles.titleLargesemiBold
                           .copyWith(color: sectionTitleColor),
                       iconPath: AppAssets.settingsFAQ,
@@ -256,13 +257,13 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
                       chevronPath: AppAssets.settingsArrow,
                     ),
                     AppSpacing.gapH12,
-                    Text(AppLocalizations.of(context)?.settingsTitle ?? AppStrings.fallbackLocalization,
+                    Text(context.tr.settingsTitle,
                         style: AppTextStyles.titleLargesemiBold.copyWith(
                           color:
                               isDark ? AppColors.textWhite : AppColors.primary,
                         )),
                     SettingsListTile(
-                      title: AppLocalizations.of(context)?.languageTitle ?? AppStrings.fallbackLocalization,
+                      title: context.tr.languageTitle,
                       titleTextStyle: AppTextStyles.titleLargesemiBold
                           .copyWith(color: sectionTitleColor),
                       iconPath: AppAssets.settingsLanguage,
