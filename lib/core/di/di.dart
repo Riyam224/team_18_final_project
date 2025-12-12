@@ -216,7 +216,7 @@ Future<void> _setupAuth() async {
     ),
   );
 
-  sl.registerFactory(() => ProfileCubit(sl()));
+  sl.registerFactory(() => ProfileCubit(sl(), sl<ISecureStorage>()));
 }
 
 Future<void> _setupHome() async {

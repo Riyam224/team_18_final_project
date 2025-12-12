@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/primary_appBar.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
-import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class FaqSupportScreen extends StatelessWidget {
@@ -22,13 +20,8 @@ class FaqSupportScreen extends StatelessWidget {
       appBar: PrimaryAppBar(
         backgroundColor:
             isDark ? AppColors.darkBackground : AppColors.lightBackground,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          color: isDark ? AppColors.textWhite : AppColors.primary,
-          onPressed: () => context.go(AppRoutes.settings),
-        ),
         title: Text(
-          AppStrings.faqSupport,
+          context.tr.faqSupport,
           style: AppTextStyles.headlineSmall.copyWith(
             color: isDark ? AppColors.textWhite : AppColors.primary,
             fontWeight: FontWeight.w700,
@@ -44,21 +37,23 @@ class FaqSupportScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                AppStrings.popularQuestions,
+                context.tr.popularQuestions,
                 style: AppTextStyles.titleMedium.copyWith(
                   color: isDark ? AppColors.textWhite : AppColors.textBlack,
                   fontWeight: FontWeight.w700,
                 ),
               ),
               AppSpacing.gapH12,
-              ..._faqs.map((faq) => _FaqTile(
-                    question: faq.$1,
-                    answer: faq.$2,
-                    isDark: isDark,
-                  )),
+              ..._getFaqs(context).map(
+                (faq) => _FaqTile(
+                  question: faq.$1,
+                  answer: faq.$2,
+                  isDark: isDark,
+                ),
+              ),
               AppSpacing.gapH24,
               Text(
-                AppStrings.needMoreHelp,
+                context.tr.needMoreHelp,
                 style: AppTextStyles.titleMedium.copyWith(
                   color: isDark ? AppColors.textWhite : AppColors.textBlack,
                   fontWeight: FontWeight.w700,
@@ -74,11 +69,13 @@ class FaqSupportScreen extends StatelessWidget {
   }
 }
 
-final List<(String, String)> _faqs = [
-  (AppStrings.faqUpdateBillingQuestion, AppStrings.faqUpdateBillingAnswer),
-  (AppStrings.faqExportInvoicesQuestion, AppStrings.faqExportInvoicesAnswer),
-  (AppStrings.faqContactSupportQuestion, AppStrings.faqContactSupportAnswer),
-];
+List<(String, String)> _getFaqs(BuildContext context) {
+  return [
+    (context.tr.faqUpdateBillingQuestion, context.tr.faqUpdateBillingAnswer),
+    (context.tr.faqExportInvoicesQuestion, context.tr.faqExportInvoicesAnswer),
+    (context.tr.faqContactSupportQuestion, context.tr.faqContactSupportAnswer),
+  ];
+}
 
 class _FaqTile extends StatelessWidget {
   final String question;
@@ -193,7 +190,7 @@ class _SupportCard extends StatelessWidget {
               AppSpacing.horizontal(12),
               Expanded(
                 child: Text(
-                  AppStrings.contactSupport,
+                  context.tr.contactSupport,
                   style: AppTextStyles.titleMedium.copyWith(
                     color: isDark ? AppColors.textWhite : AppColors.textBlack,
                     fontWeight: FontWeight.w700,
@@ -204,7 +201,7 @@ class _SupportCard extends StatelessWidget {
           ),
           AppSpacing.gapH12,
           Text(
-            AppStrings.supportResponseTime,
+            context.tr.supportResponseTime,
             style: AppTextStyles.bodyMedium.copyWith(
               color: isDark ? AppColors.textGrayLight : AppColors.textGray,
             ),
@@ -225,7 +222,7 @@ class _SupportCard extends StatelessWidget {
               ),
               onPressed: () {},
               child: Text(
-                AppStrings.startChat,
+                context.tr.startChat,
                 style: AppTextStyles.titleSmall.copyWith(
                   color: isDark ? AppColors.textDark : AppColors.textWhite,
                   fontWeight: FontWeight.w700,

@@ -44,6 +44,8 @@ dependencies:
   fl_chart: ^1.1.1
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
   flutter_bloc: ^9.1.1
   flutter_screenutil: ^5.9.3
   flutter_secure_storage: ^9.2.1
@@ -85,6 +87,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
 # The following section is specific to Flutter packages.
 flutter:
+  generate: true
   uses-material-design: true
   generate: true
 

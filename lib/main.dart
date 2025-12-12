@@ -1,21 +1,27 @@
-import 'package:flutter/material.dart';
-import 'package:team_18_final_project/core/di/di.dart';
-import 'package:team_18_final_project/core/utils/app_providers_wrapper.dart';
 import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:secure_application/secure_application.dart';
 import 'package:team_18_final_project/core/config/app_config.dart';
+import 'package:team_18_final_project/core/config/storage_keys_config.dart';
+import 'package:team_18_final_project/core/config/timing_config.dart';
+import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/app_router.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_root_detection_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_root_detection_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
 import 'package:team_18_final_project/core/utils/app_theme.dart';
+import 'package:team_18_final_project/core/utils/locale_controller.dart';
+import 'package:team_18_final_project/core/utils/theme_controller.dart';
+import 'package:team_18_final_project/l10n/app_localizations.dart';
 import 'firebase_options.dart';
 
 Future<void> main({
@@ -89,8 +95,11 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   late final IAppLockService _appLockService;
   late final IRootDetectionService _rootDetectionService;
   late final IAuditLogService _auditLogService;
+  late final ISecureStorage _secureStorage;
   StreamSubscription<bool>? _lockStateSub;
   StreamSubscription<bool>? _sessionStateSub;
+  ThemeMode _themeMode = ThemeMode.system;
+  Locale _locale = const Locale('en', '');
 
   @override
   void initState() {
@@ -102,6 +111,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     _appLockService = sl<IAppLockService>();
     _rootDetectionService = sl<IRootDetectionService>();
     _auditLogService = sl<IAuditLogService>();
+    _secureStorage = sl<ISecureStorage>();
 
     // Initialize secure application controller for background blur
     _secureController = SecureApplicationController(SecureApplicationState());
@@ -113,6 +123,8 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     _listenToAutoLock();
     _listenToSession();
     _checkRootAndWarn();
+    _loadThemeMode();
+    _loadLocale();
 
     // Update activity timestamp on app launch
     _appLockService.updateActivity();
@@ -138,6 +150,77 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
         appNavigatorKey.currentContext?.go(AppRoutes.login);
       }
     });
+  }
+
+  Future<void> _loadThemeMode() async {
+    final storedMode =
+        await _secureStorage.read(key: StorageKeysConfig.themeMode);
+    final modeString = storedMode.fold((_) => null, (value) => value);
+    final parsedMode = _parseThemeMode(modeString) ?? ThemeMode.system;
+    await _setThemeMode(parsedMode, persist: false);
+  }
+
+  Future<void> _setThemeMode(ThemeMode mode, {bool persist = true}) async {
+    if (!mounted) return;
+
+    setState(() {
+      _themeMode = mode;
+    });
+    AppTheme.setSystemUIOverlayStyle(mode);
+
+    if (persist) {
+      await _secureStorage.write(
+        key: StorageKeysConfig.themeMode,
+        value: mode.name,
+      );
+    }
+  }
+
+  ThemeMode? _parseThemeMode(String? modeString) {
+    switch (modeString) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      case 'system':
+        return ThemeMode.system;
+      default:
+        return null;
+    }
+  }
+
+  Future<void> _loadLocale() async {
+    final storedLocale =
+        await _secureStorage.read(key: StorageKeysConfig.language);
+    final localeString = storedLocale.fold((_) => null, (value) => value);
+    final parsedLocale = _parseLocale(localeString);
+    await _setLocale(parsedLocale, persist: false);
+  }
+
+  Future<void> _setLocale(Locale locale, {bool persist = true}) async {
+    if (!mounted) return;
+
+    setState(() {
+      _locale = locale;
+    });
+
+    if (persist) {
+      await _secureStorage.write(
+        key: StorageKeysConfig.language,
+        value: locale.languageCode,
+      );
+    }
+  }
+
+  Locale _parseLocale(String? localeString) {
+    switch (localeString) {
+      case 'en':
+        return const Locale('en', '');
+      case 'ar':
+        return const Locale('ar', '');
+      default:
+        return const Locale('en', '');
+    }
   }
 
   @override
@@ -209,19 +292,62 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    //SystemChrome.setPreferredOrientations(AppConstants.allowedOrientations);
+    // Set preferred orientations (optional - remove if you want landscape support)
+    SystemChrome.setPreferredOrientations(AppConstants.allowedOrientations);
 
-    return SecureApplication(
-      secureApplicationController: _secureController,
-      child: Listener(
-        behavior: HitTestBehavior.deferToChild,
-        onPointerDown: (_) {
-          // Track user activity for auto-lock and session management
-          _appLockService.updateActivity();  
-          _sessionManager.updateActivity(); 
-        },
-        child: const AppProvidersWrapper(),
-      ),
+    return ScreenUtilInit(
+      designSize: AppConstants.designSize,
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, __) {
+        return SecureApplication(
+          secureApplicationController: _secureController,
+          child: Listener(
+            behavior: HitTestBehavior.deferToChild,
+            onPointerDown: (_) {
+              // Track user activity for auto-lock and session management
+              _appLockService.updateActivity();
+              _sessionManager.updateActivity();
+            },
+            child: ThemeController(
+              themeMode: _themeMode,
+              setThemeMode: (mode) => _setThemeMode(mode),
+              child: LocaleController(
+                locale: _locale,
+                setLocale: (locale) => _setLocale(locale),
+                child: MaterialApp.router(
+                  title: AppConstants.appTitle,
+                  debugShowCheckedModeBanner: false,
+
+                  // Localization
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en', ''),
+                    Locale('ar', ''),
+                  ],
+                  locale: _locale,
+
+                  // Themes
+                  theme: AppTheme.lightTheme,
+                  darkTheme: AppTheme.darkTheme,
+                  themeMode: _themeMode,
+
+                  // Routing configuration
+                  routerConfig: RouteGenerator.mainRoutingInOurApp,
+
+                  // SecureApplication blur/screenshot handling routed via observer
+                  builder: (context, child) => child ?? const SizedBox(),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
     );
   }
 

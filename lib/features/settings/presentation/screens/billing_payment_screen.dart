@@ -6,7 +6,7 @@ import 'package:team_18_final_project/core/common_ui/widgets/primary_appBar.dart
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
@@ -30,7 +30,7 @@ class BillingPaymentScreen extends StatelessWidget {
           onPressed: () => context.go(AppRoutes.settings),
         ),
         title: Text(
-          AppStrings.billingPayment,
+          context.tr.billingPayment,
           style: AppTextStyles.headlineSmall.copyWith(
             color: isDark ? AppColors.textWhite : AppColors.primary,
             fontWeight: FontWeight.w700,
@@ -45,7 +45,7 @@ class BillingPaymentScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              AppStrings.paymentMethods,
+              context.tr.paymentMethods,
               style: AppTextStyles.titleMedium.copyWith(
                 color: isDark ? AppColors.textWhite : AppColors.textBlack,
                 fontWeight: FontWeight.w700,
@@ -53,23 +53,23 @@ class BillingPaymentScreen extends StatelessWidget {
             ),
             AppSpacing.gapH16,
             _PaymentCardTile(
-              title: AppStrings.primaryCard,
-              subtitle: '${AppStrings.cardNumberHidden}3456',
-              badge: AppStrings.cardVisa,
+              title: context.tr.primaryCard,
+              subtitle: '${context.tr.cardNumberHidden}3456',
+              badge: context.tr.cardVisa,
               asset: AppAssets.visaLogo,
               isDark: isDark,
             ),
             AppSpacing.gapH12,
             _PaymentCardTile(
-              title: AppStrings.backupCard,
-              subtitle: '${AppStrings.cardNumberHidden}9801',
-              badge: AppStrings.cardMastercard,
+              title: context.tr.backupCard,
+              subtitle: '${context.tr.cardNumberHidden}9801',
+              badge: context.tr.cardMastercard,
               asset: AppAssets.mastercardLogo,
               isDark: isDark,
             ),
             AppSpacing.gapH28,
             Text(
-              AppStrings.billing,
+              context.tr.billing,
               style: AppTextStyles.titleMedium.copyWith(
                 color: isDark ? AppColors.textWhite : AppColors.textBlack,
                 fontWeight: FontWeight.w700,
@@ -78,13 +78,13 @@ class BillingPaymentScreen extends StatelessWidget {
             AppSpacing.gapH16,
             _ActionTile(
               icon: Icons.receipt_long_outlined,
-              label: AppStrings.viewInvoices,
+              label: context.tr.viewInvoices,
               onTap: () {},
               isDark: isDark,
             ),
             _ActionTile(
               icon: Icons.add_card_outlined,
-              label: AppStrings.addNewPaymentMethod,
+              label: context.tr.addNewPaymentMethod,
               onTap: () {},
               isDark: isDark,
             ),
@@ -104,9 +104,9 @@ class BillingPaymentScreen extends StatelessWidget {
                 ),
                 onPressed: () {},
                 child: Text(
-                  AppStrings.managePaymentDetails,
+                  context.tr.managePaymentDetails,
                   style: AppTextStyles.titleSmall.copyWith(
-                    color: isDark ? AppColors.textDark : AppColors.textWhite,
+                    color: isDark ? const Color.fromRGBO(0, 0, 0, 1) : AppColors.textWhite,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

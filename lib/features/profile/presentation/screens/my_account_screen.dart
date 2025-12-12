@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
@@ -76,7 +76,7 @@ class _MyAccountViewState extends State<_MyAccountView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              AppStrings.chooseAvatar,
+              context.tr.chooseAvatar,
               style: Theme.of(context).textTheme.titleMedium,
             ),
             AppSpacing.gapH16,
@@ -114,7 +114,7 @@ class _MyAccountViewState extends State<_MyAccountView> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(AppStrings.myAccount),
+        title: Text(context.tr.myAccount),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () => context.go(AppRoutes.settings),

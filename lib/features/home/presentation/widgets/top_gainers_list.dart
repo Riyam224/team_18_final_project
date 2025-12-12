@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/features/home/domain/entities/top_gainer.dart';
 import 'package:team_18_final_project/features/home/presentation/widgets/top_gainer_tile.dart';
 
@@ -20,8 +20,8 @@ class TopGainersList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (topGainers.isEmpty) {
-      return const Center(
-        child: Text(AppStrings.noTopGainersAvailable),
+      return Center(
+        child: Text(context.tr.noTopGainersAvailable),
       );
     }
 

@@ -1,21 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/config/storage_keys_config.dart';
+import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
-import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/features/settings/presentation/widgets/settings_list_tile.dart';
-import 'package:team_18_final_project/features/settings/presentation/widgets/settings_header.dart';
-import 'package:team_18_final_project/features/settings/presentation/widgets/theme_switcher.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:team_18_final_project/features/settings/logic/language_cubit.dart';
-import 'package:go_router/go_router.dart';
-import 'package:team_18_final_project/l10n/app_localizations.dart';
+import 'package:team_18_final_project/core/utils/locale_controller.dart';
+import 'package:team_18_final_project/core/utils/theme_controller.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -25,247 +23,359 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  String _userName = '';
   String? _avatarPath;
-
+  String _displayName = 'Sophia Isabella';
+  bool _isLoading = true;
+  bool _darkModeEnabled = false;
   late final ISecureStorage _secureStorage;
 
   @override
   void initState() {
     super.initState();
     _secureStorage = sl<ISecureStorage>();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (mounted && _userName.isEmpty) {
-        setState(() {
-          _userName = AppLocalizations.of(context)?.defaultGuestName ??
-              AppStrings.fallbackGuestName;
-        });
-      }
-    });
-    _loadUserProfile();
+    _loadData();
   }
 
-  Future<void> _loadUserProfile() async {
-    try {
-      // Load user first name
-      final firstNameResult = await _secureStorage.read(
-        key: StorageKeysConfig.userDisplayName,
-      );
-      final firstName = firstNameResult.fold(
-        (failure) => null,
-        (value) => value,
-      );
-
-      // Fallback to email username if no stored display name
-      final emailResult = await _secureStorage.read(
-        key: StorageKeysConfig.userEmail,
-      );
-      final email = emailResult.fold(
-        (failure) => null,
-        (value) => value,
-      );
-
-      // Load avatar path
-      final avatarResult = await _secureStorage.read(
-        key: StorageKeysConfig.avatarUrl,
-      );
-      final avatarPath = avatarResult.fold(
-        (failure) => null,
-        (value) => value,
-      );
-
-      if (!mounted) return;
-
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final controller = ThemeController.of(context);
+    final isDarkMode = controller.themeMode == ThemeMode.dark;
+    if (_darkModeEnabled != isDarkMode) {
       setState(() {
-        _userName = _extractFirstName(firstName) ??
-            _extractFirstName(email) ??
-            _userName;
-        _avatarPath = avatarPath;
+        _darkModeEnabled = isDarkMode;
       });
-    } catch (e) {
-      // Silently handle any errors and keep default values
-      debugPrint('${AppStrings.debugErrorLoadingProfile} $e');
     }
+    _loadData(); // Refresh avatar/display name when returning from My Account.
   }
 
-  String? _extractFirstName(String? value) {
-    if (value == null) return null;
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) return null;
+  Future<void> _loadData() async {
+    final avatarResult =
+        await _secureStorage.read(key: StorageKeysConfig.avatarUrl);
+    final displayNameResult =
+        await _secureStorage.read(key: StorageKeysConfig.userDisplayName);
+    final firstNameResult =
+        await _secureStorage.read(key: StorageKeysConfig.userFirstName);
+    final lastNameResult =
+        await _secureStorage.read(key: StorageKeysConfig.userLastName);
 
-    // If value looks like an email, use the part before @
-    final emailSplit = trimmed.split('@');
-    final base = emailSplit.first;
+    final avatar = avatarResult.fold((_) => null, (value) => value);
+    final displayName = displayNameResult.fold((_) => null, (value) => value);
+    final firstName = firstNameResult.fold((_) => null, (value) => value);
+    final lastName = lastNameResult.fold((_) => null, (value) => value);
 
-    final parts = base.split(RegExp(r'\s+'));
-    final first = parts.first;
-    if (first.isEmpty) return null;
-    return first;
+    final combinedName = [
+      if (firstName != null) firstName,
+      if (lastName != null) lastName,
+    ].where((e) => e.isNotEmpty).join(' ');
+
+    if (!mounted) return;
+    setState(() {
+      _avatarPath = avatar;
+      _displayName = (displayName?.isNotEmpty ?? false)
+          ? displayName!
+          : (combinedName.isNotEmpty ? combinedName : _displayName);
+      _isLoading = false;
+    });
   }
 
-  List<Map<String, String>> getAvailableLanguages(BuildContext context) {
-    return [
-      {'name': context.tr.languageEnglish, 'code': 'en'},
-      {'name': context.tr.languageArabic, 'code': 'ar'},
-    ];
+  ImageProvider _avatarProvider() {
+    if (_avatarPath != null && _avatarPath!.isNotEmpty) {
+      if (_avatarPath!.startsWith('assets/')) {
+        return AssetImage(_avatarPath!);
+      }
+      if (_avatarPath!.startsWith('http')) {
+        return NetworkImage(_avatarPath!);
+      }
+      return FileImage(File(_avatarPath!));
+    }
+    return const AssetImage(AppAssets.profileGirl);
   }
 
-  void _showLanguageSelectionDialog(BuildContext context, bool isDark) {
-    final theme = Theme.of(context);
+  Future<void> _toggleDarkMode(bool value) async {
+    final controller = ThemeController.of(context);
+    await controller.setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+    if (!mounted) return;
+    setState(() {
+      _darkModeEnabled = value;
+    });
+  }
 
-    final langCubit = context.read<LanguageCubit>();
+  void _showComingSoon() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('This option will be available soon.')),
+    );
+  }
 
-    final currentLanguageCode =
-        context.read<LanguageCubit>().state.languageCode;
+  Future<void> _showLanguageDialog() async {
+    final localeController = LocaleController.of(context);
+    final currentLocale = localeController.locale;
 
-    showDialog(
+    await showDialog(
       context: context,
       builder: (BuildContext dialogContext) {
+        final theme = Theme.of(dialogContext);
+        final isDark = theme.brightness == Brightness.dark;
+
         return AlertDialog(
+          backgroundColor: isDark ? AppColors.darkCard : AppColors.white,
           title: Text(
-            context.tr.chooseLanguage,
-            style: theme.textTheme.headlineLarge,
-          ),
-          content: SizedBox(
-            width: double.maxFinite,
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: getAvailableLanguages(context).length,
-              itemBuilder: (context, index) {
-                final lang = getAvailableLanguages(context)[index];
-                final isSelected = lang['code'] == currentLanguageCode;
-
-                return ListTile(
-                  title: Text(
-                    lang['name'] ?? AppStrings.fallbackLanguageName,
-                    style: theme.textTheme.headlineMedium,
-                  ),
-                  trailing: isSelected
-                      ? Icon(Icons.check,
-                          color:
-                              isDark ? AppColors.textWhite : AppColors.primary)
-                      : null,
-                  onTap: () {
-                    langCubit.changeLanguage(
-                      lang['code'] ?? 'en',
-                    );
-
-                    Navigator.of(dialogContext).pop();
-
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Text(
-                          context.tr.languageSetSuccess(
-                              lang['name'] ?? AppStrings.fallbackLanguageName),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
+            'Select Language',
+            style: AppTextStyles.headlineSmall.copyWith(
+              color: isDark ? AppColors.textWhite : AppColors.primary,
+              fontWeight: FontWeight.w700,
             ),
           ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(dialogContext).pop(),
-              child: Text(
-                context.tr.cancelButton,
-                style: theme.textTheme.titleLarge,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ListTile(
+                leading: Icon(
+                  Icons.language,
+                  color: currentLocale.languageCode == 'en'
+                      ? AppColors.primary
+                      : (isDark ? AppColors.textWhite : AppColors.textGray),
+                ),
+                title: Text(
+                  'English',
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    color: isDark ? AppColors.textWhite : AppColors.textBlack,
+                    fontWeight: currentLocale.languageCode == 'en'
+                        ? FontWeight.w700
+                        : FontWeight.normal,
+                  ),
+                ),
+                trailing: currentLocale.languageCode == 'en'
+                    ? Icon(Icons.check, color: AppColors.primary)
+                    : null,
+                onTap: () async {
+                  await localeController.setLocale(const Locale('en', ''));
+                  if (dialogContext.mounted) {
+                    Navigator.of(dialogContext).pop();
+                  }
+                },
               ),
-            )
-          ],
+              ListTile(
+                leading: Icon(
+                  Icons.language,
+                  color: currentLocale.languageCode == 'ar'
+                      ? AppColors.primary
+                      : (isDark ? AppColors.textWhite : AppColors.textGray),
+                ),
+                title: Text(
+                  'العربية',
+                  style: AppTextStyles.bodyLarge.copyWith(
+                    color: isDark ? AppColors.textWhite : AppColors.textBlack,
+                    fontWeight: currentLocale.languageCode == 'ar'
+                        ? FontWeight.w700
+                        : FontWeight.normal,
+                  ),
+                ),
+                trailing: currentLocale.languageCode == 'ar'
+                    ? Icon(Icons.check, color: AppColors.primary)
+                    : null,
+                onTap: () async {
+                  await localeController.setLocale(const Locale('ar', ''));
+                  if (dialogContext.mounted) {
+                    Navigator.of(dialogContext).pop();
+                  }
+                },
+              ),
+            ],
+          ),
         );
       },
     );
   }
 
-// ...
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
 
-    final sectionTitleColor = isDark ? AppColors.textWhite : AppColors.primary;
+    final background =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final textColor = isDark ? AppColors.textWhite : AppColors.primary;
+    final subtitleColor = isDark ? AppColors.textGrayLight : AppColors.textGray;
+    final dividerColor = isDark ? AppColors.darkCard : AppColors.gray5;
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
-        appBar: AppBar(
-          title: Text(context.tr.settingsTitle,
-              style: theme.textTheme.headlineLarge),
-          backgroundColor: theme.appBarTheme.backgroundColor,
-          elevation: 0,
-          centerTitle: false,
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SettingsHeader(
-                userName: _userName,
-                avatarPath: _avatarPath,
-              ),
-              Padding(
-                padding: AppSpacing.paddingH18,
+    return Scaffold(
+      backgroundColor: background,
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: AppSpacing.paddingHV(horizontal: 24, vertical: 32),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(context.tr.generalSection,
-                        style: AppTextStyles.titleLargesemiBold
-                            .copyWith(color: sectionTitleColor)),
-                    SettingsListTile(
-                      title: context.tr.myAccountTitle,
-                      titleTextStyle: AppTextStyles.titleLargesemiBold
-                          .copyWith(color: sectionTitleColor),
-                      iconPath: AppAssets.settingsAccount,
-                      onTap: () {
-                        context.go(AppRoutes.myAccount);
-                      },
-                      chevronPath: AppAssets.settingsArrow,
+                    Text(
+                      context.tr.settings,
+                      style: AppTextStyles.headlineLarge.copyWith(
+                        color: textColor,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                    SettingsListTile(
-                      title: context.tr.billingPaymentTitle,
-                      titleTextStyle: AppTextStyles.titleLargesemiBold
-                          .copyWith(color: sectionTitleColor),
-                      iconPath: AppAssets.settingsBilling,
-                      showDivider: true,
-                      onTap: () {
-                        context.go(AppRoutes.billingPaymentSettings);
-                      },
-                      chevronPath: AppAssets.settingsArrow,
+                    AppSpacing.vertical(32),
+                    Center(
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 52.r,
+                            backgroundColor:
+                                isDark ? AppColors.darkCard : AppColors.white,
+                            backgroundImage: _avatarProvider(),
+                          ),
+                          AppSpacing.gapH16,
+                          Text(
+                            _displayName,
+                            style: AppTextStyles.headlineMedium.copyWith(
+                              color: textColor,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    SettingsListTile(
-                      title: context.tr.faqSupportTitle,
-                      titleTextStyle: AppTextStyles.titleLargesemiBold
-                          .copyWith(color: sectionTitleColor),
-                      iconPath: AppAssets.settingsFAQ,
-                      showDivider: false,
-                      onTap: () => context.go(AppRoutes.faqSupport),
-                      chevronPath: AppAssets.settingsArrow,
+                    AppSpacing.vertical(36),
+                    _SectionTitle(
+                      title: 'General',
+                      color: subtitleColor,
                     ),
                     AppSpacing.gapH12,
-                    Text(context.tr.settingsTitle,
-                        style: AppTextStyles.titleLargesemiBold.copyWith(
-                          color:
-                              isDark ? AppColors.textWhite : AppColors.primary,
-                        )),
-                    SettingsListTile(
-                      title: context.tr.languageTitle,
-                      titleTextStyle: AppTextStyles.titleLargesemiBold
-                          .copyWith(color: sectionTitleColor),
-                      iconPath: AppAssets.settingsLanguage,
-                      showDivider: true,
-                      onTap: () =>
-                          _showLanguageSelectionDialog(context, isDark),
-                      chevronPath: AppAssets.settingsArrow,
+                    _SettingsTile(
+                      icon: Icons.person,
+                      label: context.tr.myAccount,
+                      textColor: textColor,
+                      isDark: isDark,
+                      onTap: () => context.push(AppRoutes.myAccount),
                     ),
-                    const ThemeSwitcherTile(),
+                    Divider(color: dividerColor),
+                    _SettingsTile(
+                      icon: Icons.account_balance_wallet_outlined,
+                      label: context.tr.billingPayment,
+                      textColor: textColor,
+                      isDark: isDark,
+                      onTap: () =>
+                          context.push(AppRoutes.billingPaymentSettings),
+                    ),
+                    Divider(color: dividerColor),
+                    _SettingsTile(
+                      icon: Icons.help_outline_rounded,
+                      label: context.tr.faqSupport,
+                      textColor: textColor,
+                      isDark: isDark,
+                      onTap: () => context.push(AppRoutes.faqSupport),
+                    ),
+                    AppSpacing.vertical(28),
+                    _SectionTitle(
+                      title: context.tr.settings,
+                      color: subtitleColor,
+                    ),
+                    AppSpacing.gapH12,
+                    _SettingsTile(
+                      icon: Icons.language,
+                      label: context.tr.language,
+                      textColor: textColor,
+                      isDark: isDark,
+                      onTap: _showLanguageDialog,
+                    ),
+                    Divider(color: dividerColor),
+                    _SettingsTile(
+                      icon: Icons.nightlight_round,
+                      label: context.tr.darkMode,
+                      textColor: textColor,
+                      isDark: isDark,
+                      trailing: Switch.adaptive(
+                        value: _darkModeEnabled,
+                        activeColor: AppColors.primary,
+                        onChanged: _toggleDarkMode,
+                      ),
+                      onTap: () => _toggleDarkMode(!_darkModeEnabled),
+                    ),
                   ],
                 ),
               ),
-            ],
-          ),
+      ),
+    );
+  }
+}
+
+class _SettingsTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color textColor;
+  final bool isDark;
+  final Widget? trailing;
+  final VoidCallback? onTap;
+
+  const _SettingsTile({
+    required this.icon,
+    required this.label,
+    required this.textColor,
+    required this.isDark,
+    this.trailing,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14).r,
+        child: Row(
+          children: [
+            Container(
+              height: 48.r,
+              width: 48.r,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(24.r),
+              ),
+              child: Icon(
+                icon,
+                size: 24.r,
+                color: AppColors.textWhite,
+              ),
+            ),
+            AppSpacing.horizontal(16),
+            Expanded(
+              child: Text(
+                label,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  color: textColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            trailing ??
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 18.r,
+                  color: isDark ? AppColors.textWhite : AppColors.primary,
+                ),
+          ],
         ),
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  final String title;
+  final Color color;
+
+  const _SectionTitle({required this.title, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: AppTextStyles.titleMedium.copyWith(
+        fontSize: 18.sp,
+        fontWeight: FontWeight.w700,
+        color: color,
       ),
     );
   }
