@@ -31,12 +31,12 @@ class _CustomExpansionTitleState extends State<CustomExpansionTitle> {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-    final _isDark = _theme.brightness == Brightness.dark;
-    Color _backgroundColor =
-        _isDark ? AppColors.darkBackground : AppColors.lightSurface;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    Color backgroundColor =
+        isDark ? AppColors.darkBackground : AppColors.lightSurface;
     return Theme(
-        data: _theme.copyWith(
+        data: theme.copyWith(
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           hoverColor: Colors.transparent,
@@ -69,14 +69,14 @@ class _CustomExpansionTitleState extends State<CustomExpansionTitle> {
             ),
             collapsedIconColor: Colors.amber,
             iconColor: Colors.blue,
-            collapsedBackgroundColor: _backgroundColor,
-            backgroundColor: _backgroundColor,
+            collapsedBackgroundColor: backgroundColor,
+            backgroundColor: backgroundColor,
             title: Text(
               widget.title,
               style: widget.style ??
                   AppTextStyles.headlineMedium.copyWith(
                     color: widget.colorText ??
-                        (_isDark ? AppColors.textWhite : AppColors.primary),
+                        (isDark ? AppColors.textWhite : AppColors.primary),
                     fontSize: widget.fontSize ?? 16.sp,
                   ),
             ),

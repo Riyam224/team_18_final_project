@@ -45,7 +45,7 @@ class RouteGenerator {
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
 
     // INITIAL ROUTE
-    initialLocation: AppRoutes.splash,
+    initialLocation: AppRoutes.myAccount,
 
     // ==============================
     // 🔐 REDIRECT LOGIC
@@ -210,7 +210,18 @@ class RouteGenerator {
       ),
       GoRoute(
         path: AppRoutes.payment,
-        builder: (_, __) => const PaymentScreen(),
+        builder: (_, state) {
+          final paymentData = state.extra as PaymentData?;
+          if (paymentData == null) {
+            // Redirect to home if no payment data
+            return const Scaffold(
+              body: Center(
+                child: Text('Invalid payment data'),
+              ),
+            );
+          }
+          return PaymentScreen(paymentData: paymentData);
+        },
       ),
     ],
   );

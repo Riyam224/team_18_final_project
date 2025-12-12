@@ -11,7 +11,7 @@ class GoogleCardData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
+    final theme = Theme.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -23,7 +23,7 @@ class GoogleCardData extends StatelessWidget {
             ),
             AppSpacing.horizontal(2),
             Text(AppStrings.play,
-                style: _theme.textTheme.headlineLarge
+                style: theme.textTheme.headlineLarge
                     ?.copyWith(color: AppColors.gray2, fontSize: 22.sp))
           ],
         ),
@@ -36,7 +36,7 @@ class GoogleCardData extends StatelessWidget {
                 Padding(
                   padding: AppSpacing.paddingL22B5,
                   child: Text(AppStrings.dEBIT,
-                      style: _theme.textTheme.labelLarge
+                      style: theme.textTheme.labelLarge
                           ?.copyWith(color: AppColors.gray2)),
                 ),
                 AppSvgWidget(

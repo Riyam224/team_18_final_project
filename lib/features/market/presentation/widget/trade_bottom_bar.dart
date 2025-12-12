@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_action_button.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class TradeBottomBar extends StatelessWidget {
+  final String coinId;
+
   const TradeBottomBar({
     super.key,
+    required this.coinId,
   });
 
   @override
@@ -26,7 +31,7 @@ class TradeBottomBar extends StatelessWidget {
             backgroundColor: isDark ? AppColors.darkBrown : AppColors.lightPink,
             borderRadiusGeometry: BorderRadius.circular(31),
             text: AppStrings.sell,
-            onPressed: () {},
+            onPressed: () => context.push(RoutePaths.buySellRoute(coinId)),
           ),
           BottomActionButton.text(
             textColor: isDark ? AppColors.darkBackground : AppColors.textWhite,
@@ -36,7 +41,7 @@ class TradeBottomBar extends StatelessWidget {
                 isDark ? AppColors.lightSurface : AppColors.primary,
             borderRadiusGeometry: BorderRadius.circular(31),
             text: AppStrings.buy,
-            onPressed: () {},
+            onPressed: () => context.push(RoutePaths.buySellRoute(coinId)),
           )
         ],
       ),

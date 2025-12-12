@@ -4,12 +4,31 @@ import 'package:team_18_final_project/core/common_ui/widgets/app_rich_text.dart'
 import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/buy_crypto_widget/currency_selector_with_price.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CryptoConversionCard extends StatelessWidget {
-  const CryptoConversionCard({super.key});
+  final String coinSymbol;
+  final String? coinImageUrl;
+  final double fiatAmount;
+  final double cryptoAmount;
+  final double exchangeRate;
+  final String fiatCurrency;
+  final Function(double) onFiatAmountChanged;
+  final Function(double) onCryptoAmountChanged;
+
+  const CryptoConversionCard({
+    super.key,
+    required this.coinSymbol,
+    this.coinImageUrl,
+    required this.fiatAmount,
+    required this.cryptoAmount,
+    required this.exchangeRate,
+    this.fiatCurrency = 'USD',
+    required this.onFiatAmountChanged,
+    required this.onCryptoAmountChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -26,10 +45,13 @@ class CryptoConversionCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CurrencySelectorWithPrice(
-            paymentTitle: AppStrings.paymentTitleYouPay,
+            paymentTitle: 'You Pay',
+            paymentPrice: '\$${fiatAmount.toStringAsFixed(2)}',
             iconData: Icons.attach_money,
             iconDataColor:
                 isDark ? AppColors.lightSurface : AppColors.darkBackground,
+            currency: fiatCurrency,
+            onAmountChanged: onFiatAmountChanged,
           ),
           AppSpacing.vertical(20),
           Row(
@@ -51,22 +73,38 @@ class CryptoConversionCard extends StatelessWidget {
           ),
           AppSpacing.vertical(20),
           CurrencySelectorWithPrice(
-            paymentIcon: AppSvgWidget(
-              assetsName: isDark ? AppAssets.ethDark : AppAssets.ethLight,
-            ),
-            paymentPrice: AppStrings.paymentPriceYouReceive,
-            paymentTitle: AppStrings.paymentTitleYouReceive,
+            paymentIcon: coinImageUrl != null
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: CachedNetworkImage(
+                      imageUrl: coinImageUrl!,
+                      width: 18.sp,
+                      height: 18.sp,
+                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => Icon(
+                        Icons.currency_bitcoin,
+                        size: 18.sp,
+                      ),
+                    ),
+                  )
+                : AppSvgWidget(
+                    assetsName: isDark ? AppAssets.ethDark : AppAssets.ethLight,
+                  ),
+            paymentPrice: cryptoAmount.toStringAsFixed(4),
+            paymentTitle: 'You Receive',
+            currency: coinSymbol,
+            onAmountChanged: onCryptoAmountChanged,
           ),
           AppSpacing.vertical(16),
           Center(
               child: AppRichText(
                   horizontal: 5,
-                  firstText: AppStrings.cryptoExchangeRate,
+                  firstText: '1 $fiatCurrency = ${exchangeRate.toStringAsFixed(6)} $coinSymbol',
                   firstStyle: theme.textTheme.titleMedium
                       ?.copyWith(fontSize: 14.sp, color: AppColors.gray3),
                   lastStyle: theme.textTheme.titleMedium
                       ?.copyWith(fontSize: 14.sp, color: AppColors.secondary),
-                  lastText: AppStrings.circle))
+                  lastText: '●'))
         ],
       ),
     );

@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/buttons/primary_button.dart';
 
 void main() {
-  Widget _wrap(Widget child) {
+  Widget wrap(Widget child) {
     return ScreenUtilInit(
       designSize: const Size(375, 812),
       minTextAdapt: true,
@@ -20,7 +20,7 @@ void main() {
       const buttonText = 'Click Me';
 
       // Act
-      await tester.pumpWidget(_wrap(PrimaryButton(
+      await tester.pumpWidget(wrap(PrimaryButton(
         text: buttonText,
         onPressed: () {},
       )));
@@ -34,7 +34,7 @@ void main() {
       var pressed = false;
 
       // Act
-      await tester.pumpWidget(_wrap(PrimaryButton(
+      await tester.pumpWidget(wrap(PrimaryButton(
         text: 'Button',
         onPressed: () {
           pressed = true;
@@ -50,7 +50,7 @@ void main() {
 
     testWidgets('should display with custom color', (tester) async {
       // Act
-      await tester.pumpWidget(_wrap(PrimaryButton(
+      await tester.pumpWidget(wrap(PrimaryButton(
         text: 'Button',
         onPressed: () {},
         color: Colors.red,
@@ -64,7 +64,7 @@ void main() {
 
     testWidgets('should apply custom text color', (tester) async {
       // Act
-      await tester.pumpWidget(_wrap(PrimaryButton(
+      await tester.pumpWidget(wrap(PrimaryButton(
         text: 'Button',
         onPressed: () {},
         textColor: Colors.black,

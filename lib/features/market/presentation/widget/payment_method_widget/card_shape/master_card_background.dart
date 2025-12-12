@@ -9,8 +9,8 @@ class MasterCardBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-    final _isDark = _theme.brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Stack(
       children: [
@@ -20,7 +20,7 @@ class MasterCardBackground extends StatelessWidget {
           child: CustomPaint(
             size: Size(300.w, 250.h),
             painter: ArcPainter(
-              color: _isDark
+              color: isDark
                   ? AppColors.creditCardArcTertiary.withOpacity(0.2)
                   : AppColors.creditCardArcQuaternary.withOpacity(0.15),
             ),
@@ -32,7 +32,7 @@ class MasterCardBackground extends StatelessWidget {
           child: CustomPaint(
             size: Size(280.w, 220.h),
             painter: ArcPainter(
-              color: _isDark
+              color: isDark
                   ? AppColors.creditCardArcQuaternary.withOpacity(0.18)
                   : AppColors.creditCardArcSecondary.withOpacity(0.12),
             ),
@@ -41,7 +41,7 @@ class MasterCardBackground extends StatelessWidget {
         Positioned.fill(
           child: CustomPaint(
             painter: HexagonalDotPatternPainter(
-              color: _isDark
+              color: isDark
                   ? AppColors.creditCardArcQuaternary.withOpacity(0.08)
                   : AppColors.creditCardHexDotPrimary.withOpacity(0.05),
             ),

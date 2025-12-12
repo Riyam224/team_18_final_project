@@ -7,9 +7,9 @@ import 'package:team_18_final_project/features/market/presentation/widget/paymen
 import 'package:team_18_final_project/features/market/presentation/widget/payment_method_widget/credit_card/credit_card_widget.dart';
 
 bool isDark({required BuildContext context}) {
-  final _theme = Theme.of(context);
-  final _isDark = _theme.brightness == Brightness.dark;
-  return _isDark;
+  final theme = Theme.of(context);
+  final isDark = theme.brightness == Brightness.dark;
+  return isDark;
 }
 
 abstract class CardType {

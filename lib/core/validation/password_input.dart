@@ -4,7 +4,7 @@ enum PasswordValidationError { empty, tooShort }
 
 class PasswordInput extends FormzInput<String, PasswordValidationError> {
   const PasswordInput.pure() : super.pure('');
-  const PasswordInput.dirty([String value = '']) : super.dirty(value);
+  const PasswordInput.dirty([super.value = '']) : super.dirty();
 
   static const int minLength = 6;
 
