@@ -45,7 +45,7 @@ class RouteGenerator {
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
 
     // INITIAL ROUTE
-    initialLocation: AppRoutes.myAccount,
+    initialLocation: AppRoutes.splash,
 
     // ==============================
     // 🔐 REDIRECT LOGIC
