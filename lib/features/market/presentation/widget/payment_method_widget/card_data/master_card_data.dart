@@ -11,10 +11,10 @@ class MasterCardData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-    final _isDark = _theme.brightness == Brightness.dark;
-    Color _backgroundColor =
-        _isDark ? AppColors.lightSurface : AppColors.lightSurface2;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    Color backgroundColor =
+        isDark ? AppColors.lightSurface : AppColors.lightSurface2;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -26,7 +26,7 @@ class MasterCardData extends StatelessWidget {
               style: TextStyle(
                 fontSize: 11.sp,
                 fontWeight: FontWeight.w600,
-                color: _isDark ? AppColors.textWhiteSoft : AppColors.textGray,
+                color: isDark ? AppColors.textWhiteSoft : AppColors.textGray,
                 letterSpacing: 0.5,
               ),
             ),
@@ -46,10 +46,10 @@ class MasterCardData extends StatelessWidget {
         ),
         AppSpacing.vertical(5),
         Text(AppStrings.cardNumber,
-            style: _theme.textTheme.titleLarge?.copyWith(
+            style: theme.textTheme.titleLarge?.copyWith(
                 letterSpacing: 2,
                 fontSize: 16.sp,
-                color: _backgroundColor,
+                color: backgroundColor,
                 fontWeight: FontWeight.w700)),
         AppSpacing.vertical(8),
         Row(
@@ -60,16 +60,16 @@ class MasterCardData extends StatelessWidget {
               children: [
                 Text(
                   AppStrings.validTill,
-                  style: _theme.textTheme.titleMedium?.copyWith(
+                  style: theme.textTheme.titleMedium?.copyWith(
                       color:
-                          _isDark ? AppColors.textGrayDark : AppColors.textGray,
+                          isDark ? AppColors.textGrayDark : AppColors.textGray,
                       fontSize: 8.sp),
                 ),
                 AppSpacing.vertical(2),
                 Text(
                   AppStrings.cardExpiry,
-                  style: _theme.textTheme.titleLarge
-                      ?.copyWith(fontSize: 10.sp, color: _backgroundColor),
+                  style: theme.textTheme.titleLarge
+                      ?.copyWith(fontSize: 10.sp, color: backgroundColor),
                 ),
               ],
             ),

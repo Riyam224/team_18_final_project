@@ -70,8 +70,9 @@ class HomeCubit extends Cubit<HomeState> {
       final portfolioBalanceFailure =
           portfolioBalanceResult.fold((f) => f, (_) => null);
       if (portfolioBalanceFailure != null) {
-        if (!isClosed)
+        if (!isClosed) {
           emit(HomeError(message: portfolioBalanceFailure.message));
+        }
         return;
       }
 

@@ -104,7 +104,22 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
             if (state is AuthLoginSuccess) {
               await _appLockService.resetLock();
               if (!context.mounted) return;
-              context.go(AppRoutes.home);
+
+              // Check if biometric is enabled
+              if (state.biometricEnabled && state.biometricType != null) {
+                // Navigate to appropriate biometric verification screen
+                if (state.biometricType == 'fingerprint') {
+                  context.push(AppRoutes.verifyFingerprintLogin);
+                } else if (state.biometricType == 'face') {
+                  context.push(AppRoutes.faceIdScanningLogin);
+                } else {
+                  // No biometric type, go to home
+                  context.go(AppRoutes.home);
+                }
+              } else {
+                // No biometric enabled, go directly to home
+                context.go(AppRoutes.home);
+              }
             }
 
             if (state is AuthError) {
@@ -277,9 +292,10 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                           GestureDetector(
                             onTap: isLoading
                                 ? null
-                                : () => context
-                                    .read<AuthCubit>()
-                                    .loginWithBiometric(),
+                                : () {
+                                    // Navigate directly to fingerprint verification screen
+                                    context.push(AppRoutes.verifyFingerprintLogin);
+                                  },
                             child: SizedBox(
                               width: AppSizing.biometricIconSmall,
                               height: AppSizing.biometricIconSmall,
@@ -305,9 +321,10 @@ class _LoginScreenContentState extends State<_LoginScreenContent> {
                           GestureDetector(
                             onTap: isLoading
                                 ? null
-                                : () => context
-                                    .read<AuthCubit>()
-                                    .loginWithBiometric(),
+                                : () {
+                                    // Navigate directly to Face ID verification screen
+                                    context.push(AppRoutes.faceIdScanningLogin);
+                                  },
                             child: SizedBox(
                               width: AppSizing.biometricIconSmall,
                               height: AppSizing.biometricIconSmall,

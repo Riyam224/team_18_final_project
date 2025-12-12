@@ -123,7 +123,9 @@ class PasswordValidator {
 
     // Character variety checks
     if (ValidationConfig.uppercaseRegex.hasMatch(password) &&
-        ValidationConfig.lowercaseRegex.hasMatch(password)) strength++;
+        ValidationConfig.lowercaseRegex.hasMatch(password)) {
+      strength++;
+    }
     if (ValidationConfig.numberRegex.hasMatch(password)) strength++;
     if (ValidationConfig.specialCharRegex.hasMatch(password)) strength++;
 

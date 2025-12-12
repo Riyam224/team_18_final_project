@@ -58,35 +58,35 @@ class ValidationFailure extends Failure {
 /// Unauthorized access failure
 class UnauthorizedFailure extends Failure {
   const UnauthorizedFailure({
-    String message = 'Unauthorized access',
+    super.message = 'Unauthorized access',
     super.code,
     super.details,
-  }) : super(message: message);
+  });
 }
 
 /// Not found failure
 class NotFoundFailure extends Failure {
   const NotFoundFailure({
-    String message = 'Resource not found',
+    super.message = 'Resource not found',
     super.code,
     super.details,
-  }) : super(message: message);
+  });
 }
 
 /// Permission denied failure
 class PermissionDeniedFailure extends Failure {
   const PermissionDeniedFailure({
-    String message = 'Permission denied',
+    super.message = 'Permission denied',
     super.code,
     super.details,
-  }) : super(message: message);
+  });
 }
 
 /// Unexpected failure
 class UnexpectedFailure extends Failure {
   const UnexpectedFailure({
-    String message = 'An unexpected error occurred',
+    super.message = 'An unexpected error occurred',
     super.code,
     super.details,
-  }) : super(message: message);
+  });
 }

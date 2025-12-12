@@ -4,7 +4,7 @@ enum NonEmptyValidationError { empty }
 
 class NonEmptyInput extends FormzInput<String, NonEmptyValidationError> {
   const NonEmptyInput.pure() : super.pure('');
-  const NonEmptyInput.dirty([String value = '']) : super.dirty(value);
+  const NonEmptyInput.dirty([super.value = '']) : super.dirty();
 
   @override
   NonEmptyValidationError? validator(String value) {

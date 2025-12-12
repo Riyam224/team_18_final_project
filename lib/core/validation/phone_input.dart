@@ -4,7 +4,7 @@ enum PhoneValidationError { empty, invalid }
 
 class PhoneInput extends FormzInput<String, PhoneValidationError> {
   const PhoneInput.pure() : super.pure('');
-  const PhoneInput.dirty([String value = '']) : super.dirty(value);
+  const PhoneInput.dirty([super.value = '']) : super.dirty();
 
   static final _digits = RegExp(r'^[0-9]{10,}$');
 
