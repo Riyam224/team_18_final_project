@@ -191,7 +191,7 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
                     accentColor: AppColors.primary,
                     isDark: isDark,
                     onTap: () {
-                      context.push(RoutePaths.buySellRoute(coin.id));
+                      context.push(RoutePaths.coinDetailsRoute(coin.id));
                     },
                   ),
                 );
@@ -278,7 +278,7 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
                         accentColor: AppColors.primary,
                         isDark: isDark,
                         onTap: () {
-                          context.push(RoutePaths.buySellRoute(coin.id));
+                          context.push(RoutePaths.coinDetailsRoute(coin.id));
                         },
                       ),
                     );

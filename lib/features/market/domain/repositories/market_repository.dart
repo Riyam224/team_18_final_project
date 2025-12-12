@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:team_18_final_project/core/error/failure.dart';
+import 'package:team_18_final_project/features/market/domain/entities/chart_point.dart';
 import 'package:team_18_final_project/features/market/domain/entities/coin_details.dart';
 import 'package:team_18_final_project/features/market/domain/entities/market_coin.dart';
 import 'package:team_18_final_project/features/market/domain/entities/search_coin.dart';
@@ -32,4 +33,10 @@ abstract class MarketRepository {
   /// Returns `Either` containing Failure (left) or list of MarketCoinEntity (right)
   Future<Either<Failure, List<MarketCoinEntity>>> getMarketCoinsByIds(
       List<String> coinIds);
+
+  /// Fetches price chart points for a coin for the given period (days)
+  Future<Either<Failure, List<ChartPoint>>> getCoinChart({
+    required String coinId,
+    required String days,
+  });
 }

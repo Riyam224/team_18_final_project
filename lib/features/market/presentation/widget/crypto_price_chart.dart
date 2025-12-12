@@ -12,13 +12,15 @@ class CryptoPriceChart extends StatefulWidget {
   final double currentPrice;
   final double changePercentage;
   final Function(String period) onPeriodChanged;
+  final String selectedPeriod;
 
   const CryptoPriceChart({
     super.key,
     required this.chartData,   
     required this.currentPrice, 
     required this.changePercentage, 
-    required this.onPeriodChanged,  
+    required this.onPeriodChanged,
+    this.selectedPeriod = '1d',
   });
 
   @override
@@ -28,6 +30,22 @@ class CryptoPriceChart extends StatefulWidget {
 class _CryptoPriceChartState extends State<CryptoPriceChart> {
 
   String selectedPeriod = '1d'; 
+
+  @override
+  void initState() {
+    super.initState();
+    selectedPeriod = widget.selectedPeriod;
+  }
+
+  @override
+  void didUpdateWidget(covariant CryptoPriceChart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.selectedPeriod != widget.selectedPeriod) {
+      setState(() {
+        selectedPeriod = widget.selectedPeriod;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,11 +60,20 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AppColors.darkBackground : AppColors.lightSurface,
+        color: isDark ? AppColors.darkSurface : Colors.white,
         borderRadius: BorderRadius.circular(16).r,
+        boxShadow: [
+          BoxShadow(
+            color: isDark
+                ? Colors.black.withValues(alpha: 0.2)
+                : Colors.grey.withValues(alpha: 0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       padding:
-          const EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 16).r,
+          const EdgeInsets.only(left: 20, right: 20, top: 20, bottom: 20).r,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,26 +82,28 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
             currentPrice: widget.currentPrice,
             changePercentage: widget.changePercentage,
           ),
-          AppSpacing.vertical(12),
+          AppSpacing.vertical(20),
           AppSpacing.vertical(
-            180,
+            200,
             child: LineChart(
               LineChartData(
                 lineTouchData: lineTouchDataWidget(context),
                 minX: 0,
-                maxX: widget.chartData.isNotEmpty 
-                    ? widget.chartData.last.x 
-                    : 24, 
-                minY: minY, 
-                maxY: maxY, 
+                maxX: widget.chartData.isNotEmpty
+                    ? widget.chartData.last.x
+                    : 24,
+                minY: minY,
+                maxY: maxY,
                 gridData: FlGridData(
                   show: true,
                   drawVerticalLine: false,
-                  horizontalInterval: (maxY - minY) / 5, 
+                  horizontalInterval: (maxY - minY) / 5,
                   getDrawingHorizontalLine: (_) => FlLine(
-                    color: AppColors.gray4,
-                    strokeWidth: 0.7,
-                    dashArray: [9, 9],
+                    color: isDark
+                        ? AppColors.gray4.withValues(alpha: 0.3)
+                        : AppColors.gray4.withValues(alpha: 0.15),
+                    strokeWidth: 0.5,
+                    dashArray: [8, 8],
                   ),
                 ),
                 titlesData: FlTitlesData(
@@ -85,18 +114,18 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
                 ),
                 borderData: FlBorderData(show: false),
                 lineBarsData: [
-                  _lineChartBarDataWidget(context, widget.chartData), 
+                  _lineChartBarDataWidget(context, widget.chartData),
                 ],
               ),
             ),
           ),
-          AppSpacing.vertical(16),
+          AppSpacing.vertical(20),
           DetermineColorForButtonState(
             onPeriodSelected: (period) {
               setState(() {
-                selectedPeriod = period; 
+                selectedPeriod = period;
               });
-              widget.onPeriodChanged(period); 
+              widget.onPeriodChanged(period);
             },
             selectedPeriod: selectedPeriod,
           )
@@ -107,11 +136,13 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
   
   LineChartBarData _lineChartBarDataWidget(BuildContext context, List<FlSpot> spots) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final lineColor = isDark ? AppColors.lightSurface : AppColors.primary;
+
     return LineChartBarData(
-      spots: spots,   
+      spots: spots,
       isCurved: true,
-      barWidth: 2.0,
-      color: isDark ? AppColors.lightSurface : AppColors.primary,
+      barWidth: 3.0,
+      color: lineColor,
       dotData: FlDotData(show: false),
       belowBarData: BarAreaData(
         show: true,
@@ -119,8 +150,9 @@ class _CryptoPriceChartState extends State<CryptoPriceChart> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            AppColors.chartBackground,
-            AppColors.chartBackground.withOpacity(0.5),
+            lineColor.withValues(alpha: 0.4),
+            lineColor.withValues(alpha: 0.2),
+            lineColor.withValues(alpha: 0.05),
             Colors.transparent
           ],
         ),

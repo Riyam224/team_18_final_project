@@ -48,7 +48,19 @@ abstract class MarketApiService {
   /// Fetches detailed information about a specific cryptocurrency
   /// GET request to /coins/{id} endpoint
   /// @param id - Coin identifier (e.g., 'bitcoin', 'ethereum')
-  /// @return CoinDetailsModel with comprehensive coin information
+  /// @return Raw JSON Map with coin information
+  @GET('/coins/{id}')
+  Future<Map<String, dynamic>> getCoinDetailsJson({
+    @Path('id') required String id,
+    @Query('localization') bool localization = false,
+    @Query('tickers') bool tickers = false,
+    @Query('market_data') bool marketData = true,
+    @Query('community_data') bool communityData = false,
+    @Query('developer_data') bool developerData = false,
+    @Query('sparkline') bool sparkline = false,
+  });
+
+  /// Fetches detailed information parsed into a CoinDetailsModel
   @GET('/coins/{id}')
   Future<CoinDetailsModel> getCoinDetails({
     @Path('id') required String id,
@@ -73,5 +85,18 @@ abstract class MarketApiService {
     @Query('ids') required String ids,
     @Query(ApiQueryParams.order) String order = ApiDefaults.orderByMarketCap,
     @Query('sparkline') bool sparkline = false,
+  });
+
+  /// Fetches market chart data (price over time) for a specific cryptocurrency
+  /// GET request to /coins/{id}/market_chart endpoint
+  /// @param id - Coin identifier (e.g., 'bitcoin', 'ethereum')
+  /// @param vsCurrency - Target currency for price data (default: 'usd')
+  /// @param days - Data range in days (1, 7, 14, 30, 90, 180, 365, max)
+  /// @return Map containing arrays of [timestamp, price] data points
+  @GET('/coins/{id}/market_chart')
+  Future<Map<String, dynamic>> getMarketChart({
+    @Path('id') required String id,
+    @Query(ApiQueryParams.vsCurrency) String vsCurrency = ApiDefaults.currency,
+    @Query(ApiQueryParams.days) required String days,
   });
 }

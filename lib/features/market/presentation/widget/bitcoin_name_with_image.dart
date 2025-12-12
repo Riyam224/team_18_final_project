@@ -18,38 +18,36 @@ class BitcoinNameWithImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Padding(
-      padding: const EdgeInsets.only(left: 13).r,
-      child: Row(
-        children: [
-          CircleAvatar(
-            radius: 22.r,
-            backgroundColor: isDark ? AppColors.darkBackground : AppColors.lightSurface,
-            child: imageUrl.isNotEmpty
-                ? Image.network(
-                    imageUrl,
-                    height: 27.h,
-                    width: 27.w,
-                    errorBuilder: (context, error, stackTrace) => AppSvgWidget(
-                      height: 27.h,
-                      width: 27.w,
-                      assetsName: AppAssets.bitcoinIcon, 
-                    ),
-                  )     
-                : AppSvgWidget(
-                    height: 27.h,
-                    width: 27.w,
+    return Row(
+      children: [
+        Container(
+          width: 48.w,
+          height: 48.h,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: isDark ? AppColors.darkSurface : AppColors.lightSurface,
+          ),
+          padding: EdgeInsets.all(8.r),
+          child: imageUrl.isNotEmpty
+              ? Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) => AppSvgWidget(
                     assetsName: AppAssets.bitcoinIcon,
                   ),
-          ),
-          AppSpacing.horizontal(20),
-          Text(coinName,
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontSize: 20.sp,
-                    color: isDark ? AppColors.textWhite : AppColors.primary,
-                  )),
-        ],
-      ),
+                )
+              : AppSvgWidget(
+                  assetsName: AppAssets.bitcoinIcon,
+                ),
+        ),
+        AppSpacing.horizontal(16),
+        Text(coinName,
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontSize: 24.sp,
+                  fontWeight: FontWeight.w600,
+                  color: isDark ? AppColors.textWhite : AppColors.primary,
+                )),
+      ],
     );
   }
 }

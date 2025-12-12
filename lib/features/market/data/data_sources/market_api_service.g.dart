@@ -93,6 +93,48 @@ class _MarketApiService implements MarketApiService {
   }
 
   @override
+  Future<Map<String, dynamic>> getCoinDetailsJson({
+    required String id,
+    bool localization = false,
+    bool tickers = false,
+    bool marketData = true,
+    bool communityData = false,
+    bool developerData = false,
+    bool sparkline = false,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'localization': localization,
+      r'tickers': tickers,
+      r'market_data': marketData,
+      r'community_data': communityData,
+      r'developer_data': developerData,
+      r'sparkline': sparkline,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<Map<String, dynamic>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/coins/${id}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late Map<String, dynamic> _value;
+    try {
+      _value = Map<String, dynamic>.from(_result.data!);
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<CoinDetailsModel> getCoinDetails({
     required String id,
     bool localization = false,
@@ -168,6 +210,40 @@ class _MarketApiService implements MarketApiService {
             (dynamic i) => MarketCoinModel.fromJson(i as Map<String, dynamic>),
           )
           .toList();
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options, _result);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<Map<String, dynamic>> getMarketChart({
+    required String id,
+    String vsCurrency = ApiDefaults.currency,
+    required String days,
+  }) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{
+      r'vs_currency': vsCurrency,
+      r'days': days,
+    };
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<Map<String, dynamic>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/coins/${id}/market_chart',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late Map<String, dynamic> _value;
+    try {
+      _value = Map<String, dynamic>.from(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, _result);
       rethrow;

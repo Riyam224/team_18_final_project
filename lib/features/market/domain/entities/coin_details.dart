@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:team_18_final_project/features/market/domain/entities/chart_point.dart';
 
 /// Domain entity representing detailed information about a cryptocurrency
 /// Used for buy/sell screens and detailed coin views
@@ -45,6 +46,15 @@ class CoinDetailsEntity extends Equatable {
   /// All time low price
   final double? atl;
 
+  /// Additional descriptive text about the coin
+  final String description;
+
+  /// Key market statistics displayed in the UI
+  final Map<String, double> marketStats;
+
+  /// Historical price points for the selected period (x = timestamp hours, y = price)
+  final List<ChartPoint> chartPoints;
+
   const CoinDetailsEntity({
     required this.id,
     required this.symbol,
@@ -60,6 +70,9 @@ class CoinDetailsEntity extends Equatable {
     this.totalSupply,
     this.ath,
     this.atl,
+    required this.description,
+    required this.marketStats,
+    required this.chartPoints,
   });
 
   @override
@@ -78,5 +91,49 @@ class CoinDetailsEntity extends Equatable {
         totalSupply,
         ath,
         atl,
+        description,
+        marketStats,
+      chartPoints,
       ];
+
+  CoinDetailsEntity copyWith({
+    String? id,
+    String? symbol,
+    String? name,
+    String? image,
+    double? currentPrice,
+    int? marketCapRank,
+    double? marketCap,
+    double? totalVolume,
+    double? priceChangePercentage24h,
+    double? priceChange24h,
+    double? circulatingSupply,
+    double? totalSupply,
+    double? ath,
+    double? atl,
+    String? description,
+    Map<String, double>? marketStats,
+    List<ChartPoint>? chartPoints,
+  }) {
+    return CoinDetailsEntity(
+      id: id ?? this.id,
+      symbol: symbol ?? this.symbol,
+      name: name ?? this.name,
+      image: image ?? this.image,
+      currentPrice: currentPrice ?? this.currentPrice,
+      marketCapRank: marketCapRank ?? this.marketCapRank,
+      marketCap: marketCap ?? this.marketCap,
+      totalVolume: totalVolume ?? this.totalVolume,
+      priceChangePercentage24h:
+          priceChangePercentage24h ?? this.priceChangePercentage24h,
+      priceChange24h: priceChange24h ?? this.priceChange24h,
+      circulatingSupply: circulatingSupply ?? this.circulatingSupply,
+      totalSupply: totalSupply ?? this.totalSupply,
+      ath: ath ?? this.ath,
+      atl: atl ?? this.atl,
+      description: description ?? this.description,
+      marketStats: marketStats ?? this.marketStats,
+      chartPoints: chartPoints ?? this.chartPoints,
+    );
+  }
 }

@@ -13,9 +13,13 @@ class MarketStatsList extends StatelessWidget {
 
   String _formatNumber(double number) {
     if (number >= 1000000000) {
-      return NumberFormat.compactCurrency(symbol: '\$', decimalDigits: 2).format(number);
-    } 
-    return NumberFormat('#,##0.00').format(number); 
+      return '${NumberFormat.compact().format(number)} \$';
+    } else if (number >= 1000000) {
+      return '${NumberFormat.compact().format(number)} \$';
+    } else if (number >= 1000) {
+      return NumberFormat('#,##0').format(number);
+    }
+    return NumberFormat('#,##0.00').format(number);
   }
 
   @override
@@ -32,36 +36,45 @@ class MarketStatsList extends StatelessWidget {
         final statName = entry.key;  
         final statValue = entry.value; 
 
-        return ListTile(
-          title: Row(
+        return Padding(
+          padding: EdgeInsets.symmetric(vertical: 12.h, horizontal: 4.w),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(statName,
-                  style: theme.textTheme.bodyMedium!.copyWith(
-                    color: isDark ? AppColors.textWhite : AppColors.primary,
-                    fontSize: 12.sp,
-                  )),
-              AppSpacing.horizontal(16),
-              AppSvgWidget(
-                height: 12.h,
-                width: 12.w,
-                assetsName: AppAssets.infoOutline,
-              )
+              Row(
+                children: [
+                  Text(statName,
+                      style: theme.textTheme.bodyMedium!.copyWith(
+                        color: isDark ? AppColors.textWhiteSoft : AppColors.textGray,
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                      )),
+                  AppSpacing.horizontal(8),
+                  AppSvgWidget(
+                    height: 16.h,
+                    width: 16.w,
+                    assetsName: AppAssets.infoOutline,
+                  )
+                ],
+              ),
+              Text(
+                _formatNumber(statValue),
+                style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: isDark ? AppColors.textWhite : AppColors.primary),
+              ),
             ],
-          ),
-          trailing: Text(
-            _formatNumber(statValue),
-            style: theme.textTheme.titleMedium?.copyWith(
-                fontSize: 12.sp,
-                color: isDark ? AppColors.textWhite : AppColors.primary),
           ),
         );
       },
       separatorBuilder: (BuildContext context, int index) {
-        return Padding(
-          padding: EdgeInsetsDirectional.only(start: 15.r, end: 15.r),
-          child: Divider(
-              color: isDark ? AppColors.gray0 : AppColors.textWhiteSoft,
-              height: 1),
+        return Divider(
+          color: isDark
+              ? AppColors.gray0.withValues(alpha: 0.3)
+              : AppColors.gray4.withValues(alpha: 0.3),
+          height: 1,
+          thickness: 0.5,
         );
       },
     );

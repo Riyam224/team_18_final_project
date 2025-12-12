@@ -20,31 +20,46 @@ class TradeBottomBar extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       width: double.infinity,
-      height: 62.h,
-      color: isDark ? AppColors.darkBackground : AppColors.lightSurface,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          BottomActionButton.text(
-            textColor: AppColors.alertRed,
-            width: 145.w,
-            height: 45.h,
-            backgroundColor: isDark ? AppColors.darkBrown : AppColors.lightPink,
-            borderRadiusGeometry: BorderRadius.circular(31),
-            text: context.tr.buttonSell,
-            onPressed: () => context.push(RoutePaths.buySellRoute(coinId)),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: isDark ? AppColors.darkBackground : Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, -2),
           ),
-          BottomActionButton.text(
-            textColor: isDark ? AppColors.darkBackground : AppColors.textWhite,
-            width: 145.w,
-            height: 45.h,
-            backgroundColor:
-                isDark ? AppColors.lightSurface : AppColors.primary,
-            borderRadiusGeometry: BorderRadius.circular(31),
-            text: context.tr.buttonBuy,
-            onPressed: () => context.push(RoutePaths.buySellRoute(coinId)),
-          )
         ],
+      ),
+      child: SafeArea(
+        child: Row(
+          children: [
+            Expanded(
+              child: BottomActionButton.text(
+                textColor: AppColors.alertRed,
+                width: double.infinity,
+                height: 52.h,
+                backgroundColor: isDark ? AppColors.darkBrown : AppColors.lightPink,
+                borderRadiusGeometry: BorderRadius.circular(100.r),
+                text: context.tr.buttonSell,
+                onPressed: () => context.push(RoutePaths.buySellRoute(coinId)),
+              ),
+            ),
+            SizedBox(width: 16.w),
+            Expanded(
+              child: BottomActionButton.text(
+                textColor: Colors.white,
+                width: double.infinity,
+                height: 52.h,
+                backgroundColor:
+                    isDark ? AppColors.lightSurface : AppColors.primary,
+                borderRadiusGeometry: BorderRadius.circular(100.r),
+                text: context.tr.buttonBuy,
+                onPressed: () => context.push(RoutePaths.buySellRoute(coinId)),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -39,7 +39,8 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
   @override
   void initState() {
     super.initState();
-    _selectedCurrency = widget.currency;
+    // Normalize currency to uppercase to match AppStrings.currencies
+    _selectedCurrency = widget.currency.toUpperCase();
     _priceController = TextEditingController(text: widget.paymentPrice);
   }
 

@@ -1,19 +1,32 @@
-import 'package:fl_chart/fl_chart.dart';
+import 'package:equatable/equatable.dart';
+import 'package:team_18_final_project/features/market/domain/entities/chart_point.dart';
 
-class CoinChartModel {
-  final List<FlSpot> prices; 
+class CoinChartModel extends Equatable {
+  final List<ChartPoint> points;
 
-  CoinChartModel({required this.prices});
+  const CoinChartModel({required this.points});
+
+  @override
+  List<Object?> get props => [points];
 
   factory CoinChartModel.fromJson(Map<String, dynamic> json) {
     final List pricesRaw = json['prices'] ?? [];
-    
-    final List<FlSpot> spots = pricesRaw.map((point) {
-      final double timestampInHours = (point[0] as num).toDouble() / 3600000;
-      final double price = (point[1] as num).toDouble();
-      return FlSpot(timestampInHours, price);
+
+    // Normalize timestamps so x-values start at 0 to avoid extremely large
+    // axis ranges (which were locking up the chart with thousands of labels).
+    int? firstTimestampMs;
+    final List<ChartPoint> parsed = pricesRaw.map((point) {
+      final timestampMs = (point[0] as num?)?.toInt() ?? 0;
+      firstTimestampMs ??= timestampMs;
+      final hoursSinceStart =
+          (timestampMs - firstTimestampMs!) / 3600000; // ms -> hours delta
+
+      final double price = (point[1] as num?)?.toDouble() ?? 0;
+      return ChartPoint(x: hoursSinceStart.toDouble(), y: price);
     }).toList();
 
-    return CoinChartModel(prices: spots);
+    return CoinChartModel(points: parsed);
   }
+
+  List<ChartPoint> toPoints() => points;
 }
