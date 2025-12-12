@@ -16,5 +16,6 @@ class Endpoints {
       "/coins/$id/market_chart?${ApiQueryParams.vsCurrency}=${ApiDefaults.currency}&${ApiQueryParams.days}=$days";
 
   static String simplePrice(String ids) =>
+
       "/simple/price?${ApiQueryParams.ids}=$ids&${ApiQueryParams.vsCurrencies}=${ApiDefaults.currency}&${ApiQueryParams.include24hrChange}=true";
 }

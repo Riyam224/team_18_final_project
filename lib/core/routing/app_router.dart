@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_nav_shell.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/features/auth/presentation/debug/biometric_debug_screen.dart';
+import 'package:team_18_final_project/features/auth/presentation/debug/biometric_test_screen.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/login/faceid_scanning_login_screen.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/login/faceid_verify_login_screen.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/login/fingerprint_verify_login_screen.dart';
@@ -19,6 +22,7 @@ import 'package:team_18_final_project/features/auth/presentation/screens/registe
 import 'package:team_18_final_project/features/auth/presentation/screens/register/register_screen.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/security_screens/app_lock_screen.dart';
 import 'package:team_18_final_project/features/auth/presentation/screens/security_screens/root_warning_screen.dart';
+import 'package:team_18_final_project/features/home/presentation/cubit/home_cubit.dart';
 import 'package:team_18_final_project/features/home/presentation/screens/home_screen.dart';
 import 'package:team_18_final_project/features/market/presentation/screens/buy_sell_screen.dart';
 import 'package:team_18_final_project/features/market/presentation/screens/coin_details_screen.dart';
@@ -27,13 +31,11 @@ import 'package:team_18_final_project/features/market/presentation/screens/payme
 import 'package:team_18_final_project/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/screens/portfolio_screen.dart';
 import 'package:team_18_final_project/features/profile/presentation/screens/my_account_screen.dart';
+import 'package:team_18_final_project/features/settings/presentation/screens/billing_payment_screen.dart';
+import 'package:team_18_final_project/features/settings/presentation/screens/faq_support_screen.dart';
 import 'package:team_18_final_project/features/settings/presentation/screens/settings_screen.dart';
 import 'package:team_18_final_project/features/splash/presentation/screens/splash_screen.dart';
-import 'package:team_18_final_project/core/di/di.dart';
-import 'package:team_18_final_project/features/home/presentation/cubit/home_cubit.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 
-import '../../features/auth/presentation/debug/biometric_test_screen.dart';
 
 final GlobalKey<NavigatorState> appNavigatorKey = GlobalKey<NavigatorState>();
 
@@ -45,7 +47,9 @@ class RouteGenerator {
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
 
     // INITIAL ROUTE
+
     initialLocation: AppRoutes.splash,
+
 
     // ==============================
     // 🔐 REDIRECT LOGIC
@@ -194,6 +198,14 @@ class RouteGenerator {
       // ==========================
       // NO-NAV SCREENS
       // ==========================
+      GoRoute(
+        path: AppRoutes.billingPaymentSettings,
+        builder: (_, __) => const BillingPaymentScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.faqSupport,
+        builder: (_, __) => const FaqSupportScreen(),
+      ),
       GoRoute(
         path: '${AppRoutes.coinDetails}/:id',
         builder: (_, state) {

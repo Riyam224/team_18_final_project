@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 
 class AppTextStyles {
@@ -259,4 +260,51 @@ class AppTextStyles {
     fontSize: 14,
     fontWeight: FontWeight.w400,
   );
+
+
+// rahma
+  static const TextStyle errorLoading = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 16,
+    fontWeight: FontWeight.w700,
+    color: AppColors.error, 
+  );
+
+
+  static const TextStyle baseSmall = TextStyle(
+      fontSize: 12,
+  );
+
+
+  static const TextStyle labelMoreLarge = TextStyle(
+      fontSize: 15,
+      fontWeight: FontWeight.w700, 
+  );
+
+  static const TextStyle headlineSmallBold = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 18,
+    fontWeight: FontWeight.w700,
+  );
+
+
+  static const TextStyle titleMoreSmall = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 14,
+    fontWeight: FontWeight.w500,
+  );
+
+  static const TextStyle headlineMediumBold = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 20,
+    fontWeight: FontWeight.w700, // SemiBold
+  );
+
+
+  static const TextStyle titleLargesemiBold = TextStyle(
+    fontFamily: 'Lato',
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+  );
+
 }

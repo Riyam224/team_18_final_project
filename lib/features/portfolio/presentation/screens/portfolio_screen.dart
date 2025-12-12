@@ -56,7 +56,7 @@ class PortfolioScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      AppStrings.portfolioTitle,
+                      context.tr.portfolioTitle,
                       style: AppTextStyles.headlineLarge.copyWith(
                         fontWeight: FontWeight.w700,
                         color: isDark ? AppColors.textWhite : AppColors.primary,
@@ -64,7 +64,7 @@ class PortfolioScreen extends StatelessWidget {
                     ),
                     AppSpacing.gapH27,
                     TotalValueCard(
-                      title: AppStrings.totalValue,
+                      title: context.tr.totalValue,
                       value: state.totalValue,
                       changeLabel: state.changeLabel,
                     ),
@@ -82,7 +82,7 @@ class PortfolioScreen extends StatelessWidget {
                       centerLabel: state.totalValue,
                     ),
                     AppSpacing.gapH33,
-                    const SectionTitle(title: AppStrings.myHoldings),
+                    SectionTitle(title: context.tr.myHoldings),
                     AppSpacing.gapH12,
                     ...state.holdings.map(
                       (h) => HoldingCard(
@@ -98,9 +98,35 @@ class PortfolioScreen extends StatelessWidget {
                       ),
                     ),
                     AppSpacing.gapH20,
-                    const SectionTitle(title: AppStrings.recentTransactions),
+                    SectionTitle(title: context.tr.recentTransactions),
                     AppSpacing.gapH12,
-                    ..._buildTransactions(),
+                    ...() {
+                      final dataSource = TransactionLocalDataSource();
+                      final transactions = dataSource.getRecentTransactions();
+                      final currencyFormat = NumberFormat.simpleCurrency(
+                        decimalDigits: AppPortfolioConstants.decimalDigitsForCurrency,
+                      );
+
+                      return transactions.map((t) {
+                        final transactionType = t.type == TransactionType.buy
+                            ? context.tr.buyTransaction
+                            : context.tr.sellTransaction;
+                        final title = '$transactionType ${t.cryptoName}';
+                        final subtitle = _formatTimestamp(context, t.timestamp);
+                        final amount = '${t.amount} ${t.cryptoSymbol}';
+                        final valueChange =
+                            '${t.type == TransactionType.buy ? '+' : '-'}${currencyFormat.format(t.valueUsd)}';
+                        final isBuy = t.type == TransactionType.buy;
+
+                        return TransactionTile(
+                          title: title,
+                          subtitle: subtitle,
+                          amount: amount,
+                          valueChange: valueChange,
+                          isBuy: isBuy,
+                        );
+                      }).toList();
+                    }(),
                     AppSpacing.gapH24,
                   ],
                 ),
@@ -112,48 +138,20 @@ class PortfolioScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> _buildTransactions() {
-    final dataSource = TransactionLocalDataSource();
-    final transactions = dataSource.getRecentTransactions();
-    final currencyFormat = NumberFormat.simpleCurrency(
-      decimalDigits: AppPortfolioConstants.decimalDigitsForCurrency,
-    );
-
-    return transactions.map((t) {
-      final transactionType = t.type == TransactionType.buy
-          ? AppStrings.buyTransaction
-          : AppStrings.sellTransaction;
-      final title = '$transactionType ${t.cryptoName}';
-      final subtitle = _formatTimestamp(t.timestamp);
-      final amount = '${t.amount} ${t.cryptoSymbol}';
-      final valueChange =
-          '${t.type == TransactionType.buy ? '+' : '-'}${currencyFormat.format(t.valueUsd)}';
-      final isBuy = t.type == TransactionType.buy;
-
-      return TransactionTile(
-        title: title,
-        subtitle: subtitle,
-        amount: amount,
-        valueChange: valueChange,
-        isBuy: isBuy,
-      );
-    }).toList();
-  }
-
-  String _formatTimestamp(DateTime timestamp) {
+  String _formatTimestamp(BuildContext context, DateTime timestamp) {
     final now = DateTime.now();
     final difference = now.difference(timestamp);
 
     if (difference.inHours < AppPortfolioConstants.hoursInDay) {
       final hourLabel = difference.inHours == AppPortfolioConstants.oneValue
-          ? AppStrings.hour
-          : AppStrings.hours;
-      return '${difference.inHours} $hourLabel ${AppStrings.ago}';
+          ? context.tr.hour
+          : context.tr.hours;
+      return '${difference.inHours} $hourLabel ${context.tr.ago}';
     } else if (difference.inDays < AppPortfolioConstants.daysInWeek) {
       final dayLabel = difference.inDays == AppPortfolioConstants.oneValue
-          ? AppStrings.day
-          : AppStrings.days;
-      return '${difference.inDays} $dayLabel ${AppStrings.ago}';
+          ? context.tr.day
+          : context.tr.days;
+      return '${difference.inDays} $dayLabel ${context.tr.ago}';
     } else {
       return DateFormat(AppPortfolioConstants.dateFormat).format(timestamp);
     }

@@ -23,8 +23,17 @@ ThemeData buildLightTheme() {
           AppTextStyles.headlineLarge.copyWith(color: AppColors.primary),
       headlineMedium:
           AppTextStyles.headlineMedium.copyWith(color: AppColors.primary),
+          
+      headlineSmall: AppTextStyles.headlineSmallBold.copyWith(color: AppColors.primary),
+      titleLarge: AppTextStyles.titleLarge.copyWith(color: AppColors.primary),
+
       titleMedium:
           AppTextStyles.titleMedium.copyWith(color: AppColors.textBlack),
+      
+      
+      titleSmall:
+          AppTextStyles.titleSmall.copyWith(color: AppColors.lightBackground),
+
       bodySmall:
           AppTextStyles.bodySmall.copyWith(color: AppColors.textGraySecondary),
       bodyMedium: AppTextStyles.bodyMedium.copyWith(color: AppColors.textGray),

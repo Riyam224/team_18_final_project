@@ -13,6 +13,7 @@ import 'package:team_18_final_project/features/market/presentation/cubit/market_
 import 'package:team_18_final_project/features/market/presentation/cubit/market_state.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/market_coin_tile.dart';
 import 'package:team_18_final_project/features/market/presentation/widget/market_search_bar.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 
 class MarketScreen extends StatelessWidget {
   const MarketScreen({super.key});
@@ -92,14 +93,14 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
       body: SafeArea(
         child: Column(
           children: [
-            Padding(
-              padding: AppSpacing.paddingHV(horizontal: 16, vertical: 16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppSpacing.gapH20,
-                  Text(
-                    'Crypto Market',
+              Padding(
+                padding: AppSpacing.paddingHV(horizontal: 16, vertical: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AppSpacing.gapH20,
+                    Text(
+                    context.tr.cryptoMarketTitle,
                     style: AppTextStyles.headlineLarge.copyWith(
                       color: isDark ? AppColors.textWhite : AppColors.primary,
                       fontWeight: FontWeight.w700,
@@ -108,7 +109,7 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
                   AppSpacing.gapH20,
                   MarketSearchBar(
                     controller: _searchController,
-                    hintText: 'Search',
+                    hintText: context.tr.searchHint,
                     onChanged: _onSearchChanged,
                     trailing: _isSearching
                         ? IconButton(
@@ -160,7 +161,7 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
 
         if (state is MarketLoaded) {
           if (state.coins.isEmpty) {
-            return _buildEmpty('No coins found', isDark);
+            return _buildEmpty(context.tr.noCoinsFound, isDark);
           }
 
           return RefreshIndicator(
@@ -191,7 +192,7 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
                     accentColor: AppColors.primary,
                     isDark: isDark,
                     onTap: () {
-                      context.push(RoutePaths.buySellRoute(coin.id));
+                      context.push(RoutePaths.coinDetailsRoute(coin.id));
                     },
                   ),
                 );
@@ -223,7 +224,10 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
 
         if (searchState is SearchLoaded) {
           if (searchState.searchResults.isEmpty) {
-            return _buildEmpty('No results found for "${searchState.query}"', isDark);
+            return _buildEmpty(
+              context.tr.noResultsFound(searchState.query),
+              isDark,
+            );
           }
 
           return Column(
@@ -250,7 +254,7 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
                       AppSpacing.gapW8,
                       Expanded(
                         child: Text(
-                          'Tap any coin to view price and buy',
+                          context.tr.tapAnyCoin,
                           style: AppTextStyles.bodySmall.copyWith(
                             color: isDark ? AppColors.textWhite : AppColors.primary,
                             fontSize: 12,
@@ -278,7 +282,7 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
                         accentColor: AppColors.primary,
                         isDark: isDark,
                         onTap: () {
-                          context.push(RoutePaths.buySellRoute(coin.id));
+                          context.push(RoutePaths.coinDetailsRoute(coin.id));
                         },
                       ),
                     );
@@ -323,7 +327,7 @@ class _MarketScreenContentState extends State<_MarketScreenContent> {
                   context.read<MarketCubit>().loadMarketCoins();
                 }
               },
-              child: const Text('Retry'),
+              child: Text(context.tr.retry),
             ),
           ],
         ),

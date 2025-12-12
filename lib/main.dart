@@ -3,21 +3,26 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:secure_application/secure_application.dart';
-
 import 'package:team_18_final_project/core/config/app_config.dart';
+import 'package:team_18_final_project/core/config/storage_keys_config.dart';
+import 'package:team_18_final_project/core/config/timing_config.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/app_router.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_root_detection_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_root_detection_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
 import 'package:team_18_final_project/core/utils/app_theme.dart';
+import 'package:team_18_final_project/core/utils/locale_controller.dart';
+import 'package:team_18_final_project/core/utils/theme_controller.dart';
+import 'package:team_18_final_project/l10n/app_localizations.dart';
 import 'firebase_options.dart';
 
 Future<void> main({
@@ -25,6 +30,18 @@ Future<void> main({
   SecurityOverrides? securityOverrides,
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
+
+// New Addition: Set screen orientation once to prevent repeated calls from build()
+  // This centralizes the global system settings.
+    SystemChrome.setPreferredOrientations(
+    AppConstants.allowedOrientations,
+  );
+
+
+  // New Addition: Set initial System UI style (status bar/nav bar colors)
+  // This should only be called once at startup (or in the MaterialApp builder)
+  // We apply the default Light Theme style here to avoid side effects in build.
+  AppTheme.setSystemUIOverlayStyle(ThemeMode.light);
 
   if (env == AppEnvironment.prod) {
     await Firebase.initializeApp(
@@ -37,11 +54,6 @@ Future<void> main({
     env: env,
     securityOverrides: securityOverrides,
   );
-
-  // Set system UI overlay style
-  if (env == AppEnvironment.prod) {
-    AppTheme.setSystemUIOverlayStyle(ThemeMode.system);
-  }
 
   // Optional: Check for rooted/jailbroken device
   if (env == AppEnvironment.prod) {
@@ -84,8 +96,11 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   late final IAppLockService _appLockService;
   late final IRootDetectionService _rootDetectionService;
   late final IAuditLogService _auditLogService;
+  late final ISecureStorage _secureStorage;
   StreamSubscription<bool>? _lockStateSub;
   StreamSubscription<bool>? _sessionStateSub;
+  ThemeMode _themeMode = ThemeMode.system;
+  Locale _locale = const Locale('en', '');
 
   @override
   void initState() {
@@ -97,6 +112,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     _appLockService = sl<IAppLockService>();
     _rootDetectionService = sl<IRootDetectionService>();
     _auditLogService = sl<IAuditLogService>();
+    _secureStorage = sl<ISecureStorage>();
 
     // Initialize secure application controller for background blur
     _secureController = SecureApplicationController(SecureApplicationState());
@@ -108,6 +124,8 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     _listenToAutoLock();
     _listenToSession();
     _checkRootAndWarn();
+    _loadThemeMode();
+    _loadLocale();
 
     // Update activity timestamp on app launch
     _appLockService.updateActivity();
@@ -133,6 +151,77 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
         appNavigatorKey.currentContext?.go(AppRoutes.login);
       }
     });
+  }
+
+  Future<void> _loadThemeMode() async {
+    final storedMode =
+        await _secureStorage.read(key: StorageKeysConfig.themeMode);
+    final modeString = storedMode.fold((_) => null, (value) => value);
+    final parsedMode = _parseThemeMode(modeString) ?? ThemeMode.system;
+    await _setThemeMode(parsedMode, persist: false);
+  }
+
+  Future<void> _setThemeMode(ThemeMode mode, {bool persist = true}) async {
+    if (!mounted) return;
+
+    setState(() {
+      _themeMode = mode;
+    });
+    AppTheme.setSystemUIOverlayStyle(mode);
+
+    if (persist) {
+      await _secureStorage.write(
+        key: StorageKeysConfig.themeMode,
+        value: mode.name,
+      );
+    }
+  }
+
+  ThemeMode? _parseThemeMode(String? modeString) {
+    switch (modeString) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      case 'system':
+        return ThemeMode.system;
+      default:
+        return null;
+    }
+  }
+
+  Future<void> _loadLocale() async {
+    final storedLocale =
+        await _secureStorage.read(key: StorageKeysConfig.language);
+    final localeString = storedLocale.fold((_) => null, (value) => value);
+    final parsedLocale = _parseLocale(localeString);
+    await _setLocale(parsedLocale, persist: false);
+  }
+
+  Future<void> _setLocale(Locale locale, {bool persist = true}) async {
+    if (!mounted) return;
+
+    setState(() {
+      _locale = locale;
+    });
+
+    if (persist) {
+      await _secureStorage.write(
+        key: StorageKeysConfig.language,
+        value: locale.languageCode,
+      );
+    }
+  }
+
+  Locale _parseLocale(String? localeString) {
+    switch (localeString) {
+      case 'en':
+        return const Locale('en', '');
+      case 'ar':
+        return const Locale('ar', '');
+      default:
+        return const Locale('en', '');
+    }
   }
 
   @override
@@ -203,16 +292,6 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   }
 
   @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    _lockStateSub?.cancel();
-    _sessionStateSub?.cancel();
-    _sessionManager.dispose();
-    _appLockService.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     // Set preferred orientations (optional - remove if you want landscape support)
     SystemChrome.setPreferredOrientations(AppConstants.allowedOrientations);
@@ -231,24 +310,55 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
               _appLockService.updateActivity();
               _sessionManager.updateActivity();
             },
-            child: MaterialApp.router(
-              title: AppConstants.appTitle,
-              debugShowCheckedModeBanner: false,
+            child: ThemeController(
+              themeMode: _themeMode,
+              setThemeMode: (mode) => _setThemeMode(mode),
+              child: LocaleController(
+                locale: _locale,
+                setLocale: (locale) => _setLocale(locale),
+                child: MaterialApp.router(
+                  title: AppConstants.appTitle,
+                  debugShowCheckedModeBanner: false,
 
-              // Themes
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              themeMode: ThemeMode.system,
+                  // Localization
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: const [
+                    Locale('en', ''),
+                    Locale('ar', ''),
+                  ],
+                  locale: _locale,
 
-              // Routing configuration
-              routerConfig: RouteGenerator.mainRoutingInOurApp,
+                  // Themes
+                  theme: AppTheme.lightTheme,
+                  darkTheme: AppTheme.darkTheme,
+                  themeMode: _themeMode,
 
-              // SecureApplication blur/screenshot handling routed via observer
-              builder: (context, child) => child ?? const SizedBox(),
+                  // Routing configuration
+                  routerConfig: RouteGenerator.mainRoutingInOurApp,
+
+                  // SecureApplication blur/screenshot handling routed via observer
+                  builder: (context, child) => child ?? const SizedBox(),
+                ),
+              ),
             ),
           ),
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _lockStateSub?.cancel();
+    _sessionStateSub?.cancel();
+    _sessionManager.dispose();
+    _appLockService.dispose();
+    super.dispose();
   }
 }

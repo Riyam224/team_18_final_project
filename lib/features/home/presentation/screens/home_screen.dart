@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/features/home/presentation/cubit/home_cubit.dart';
@@ -14,6 +13,7 @@ import '../widgets/market_overview_grid.dart';
 import '../widgets/section_title.dart';
 import '../widgets/trending_now_list.dart';
 import '../widgets/top_gainers_list.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -41,6 +41,13 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
   void initState() {
     super.initState();
     _secureStorage = sl<ISecureStorage>();
+    _loadUserProfile();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh avatar/name when coming back from profile edits.
     _loadUserProfile();
   }
 
@@ -138,7 +145,7 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                       onPressed: () {
                         context.read<HomeCubit>().refreshHomeData();
                       },
-                      child: const Text(AppStrings.retry),
+                      child: Text(context.tr.retry),
                     ),
                   ],
                 ),
@@ -169,27 +176,27 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
                           state.portfolioBalance.weeklyChangePercentage,
                     ),
                     AppSpacing.gapH24,
-                    const SectionTitle(title: "Market Overview"),
+                    SectionTitle(title: context.tr.marketOverview),
                     AppSpacing.gapH12,
                     MarketOverviewGrid(marketOverview: state.marketOverview),
                     AppSpacing.gapH24,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Expanded(
+                        Expanded(
                           child: SectionTitle(
-                            title: "Trending Now",
+                            title: context.tr.trendingNow,
                           ),
                         ),
-                        const ViewAll(
-                          title: "view all",
+                        ViewAll(
+                          title: context.tr.viewAll,
                         ),
                       ],
                     ),
                     AppSpacing.gapH12,
                     TrendingNowList(trendingCoins: state.trendingCoins),
                     AppSpacing.gapH24,
-                    const SectionTitle(title: "Top Gainers"),
+                    SectionTitle(title: context.tr.topGainers),
                     AppSpacing.gapH12,
                     TopGainersList(topGainers: state.topGainers),
                     AppSpacing.gapH24,

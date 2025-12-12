@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
@@ -46,7 +46,7 @@ class BottomNavShell extends StatelessWidget {
             context: context,
             index: 0,
             selectedIndex: selectedIndex,
-            label: AppStrings.home,
+            label: context.tr.home,
             icon: AppAssets.home,
             selectedIcon: AppAssets.homeFilled,
           ),
@@ -54,7 +54,7 @@ class BottomNavShell extends StatelessWidget {
             context: context,
             index: 1,
             selectedIndex: selectedIndex,
-            label: AppStrings.market,
+            label: context.tr.market,
             icon: AppAssets.market,
             selectedIcon: AppAssets.marketFilled,
           ),
@@ -62,7 +62,7 @@ class BottomNavShell extends StatelessWidget {
             context: context,
             index: 2,
             selectedIndex: selectedIndex,
-            label: AppStrings.portfolio,
+            label: context.tr.portfolio,
             icon: AppAssets.portfolio,
             selectedIcon: AppAssets.portfolioFilled,
           ),
@@ -70,7 +70,7 @@ class BottomNavShell extends StatelessWidget {
             context: context,
             index: 3,
             selectedIndex: selectedIndex,
-            label: AppStrings.settings,
+            label: context.tr.settings,
             icon: AppAssets.settings,
             selectedIcon: AppAssets.settingsFilled,
           ),

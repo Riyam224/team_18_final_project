@@ -2,6 +2,8 @@ import 'package:dartz/dartz.dart';
 import 'package:team_18_final_project/core/error/failure.dart';
 import 'package:team_18_final_project/core/networking/api_error_handler.dart';
 import 'package:team_18_final_project/features/market/data/data_sources/market_api_service.dart';
+import 'package:team_18_final_project/features/market/data/models/coin_chart_model.dart';
+import 'package:team_18_final_project/features/market/domain/entities/chart_point.dart';
 import 'package:team_18_final_project/features/market/domain/entities/coin_details.dart';
 import 'package:team_18_final_project/features/market/domain/entities/market_coin.dart';
 import 'package:team_18_final_project/features/market/domain/entities/search_coin.dart';
@@ -112,13 +114,8 @@ class MarketRepositoryImpl implements MarketRepository {
   Future<Either<Failure, CoinDetailsEntity>> getCoinDetails(
       String coinId) async {
     try {
-      // Apply debouncing
       await _applyRequestDebounce();
-
-      // Fetch from API
       final response = await _apiService.getCoinDetails(id: coinId);
-
-      // Convert model to entity
       final entity = response.toEntity();
 
       return Right(entity);
@@ -155,6 +152,23 @@ class MarketRepositoryImpl implements MarketRepository {
       return Left(ServerFailure(message: errorMessage));
     }
   }
+
+  @override
+  Future<Either<Failure, List<ChartPoint>>> getCoinChart({
+    required String coinId,
+    required String days,
+  }) async {
+    try {
+      await _applyRequestDebounce();
+      final chartJson = await _apiService.getMarketChart(id: coinId, days: days);
+      final chartModel = CoinChartModel.fromJson(chartJson);
+      return Right(chartModel.toPoints());
+    } catch (e) {
+      final errorMessage = ApiErrorHandler.handleError(e);
+      return Left(ServerFailure(message: errorMessage));
+    }
+  }
+
 
   /// Clears all cached market data
   void clearCache() {

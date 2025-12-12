@@ -15,6 +15,9 @@ class AppRoutes {
   @Deprecated('Use myAccount')
   static const profile = myAccount;
 
+  static const billingPaymentSettings = '/billing-payment';
+  static const faqSupport = '/faq-support';
+
   static const coinDetails = '/coinDetails';
   static const buySell = '/buySell';
   static const payment = '/payment';
@@ -51,6 +54,8 @@ class RoutePaths {
 
   static String coinDetailsPath = '${AppRoutes.coinDetails}/:${RouteParams.id}';
   static String buySellPath = '${AppRoutes.buySell}/:${RouteParams.id}';
+  static String billingPaymentPath = AppRoutes.billingPaymentSettings;
+  static String faqSupportPath = AppRoutes.faqSupport;
 
   static String coinDetailsRoute(String coinId) =>
       '${AppRoutes.coinDetails}/$coinId';

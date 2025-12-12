@@ -3,6 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:team_18_final_project/features/settings/logic/language_cubit.dart';
+
+import 'package:team_18_final_project/features/settings/logic/theme_cubit.dart';
 import 'package:team_18_final_project/core/networking/dio_client.dart';
 import 'package:team_18_final_project/core/security/implementations/app_lock_service_impl.dart';
 import 'package:team_18_final_project/core/security/implementations/audit_log_service_impl.dart';
@@ -63,12 +66,14 @@ import 'package:team_18_final_project/features/portfolio/presentation/cubit/port
 import 'package:team_18_final_project/features/market/data/data_sources/market_api_service.dart';
 import 'package:team_18_final_project/features/market/data/repositories/market_repository_impl.dart';
 import 'package:team_18_final_project/features/market/domain/repositories/market_repository.dart';
+import 'package:team_18_final_project/features/market/domain/usecases/get_coin_chart_usecase.dart';
 import 'package:team_18_final_project/features/market/domain/usecases/get_coin_details_usecase.dart';
 import 'package:team_18_final_project/features/market/domain/usecases/get_market_coins_usecase.dart';
 import 'package:team_18_final_project/features/market/domain/usecases/get_market_coins_by_ids_usecase.dart';
 import 'package:team_18_final_project/features/market/domain/usecases/search_coins_usecase.dart';
 import 'package:team_18_final_project/features/market/presentation/cubit/buy_sell_cubit.dart';
 import 'package:team_18_final_project/features/market/presentation/cubit/market_cubit.dart';
+import 'package:team_18_final_project/features/market/presentation/cubit/coin_details_cubit.dart';
 
 final sl = GetIt.instance;
 
@@ -112,6 +117,7 @@ Future<void> setupDependencies({
   await _setupMarket();
   await _setupPortfolio();
   await _setupTransactions();
+  await _settings();
 }
 
 Future<void> resetDependencies({
@@ -210,7 +216,7 @@ Future<void> _setupAuth() async {
     ),
   );
 
-  sl.registerFactory(() => ProfileCubit(sl()));
+  sl.registerFactory(() => ProfileCubit(sl(), sl<ISecureStorage>()));
 }
 
 Future<void> _setupHome() async {
@@ -239,41 +245,6 @@ Future<void> _setupHome() async {
   );
 }
 
-Future<void> _setupMarket() async {
-  // Register API Service
-  sl.registerLazySingleton<MarketApiService>(
-    () => MarketApiService(sl<Dio>()),
-  );
-
-  // Register Repository
-  sl.registerLazySingleton<MarketRepository>(
-    () => MarketRepositoryImpl(sl<MarketApiService>()),
-  );
-
-  // Register Use Cases
-  sl.registerLazySingleton(
-      () => GetMarketCoinsUseCase(sl<MarketRepository>()));
-  sl.registerLazySingleton(() => SearchCoinsUseCase(sl<MarketRepository>()));
-  sl.registerLazySingleton(() => GetCoinDetailsUseCase(sl<MarketRepository>()));
-  sl.registerLazySingleton(
-      () => GetMarketCoinsByIdsUseCase(sl<MarketRepository>()));
-
-  // Register Cubits
-  sl.registerFactory(
-    () => MarketCubit(
-      getMarketCoinsUseCase: sl<GetMarketCoinsUseCase>(),
-      searchCoinsUseCase: sl<SearchCoinsUseCase>(),
-      getMarketCoinsByIdsUseCase: sl<GetMarketCoinsByIdsUseCase>(),
-    ),
-  );
-
-  sl.registerFactory(
-    () => BuySellCubit(
-      getCoinDetailsUseCase: sl<GetCoinDetailsUseCase>(),
-      addTransactionUseCase: sl<AddTransactionUseCase>(),
-    ),
-  );
-}
 
 Future<void> _setupPortfolio() async {
   sl.registerLazySingleton<PortfolioApiService>(
@@ -320,6 +291,15 @@ Future<void> _setupTransactions() async {
   sl.registerLazySingleton(() => GetTransactionsUseCase(sl()));
   sl.registerLazySingleton(() => AddTransactionUseCase(sl()));
   sl.registerLazySingleton(() => ClearTransactionsUseCase(sl()));
+}
+
+Future<void> _settings() async {
+  // settings
+  sl.registerLazySingleton<ThemeCubit>(
+    () => ThemeCubit(),
+  );
+
+  sl.registerLazySingleton<LanguageCubit>(() => LanguageCubit());
 }
 
 void _registerSecurityProd() {
@@ -383,5 +363,58 @@ void _registerSecurityTest(SecurityOverrides overrides) {
   );
   sl.registerLazySingleton<IBlurService>(
     () => overrides.blur(secure),
+  );
+}
+
+Future<void> _setupMarket() async {
+  // Register Retrofit API Service (data sources layer - for domain repository)
+  sl.registerLazySingleton<MarketApiService>(
+    () => MarketApiService(sl<Dio>()),
+  );
+
+  // Register Domain Repository (clean architecture)
+  sl.registerLazySingleton<MarketRepository>(
+    () => MarketRepositoryImpl(sl<MarketApiService>()),
+  );
+
+  // Register Use Cases
+  sl.registerLazySingleton(
+    () => GetMarketCoinsUseCase(sl<MarketRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => SearchCoinsUseCase(sl<MarketRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetCoinDetailsUseCase(sl<MarketRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetCoinChartUseCase(sl<MarketRepository>()),
+  );
+  sl.registerLazySingleton(
+    () => GetMarketCoinsByIdsUseCase(sl<MarketRepository>()),
+  );
+
+  // Register Cubits
+  sl.registerFactory(
+    () => MarketCubit(
+      getMarketCoinsUseCase: sl<GetMarketCoinsUseCase>(),
+      searchCoinsUseCase: sl<SearchCoinsUseCase>(),
+      getMarketCoinsByIdsUseCase: sl<GetMarketCoinsByIdsUseCase>(),
+    ),
+  );
+
+  sl.registerFactory(
+    () => BuySellCubit(
+      getCoinDetailsUseCase: sl<GetCoinDetailsUseCase>(),
+      addTransactionUseCase: sl<AddTransactionUseCase>(),
+    ),
+  );
+
+  // Register CoinDetailsCubit (uses Retrofit MarketApiService directly)
+  sl.registerFactory<CoinDetailsCubit>(
+    () => CoinDetailsCubit(
+      sl<GetCoinDetailsUseCase>(),
+      sl<GetCoinChartUseCase>(),
+    ),
   );
 }

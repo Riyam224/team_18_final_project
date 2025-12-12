@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class BalanceCard extends StatelessWidget {
@@ -50,7 +50,7 @@ class BalanceCard extends StatelessWidget {
         children: [
           /// ---- CURRENT BALANCE ----
           Text(
-            AppStrings.currentBalance,
+            context.tr.currentBalance,
             style: AppTextStyles.titleSmall.copyWith(
               color: AppColors.balanceCardText.withOpacity(0.7),
               fontSize: 14.sp,
@@ -79,7 +79,7 @@ class BalanceCard extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                AppStrings.weeklyProfit,
+                context.tr.weeklyProfit,
                 style: AppTextStyles.titleSmall.copyWith(
                   color: AppColors.balanceCardText.withOpacity(0.9),
                   fontWeight: FontWeight.w600,
