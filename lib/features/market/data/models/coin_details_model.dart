@@ -1,144 +1,52 @@
-import 'package:json_annotation/json_annotation.dart';
-import 'package:team_18_final_project/features/market/domain/entities/coin_details.dart';
+import 'package:team_18_final_project/features/market/data/models/coin_chart_model.dart';
 
-part 'coin_details_model.g.dart';
-
-/// Data model for detailed coin information from CoinGecko API
-/// Maps JSON response to Dart object and converts to domain entity
-@JsonSerializable()
 class CoinDetailsModel {
-  @JsonKey(name: 'id')
   final String id;
-
-  @JsonKey(name: 'symbol')
   final String symbol;
-
-  @JsonKey(name: 'name')
   final String name;
+  final String imageUrl;
+  final double currentPrice;
+  final double priceChangePercentage24h;
+  final String description;
+  final Map<String, double> marketStats;
+  
+  CoinChartModel? chartData; 
 
-  @JsonKey(name: 'image')
-  final CoinImageModel? image;
+  set updateChartData(CoinChartModel? newChartData) {
+    chartData = newChartData;
+  }
 
-  @JsonKey(name: 'market_data')
-  final MarketDataModel? marketData;
-
-  @JsonKey(name: 'market_cap_rank')
-  final int? marketCapRank;
 
   CoinDetailsModel({
     required this.id,
     required this.symbol,
     required this.name,
-    this.image,
-    this.marketData,
-    this.marketCapRank,
+
+    required this.imageUrl,
+    required this.currentPrice,
+    required this.priceChangePercentage24h,
+    required this.description,
+    required this.marketStats,
+    this.chartData,
   });
 
-  factory CoinDetailsModel.fromJson(Map<String, dynamic> json) =>
-      _$CoinDetailsModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CoinDetailsModelToJson(this);
-
-  /// Converts data model to domain entity
-  CoinDetailsEntity toEntity() {
-    return CoinDetailsEntity(
-      id: id,
-      symbol: symbol.toUpperCase(),
-      name: name,
-      image: image?.large ?? image?.small ?? image?.thumb,
-      currentPrice: marketData?.currentPrice?.usd ?? 0.0,
-      marketCapRank: marketCapRank,
-      marketCap: marketData?.marketCap?.usd,
-      totalVolume: marketData?.totalVolume?.usd,
-      priceChangePercentage24h: marketData?.priceChangePercentage24h,
-      priceChange24h: marketData?.priceChange24h,
-      circulatingSupply: marketData?.circulatingSupply,
-      totalSupply: marketData?.totalSupply,
-      ath: marketData?.ath?.usd,
-      atl: marketData?.atl?.usd,
+  factory CoinDetailsModel.fromJson(Map<String, dynamic> json) {
+    return CoinDetailsModel(
+        id: json['id'] as String? ?? 'N/A',
+        symbol: json['symbol'] as String? ?? 'N/A',
+        name: json['name'] as String? ?? 'Unknown Coin',
+        imageUrl: (json['image'] is Map) 
+            ? json['image']['large'] ?? json['image']['small'] ?? '' 
+            : '',
+        currentPrice: (json['market_data']?['current_price']?['usd'] as num?)?.toDouble() ?? 0.0,
+        priceChangePercentage24h: (json['market_data']?['price_change_percentage_24h'] as num?)?.toDouble() ?? 0.0,
+        description: json['description']?['en'] ?? 'No description available.',
+        marketStats: {
+          'Market Cap': (json['market_data']?['market_cap']?['usd'] as num?)?.toDouble() ?? 0.0,
+          'Volume 24h': (json['market_data']?['total_volume']?['usd'] as num?)?.toDouble() ?? 0.0,
+          'Available Supply': (json['market_data']?['circulating_supply'] as num?)?.toDouble() ?? 0.0,
+          'Max Supply': (json['market_data']?['max_supply'] as num?)?.toDouble() ?? 0.0,
+        }
     );
   }
-}
-
-@JsonSerializable()
-class CoinImageModel {
-  @JsonKey(name: 'thumb')
-  final String? thumb;
-
-  @JsonKey(name: 'small')
-  final String? small;
-
-  @JsonKey(name: 'large')
-  final String? large;
-
-  CoinImageModel({
-    this.thumb,
-    this.small,
-    this.large,
-  });
-
-  factory CoinImageModel.fromJson(Map<String, dynamic> json) =>
-      _$CoinImageModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CoinImageModelToJson(this);
-}
-
-@JsonSerializable()
-class MarketDataModel {
-  @JsonKey(name: 'current_price')
-  final PriceModel? currentPrice;
-
-  @JsonKey(name: 'market_cap')
-  final PriceModel? marketCap;
-
-  @JsonKey(name: 'total_volume')
-  final PriceModel? totalVolume;
-
-  @JsonKey(name: 'price_change_24h')
-  final double? priceChange24h;
-
-  @JsonKey(name: 'price_change_percentage_24h')
-  final double? priceChangePercentage24h;
-
-  @JsonKey(name: 'circulating_supply')
-  final double? circulatingSupply;
-
-  @JsonKey(name: 'total_supply')
-  final double? totalSupply;
-
-  @JsonKey(name: 'ath')
-  final PriceModel? ath;
-
-  @JsonKey(name: 'atl')
-  final PriceModel? atl;
-
-  MarketDataModel({
-    this.currentPrice,
-    this.marketCap,
-    this.totalVolume,
-    this.priceChange24h,
-    this.priceChangePercentage24h,
-    this.circulatingSupply,
-    this.totalSupply,
-    this.ath,
-    this.atl,
-  });
-
-  factory MarketDataModel.fromJson(Map<String, dynamic> json) =>
-      _$MarketDataModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$MarketDataModelToJson(this);
-}
-
-@JsonSerializable()
-class PriceModel {
-  @JsonKey(name: 'usd')
-  final double? usd;
-
-  PriceModel({this.usd});
-
-  factory PriceModel.fromJson(Map<String, dynamic> json) =>
-      _$PriceModelFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PriceModelToJson(this);
 }

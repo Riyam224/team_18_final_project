@@ -16,19 +16,23 @@ class AppSpacing {
   static EdgeInsets get paddingH10 => EdgeInsets.symmetric(horizontal: 10.w);
   static EdgeInsets get paddingH12 => EdgeInsets.symmetric(horizontal: 12.w);
   static EdgeInsets get paddingH16 => EdgeInsets.symmetric(horizontal: 16.w);
+  static EdgeInsets get paddingH18 => EdgeInsets.symmetric(horizontal: 18.w);
   static EdgeInsets get paddingH20 => EdgeInsets.symmetric(horizontal: 20.w);
   static EdgeInsets get paddingH24 => EdgeInsets.symmetric(horizontal: 24.w);
   static EdgeInsets get paddingH28 => EdgeInsets.symmetric(horizontal: 28.w);
   static EdgeInsets get paddingH40 => EdgeInsets.symmetric(horizontal: 40.w);
   static EdgeInsets get paddingH19 => EdgeInsets.symmetric(horizontal: 19.w);
 
+
   // Padding - Vertical
+  static EdgeInsets get paddingAllH2 => EdgeInsets.all(2.h);
   static EdgeInsets get paddingV4 => EdgeInsets.symmetric(vertical: 4.h);
   static EdgeInsets get paddingV8 => EdgeInsets.symmetric(vertical: 8.h);
   static EdgeInsets get paddingV10 => EdgeInsets.symmetric(vertical: 10.h);
   static EdgeInsets get paddingV12 => EdgeInsets.symmetric(vertical: 12.h);
   static EdgeInsets get paddingV16 => EdgeInsets.symmetric(vertical: 16.h);
   static EdgeInsets get paddingV20 => EdgeInsets.symmetric(vertical: 20.h);
+  static EdgeInsets get paddingV23 => EdgeInsets.symmetric(vertical: 23.h);
 
   // Padding - Combined
 
@@ -141,6 +145,7 @@ class AppSpacing {
   static SizedBox get gapH2 => SizedBox(height: 2.h);
   static SizedBox get gapH4 => SizedBox(height: 4.h);
   static SizedBox get gapH8 => SizedBox(height: 8.h);
+  static SizedBox get gapH9 => SizedBox(height: 9.h);
   static SizedBox get gapH12 => SizedBox(height: 12.h);
   static SizedBox get gapH16 => SizedBox(height: 16.h);
   static SizedBox get gapH20 => SizedBox(height: 20.h);

@@ -3,6 +3,9 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
+import 'package:team_18_final_project/features/settings/logic/language_cubit.dart';
+
+import 'package:team_18_final_project/features/settings/logic/theme_cubit.dart';
 import 'package:team_18_final_project/core/networking/dio_client.dart';
 import 'package:team_18_final_project/core/security/implementations/app_lock_service_impl.dart';
 import 'package:team_18_final_project/core/security/implementations/audit_log_service_impl.dart';
@@ -70,6 +73,12 @@ import 'package:team_18_final_project/features/market/domain/usecases/search_coi
 import 'package:team_18_final_project/features/market/presentation/cubit/buy_sell_cubit.dart';
 import 'package:team_18_final_project/features/market/presentation/cubit/market_cubit.dart';
 
+
+import 'package:team_18_final_project/features/market/data/services/market_api_service.dart' hide MarketApiService;
+import 'package:team_18_final_project/features/market/data/repositories/market_repository.dart' hide MarketRepository;
+import 'package:team_18_final_project/features/market/logic/coin_details_cubit.dart';
+
+
 final sl = GetIt.instance;
 
 enum AppEnvironment { prod, test }
@@ -101,6 +110,10 @@ class SecurityOverrides {
   });
 }
 
+
+
+
+
 Future<void> setupDependencies({
   AppEnvironment env = AppEnvironment.prod,
   SecurityOverrides? securityOverrides,
@@ -112,6 +125,8 @@ Future<void> setupDependencies({
   await _setupMarket();
   await _setupPortfolio();
   await _setupTransactions();
+  await _settings();
+  await _setupMarket();
 }
 
 Future<void> resetDependencies({
@@ -239,41 +254,50 @@ Future<void> _setupHome() async {
   );
 }
 
-Future<void> _setupMarket() async {
-  // Register API Service
-  sl.registerLazySingleton<MarketApiService>(
-    () => MarketApiService(sl<Dio>()),
-  );
+// Future<void> _setupMarket() async {
+//   // Register API Service
+//   sl.registerLazySingleton<MarketApiService>(
+//     () => MarketApiService(sl<Dio>()),
+//   );
 
-  // Register Repository
-  sl.registerLazySingleton<MarketRepository>(
-    () => MarketRepositoryImpl(sl<MarketApiService>()),
-  );
+//   // Register Repository
+//   sl.registerLazySingleton<MarketRepository>(
+//     () => MarketRepositoryImpl(sl<MarketApiService>()),
+//   );
 
-  // Register Use Cases
-  sl.registerLazySingleton(
-      () => GetMarketCoinsUseCase(sl<MarketRepository>()));
-  sl.registerLazySingleton(() => SearchCoinsUseCase(sl<MarketRepository>()));
-  sl.registerLazySingleton(() => GetCoinDetailsUseCase(sl<MarketRepository>()));
-  sl.registerLazySingleton(
-      () => GetMarketCoinsByIdsUseCase(sl<MarketRepository>()));
+//   // Register Use Cases
+//   sl.registerLazySingleton(
+//       () => GetMarketCoinsUseCase(sl<MarketRepository>()));
+//   sl.registerLazySingleton(() => SearchCoinsUseCase(sl<MarketRepository>()));
+//   sl.registerLazySingleton(() => GetCoinDetailsUseCase(sl<MarketRepository>()));
+//   sl.registerLazySingleton(
+//       () => GetMarketCoinsByIdsUseCase(sl<MarketRepository>()));
 
-  // Register Cubits
-  sl.registerFactory(
-    () => MarketCubit(
-      getMarketCoinsUseCase: sl<GetMarketCoinsUseCase>(),
-      searchCoinsUseCase: sl<SearchCoinsUseCase>(),
-      getMarketCoinsByIdsUseCase: sl<GetMarketCoinsByIdsUseCase>(),
-    ),
-  );
+//   // Register Cubits
+//   sl.registerFactory(
+//     () => MarketCubit(
+//       getMarketCoinsUseCase: sl<GetMarketCoinsUseCase>(),
+//       searchCoinsUseCase: sl<SearchCoinsUseCase>(),
+//       getMarketCoinsByIdsUseCase: sl<GetMarketCoinsByIdsUseCase>(),
+//     ),
+//   );
 
-  sl.registerFactory(
-    () => BuySellCubit(
-      getCoinDetailsUseCase: sl<GetCoinDetailsUseCase>(),
-      addTransactionUseCase: sl<AddTransactionUseCase>(),
-    ),
-  );
-}
+//   sl.registerFactory(
+//     () => BuySellCubit(
+//       getCoinDetailsUseCase: sl<GetCoinDetailsUseCase>(),
+//       addTransactionUseCase: sl<AddTransactionUseCase>(),
+//     ),
+//   );
+// }
+
+
+
+
+
+
+
+
+
 
 Future<void> _setupPortfolio() async {
   sl.registerLazySingleton<PortfolioApiService>(
@@ -321,6 +345,19 @@ Future<void> _setupTransactions() async {
   sl.registerLazySingleton(() => AddTransactionUseCase(sl()));
   sl.registerLazySingleton(() => ClearTransactionsUseCase(sl()));
 }
+
+
+Future<void> _settings() async {
+  // settings
+  sl.registerLazySingleton<ThemeCubit>(
+    () => ThemeCubit(),
+);
+
+  sl.registerLazySingleton<LanguageCubit>(
+    () => LanguageCubit());
+
+}
+
 
 void _registerSecurityProd() {
   sl.registerLazySingleton<ISecureStorage>(() => FlutterSecureStorageImpl());
@@ -384,4 +421,20 @@ void _registerSecurityTest(SecurityOverrides overrides) {
   sl.registerLazySingleton<IBlurService>(
     () => overrides.blur(secure),
   );
+}
+
+
+
+Future<void> _setupMarket() async {
+  sl.registerLazySingleton<MarketApiService>(
+    () => MarketApiService(sl<Dio>()), 
+  );
+
+  // sl.registerLazySingleton<MarketRepository>(
+  //   () => MarketRepository(sl<MarketApiService>()), 
+  // );
+
+  // sl.registerFactory<CoinDetailsCubit>(
+  //   () => CoinDetailsCubit(sl<MarketRepository>()), 
+  // );
 }

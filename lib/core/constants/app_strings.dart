@@ -272,4 +272,16 @@ class AppStrings {
   static const String trendingNow = 'Trending Now';
   static const String topGainers = 'Top Gainers';
   static const String viewAll = 'View all';
+
+// constants used in theme_cubit.dart and settings
+  static const String themeKeyLightValue = 'light';
+  static const String themeKeyDarkValue = 'dark';
+  static const String themePreferenceKey = 'preferred_theme';
+  static const String debugErrorLoadingProfile = 'Error loading user profile in Settings:';
+  static const String fallbackGuestName = 'Guest';
+  static const String exceptionLocalization = 'AppLocalizations not found in current BuildContext. '
+              'Check your MaterialApp/CupertinoApp setup.';
+  static const String fallbackLanguageName = 'Unknown Language';
+  static const String debugErrorLoadingTheme = 'Theme Cubit Error loading theme preference:'; 
+    static const String debugErrorSavingTheme = 'Theme Cubit Error saving theme preference:';  
 }

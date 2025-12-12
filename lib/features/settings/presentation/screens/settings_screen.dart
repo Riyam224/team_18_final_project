@@ -1,25 +1,23 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:go_router/go_router.dart';
-
-import 'package:team_18_final_project/core/config/app_constants.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/config/storage_keys_config.dart';
-import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
-import 'package:team_18_final_project/features/auth/domain/repositories/auth_repository.dart';
+import 'package:team_18_final_project/core/constants/app_assets.dart';
+
+import 'package:team_18_final_project/features/settings/presentation/widgets/settings_list_tile.dart';
+import 'package:team_18_final_project/features/settings/presentation/widgets/settings_header.dart';
+import 'package:team_18_final_project/features/settings/presentation/widgets/theme_switcher.dart';
+
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:team_18_final_project/features/settings/logic/language_cubit.dart';
+import 'package:go_router/go_router.dart';
+import 'package:team_18_final_project/l10n/app_localizations.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -29,248 +27,259 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
+
+  String _userName = ''; 
   String? _avatarPath;
-  bool _biometricEnabled = false;
-  bool _biometricAvailable = false;
-  int _autoLockSeconds = AppConstants.defaultAutoLockTimeout;
-  bool _loading = true;
 
   late final ISecureStorage _secureStorage;
-  late final IBiometricService _biometricService;
-  late final IAppLockService _appLockService;
-  late final IAuditLogService _auditLogService;
-  late final ISessionManager _sessionManager;
-  late final AuthRepository _authRepository;
 
   @override
   void initState() {
     super.initState();
-    _secureStorage = sl<ISecureStorage>();
-    _biometricService = sl<IBiometricService>();
-    _appLockService = sl<IAppLockService>();
-    _auditLogService = sl<IAuditLogService>();
-    _sessionManager = sl<ISessionManager>();
-    _authRepository = sl<AuthRepository>();
-    _loadData();
-  }
-
-  Future<void> _loadData() async {
-    // Load avatar path
-    final avatarResult =
-        await _secureStorage.read(key: StorageKeysConfig.avatarUrl);
-    final avatar = avatarResult.fold((failure) => null, (value) => value);
-
-    // Load biometric enabled
-    final enabledResult =
-        await _secureStorage.read(key: StorageKeysConfig.biometricEnabled);
-    final enabled =
-        enabledResult.fold((failure) => false, (value) => value == 'true');
-
-    // Check biometric availability
-    final availableResult = await _biometricService.isAvailable();
-    final available =
-        availableResult.fold((failure) => false, (value) => value);
-
-    // Get auto-lock timeout
-    final timeoutResult = await _appLockService.getAutoLockTimeout();
-    final lockDuration = timeoutResult.fold(
-      (failure) => Duration(seconds: AppConstants.defaultAutoLockTimeout),
-      (duration) => duration,
-    );
-    final lock = lockDuration.inSeconds;
-
-    if (!mounted) return;
-    setState(() {
-      _avatarPath = avatar;
-      _biometricEnabled = enabled && available;
-      _biometricAvailable = available;
-      _autoLockSeconds = AppConstants.autoLockTimeoutOptions.contains(lock)
-          ? lock
-          : AppConstants.autoLockTimeoutOptions.first;
-      _loading = false;
+    _secureStorage = sl<ISecureStorage>();  
+    WidgetsBinding.instance.addPostFrameCallback((_) { 
+        if (mounted && _userName.isEmpty) {
+            setState(() {
+                _userName = AppLocalizations.of(context)?.defaultGuestName ?? AppStrings.fallbackGuestName;
+            });
+        }
     });
+    _loadUserProfile(); 
   }
 
-  ImageProvider _avatarProvider() {
-    if (_avatarPath != null && _avatarPath!.isNotEmpty) {
-      if (_avatarPath!.startsWith('assets/')) {
-        return AssetImage(_avatarPath!);
-      }
-      if (_avatarPath!.startsWith('http')) {
-        return NetworkImage(_avatarPath!);
-      }
-      return FileImage(File(_avatarPath!));
-    }
-    return const AssetImage(AppAssets.profileGirl);
-  }
 
-  Future<void> _toggleBiometric(bool value) async {
-    if (!_biometricAvailable && value) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Biometrics not available on this device')),
+  Future<void> _loadUserProfile() async {
+    try {
+      // Load user first name
+      final firstNameResult = await _secureStorage.read(
+        key: StorageKeysConfig.userDisplayName,
       );
-      return;
+      final firstName = firstNameResult.fold(
+        (failure) => null,
+        (value) => value,
+      );
+
+      // Fallback to email username if no stored display name
+      final emailResult = await _secureStorage.read(
+        key: StorageKeysConfig.userEmail,
+      );
+      final email = emailResult.fold(
+        (failure) => null,
+        (value) => value,
+      );
+
+      // Load avatar path
+      final avatarResult = await _secureStorage.read(
+        key: StorageKeysConfig.avatarUrl,
+      );
+      final avatarPath = avatarResult.fold(
+        (failure) => null,
+        (value) => value,
+      );
+
+      if (!mounted) return;
+
+      setState(() {
+        _userName = _extractFirstName(firstName) ??
+            _extractFirstName(email) ??
+            _userName;
+        _avatarPath = avatarPath;
+      });
+    } catch (e) {
+      // Silently handle any errors and keep default values
+      debugPrint('${AppStrings.debugErrorLoadingProfile} $e');
     }
-
-    await _secureStorage.write(
-      key: StorageKeysConfig.biometricEnabled,
-      value: value.toString(),
-    );
-
-    await _auditLogService.log(
-      event: 'Biometric auth ${value ? 'enabled' : 'disabled'}',
-      metadata: {'type': 'security'},
-    );
-
-    setState(() {
-      _biometricEnabled = value;
-    });
   }
 
-  Future<void> _updateLockTimeout(int seconds) async {
-    await _appLockService.setAutoLockTimeout(Duration(seconds: seconds));
 
-    await _secureStorage.write(
-      key: StorageKeysConfig.sessionTimeoutMinutes,
-      value: ((seconds / 60).ceil()).toString(),
-    );
+  String? _extractFirstName(String? value) {
+    if (value == null) return null;
+    final trimmed = value.trim();
+    if (trimmed.isEmpty) return null;
 
-    await _auditLogService.log(
-      event:
-          'Auto-lock timeout set to ${seconds == 0 ? 'Never' : '${seconds}s'}',
-      metadata: {'type': 'security'},
-    );
+    // If value looks like an email, use the part before @
+    final emailSplit = trimmed.split('@');
+    final base = emailSplit.first;
 
-    setState(() {
-      _autoLockSeconds = seconds;
-    });
+    final parts = base.split(RegExp(r'\s+'));
+    final first = parts.first;
+    if (first.isEmpty) return null;
+    return first;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? AppColors.textWhite : AppColors.textBlack;
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(AppStrings.settings),
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: AppSpacing.paddingAll16,
-              children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: AppSizing.w32,
-                      backgroundImage: _avatarProvider(),
-                    ),
-                    AppSpacing.gapW12,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppStrings.profile,
-                          style: AppTextStyles.titleMedium.copyWith(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w600,
-                            color: textColor,
+
+
+
+List<Map<String, String>> getAvailableLanguages(BuildContext context) {
+  return [
+    {
+      'name': context.tr.languageEnglish, 
+      'code': 'en'
+    },
+    {
+      'name': context.tr.languageArabic,  
+      'code': 'ar'
+    },
+  ];
+}
+
+  void _showLanguageSelectionDialog(BuildContext context, bool isDark) {
+    final theme = Theme.of(context);
+
+    final langCubit = context.read<LanguageCubit>();
+
+    final currentLanguageCode =
+        context.read<LanguageCubit>().state.languageCode;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text(
+            context.tr.chooseLanguage,
+            style: theme.textTheme.headlineLarge,
+          ),
+          content: SizedBox(
+            width: double.maxFinite,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: getAvailableLanguages(context).length,
+              itemBuilder: (context, index) {
+                final lang = getAvailableLanguages(context)[index];
+                final isSelected = lang['code'] == currentLanguageCode;
+
+                return ListTile(
+                  title: Text(
+                    lang['name'] ?? AppStrings.fallbackLanguageName,
+                    style: theme.textTheme.headlineMedium,
+                  ),
+                  trailing: isSelected
+                      ? Icon(Icons.check,
+                          color:
+                              isDark ? AppColors.textWhite : AppColors.primary)
+                      : null,
+                  onTap: () {
+                    langCubit.changeLanguage(lang['code'] ?? 'en',);
+
+                    Navigator.of(dialogContext).pop();
+
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                          content: Text(
+                            context.tr.languageSetSuccess(
+                                  lang['name'] ?? AppStrings.fallbackLanguageName
+                              ), 
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () => context.push(AppRoutes.myAccount),
-                          child: const Text('View / edit profile'),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-                AppSpacing.gapH24,
-                Text(
-                  AppStrings.avatarDescription,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontSize: 14.sp,
-                    color: textColor,
-                  ),
-                ),
-                AppSpacing.gapH24,
-                Text(
-                  'Security',
-                  style: AppTextStyles.titleMedium.copyWith(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w700,
-                    color: textColor,
-                  ),
-                ),
-                SwitchListTile.adaptive(
-                  title: const Text('Enable Biometrics'),
-                  subtitle: Text(
-                    _biometricAvailable
-                        ? 'Use Face/Touch ID to unlock'
-                        : 'Biometrics not available',
-                  ),
-                  value: _biometricEnabled,
-                  onChanged: _toggleBiometric,
-                ),
-                ListTile(
-                  title: const Text('Auto-lock timeout'),
-                  subtitle: Text(
-                    _autoLockSeconds == 0
-                        ? 'Never'
-                        : _autoLockSeconds < 60
-                            ? 'After ${_autoLockSeconds}s'
-                            : 'After ${_autoLockSeconds ~/ 60} minutes',
-                  ),
-                  trailing: DropdownButton<int>(
-                    value: _autoLockSeconds,
-                    items: AppConstants.autoLockTimeoutOptions
-                        .map((m) => DropdownMenuItem(
-                              value: m,
-                              child: Text(
-                                m == 0
-                                    ? 'Never'
-                                    : m < 60
-                                        ? '$m s'
-                                        : '${m ~/ 60} min',
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      if (value != null) _updateLockTimeout(value);
-                    },
-                  ),
-                ),
-                AppSpacing.gapH24,
-                ElevatedButton(
-                  onPressed: () async {
-                    final messenger = ScaffoldMessenger.of(context);
-                    final router = GoRouter.of(context);
-
-                    await _auditLogService.log(
-                      event: 'User logged out from settings',
-                      metadata: {'type': 'auth'},
-                    );
-
-                    // Sign out: clears session and user data while preserving biometric credentials
-                    await _authRepository.signOut();
-                    await _sessionManager.endSession();
-
-                    // Reset DI container AFTER signing out
-                    // This ensures biometric credentials are preserved before DI reset
-                    await resetDependencies();
-
-                    if (!mounted) return;
-                    router.go(AppRoutes.login);
-                    messenger.showSnackBar(
-                      const SnackBar(content: Text('Logged out successfully')),
+                          ),
                     );
                   },
-                  child: const Text('Logout'),
-                ),
-              ],
+                );
+              },
             ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(
+                context.tr.cancelButton,
+                style: theme.textTheme.titleLarge,
+              ),
+            )
+          ],
+        );
+      },
+    );
+  }
+
+// ...
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final sectionTitleColor = isDark ? AppColors.textWhite : AppColors.primary;
+
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: theme.scaffoldBackgroundColor,
+        appBar: AppBar(
+          title: Text(context.tr.settingsTitle,
+              style: theme.textTheme.headlineLarge),
+          backgroundColor: theme.appBarTheme.backgroundColor,
+          elevation: 0,
+          centerTitle: false,
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+                SettingsHeader(
+                userName: _userName, 
+                avatarPath: _avatarPath,
+              ),
+              Padding(
+                padding: AppSpacing.paddingH18,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(context.tr.generalSection,
+                        style: AppTextStyles.titleLargesemiBold
+                            .copyWith(color: sectionTitleColor)),
+                    SettingsListTile(
+                      title:context.tr.myAccountTitle,
+                      titleTextStyle: AppTextStyles.titleLargesemiBold
+                          .copyWith(color: sectionTitleColor),
+                      iconPath: AppAssets.settingsAccount,
+                      onTap: () {
+                        context.pushNamed(AppRoutes.home);
+                      },
+                      chevronPath: AppAssets.settingsArrow,
+                    ),
+                    SettingsListTile(
+                      title: context.tr.billingPaymentTitle,
+                      titleTextStyle: AppTextStyles.titleLargesemiBold
+                          .copyWith(color: sectionTitleColor),
+                      iconPath: AppAssets.settingsBilling,
+                      showDivider: true,
+                      onTap: () {
+                        context.pushNamed(AppRoutes.payment);
+                      },
+                      chevronPath: AppAssets.settingsArrow,
+                    ),
+                    SettingsListTile(
+                      title: context.tr.faqSupportTitle,
+                      titleTextStyle: AppTextStyles.titleLargesemiBold
+                          .copyWith(color: sectionTitleColor),
+                      iconPath: AppAssets.settingsFAQ,
+                      showDivider: false,
+                      onTap: () {},
+                      chevronPath: AppAssets.settingsArrow,
+                    ),
+                    AppSpacing.gapH12,
+                    Text(context.tr.settingsTitle,
+                        style: AppTextStyles.titleLargesemiBold.copyWith(
+                          color:
+                              isDark ? AppColors.textWhite : AppColors.primary,
+                        )),
+                    SettingsListTile(
+                      title: context.tr.languageTitle,
+                      titleTextStyle: AppTextStyles.titleLargesemiBold
+                          .copyWith(color: sectionTitleColor),
+                      iconPath: AppAssets.settingsLanguage,
+                      showDivider: true,
+                      onTap: () =>
+                          _showLanguageSelectionDialog(context, isDark),
+                      chevronPath: AppAssets.settingsArrow,
+                    ),
+                    const ThemeSwitcherTile(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

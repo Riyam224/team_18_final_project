@@ -1,14 +1,12 @@
-import 'dart:async';
-
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/utils/app_providers_wrapper.dart';
+import 'dart:async';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:secure_application/secure_application.dart';
-
 import 'package:team_18_final_project/core/config/app_config.dart';
-import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/app_router.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
@@ -26,6 +24,18 @@ Future<void> main({
 }) async {
   WidgetsFlutterBinding.ensureInitialized();
 
+// New Addition: Set screen orientation once to prevent repeated calls from build()
+  // This centralizes the global system settings.
+    SystemChrome.setPreferredOrientations(
+    AppConstants.allowedOrientations,
+  );
+
+
+  // New Addition: Set initial System UI style (status bar/nav bar colors)
+  // This should only be called once at startup (or in the MaterialApp builder)
+  // We apply the default Light Theme style here to avoid side effects in build.
+  AppTheme.setSystemUIOverlayStyle(ThemeMode.light);
+
   if (env == AppEnvironment.prod) {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
@@ -37,11 +47,6 @@ Future<void> main({
     env: env,
     securityOverrides: securityOverrides,
   );
-
-  // Set system UI overlay style
-  if (env == AppEnvironment.prod) {
-    AppTheme.setSystemUIOverlayStyle(ThemeMode.system);
-  }
 
   // Optional: Check for rooted/jailbroken device
   if (env == AppEnvironment.prod) {
@@ -203,6 +208,24 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   }
 
   @override
+  Widget build(BuildContext context) {
+    //SystemChrome.setPreferredOrientations(AppConstants.allowedOrientations);
+
+    return SecureApplication(
+      secureApplicationController: _secureController,
+      child: Listener(
+        behavior: HitTestBehavior.deferToChild,
+        onPointerDown: (_) {
+          // Track user activity for auto-lock and session management
+          _appLockService.updateActivity();  
+          _sessionManager.updateActivity(); 
+        },
+        child: const AppProvidersWrapper(),
+      ),
+    );
+  }
+
+  @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _lockStateSub?.cancel();
@@ -210,45 +233,5 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     _sessionManager.dispose();
     _appLockService.dispose();
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    // Set preferred orientations (optional - remove if you want landscape support)
-    SystemChrome.setPreferredOrientations(AppConstants.allowedOrientations);
-
-    return ScreenUtilInit(
-      designSize: AppConstants.designSize,
-      minTextAdapt: true,
-      splitScreenMode: true,
-      builder: (_, __) {
-        return SecureApplication(
-          secureApplicationController: _secureController,
-          child: Listener(
-            behavior: HitTestBehavior.deferToChild,
-            onPointerDown: (_) {
-              // Track user activity for auto-lock and session management
-              _appLockService.updateActivity();
-              _sessionManager.updateActivity();
-            },
-            child: MaterialApp.router(
-              title: AppConstants.appTitle,
-              debugShowCheckedModeBanner: false,
-
-              // Themes
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              themeMode: ThemeMode.system,
-
-              // Routing configuration
-              routerConfig: RouteGenerator.mainRoutingInOurApp,
-
-              // SecureApplication blur/screenshot handling routed via observer
-              builder: (context, child) => child ?? const SizedBox(),
-            ),
-          ),
-        );
-      },
-    );
   }
 }
