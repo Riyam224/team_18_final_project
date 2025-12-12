@@ -6,6 +6,10 @@ import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/settings/presentation/widgets/settings_header.dart';
 import 'package:team_18_final_project/l10n/app_localizations.dart'; 
+import 'package:team_18_final_project/core/extension/app_extension.dart';
+
+const String mockUserName = 'Test User';
+const String mockLocalizedName = 'Sophia Isabella';
 
 class MockAppLocalizations implements AppLocalizations {
 
@@ -14,6 +18,7 @@ class MockAppLocalizations implements AppLocalizations {
 
 
   MockAppLocalizations(this.locale);  
+  @override String get name => mockLocalizedName;
   @override String get settingsTitle => 'Settings'; 
   @override String get generalSection => 'General';
   @override String get myAccountTitle => 'My Account';
@@ -33,7 +38,7 @@ class MockAppLocalizations implements AppLocalizations {
   
   @override
   // TODO: implement languageSetSuccessDescription
-  String get languageSetSuccessDescription => throw UnimplementedError();
+String get languageSetSuccessDescription => 'Mock language description';
 }
 
 class MockAppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -77,7 +82,7 @@ void main() {
             )
           ),
           
-          home:  Scaffold(body: SettingsHeader(userName: 'Test User',)), 
+          home:  Scaffold(body: SettingsHeader(userName: mockUserName,)), 
         );
       },
     );
@@ -88,12 +93,12 @@ void main() {
     await tester.pumpWidget(createHeaderWrapper(brightness: Brightness.light));
     await tester.pumpAndSettle(); 
 
-    expect(find.text('Sophia Isabella'), findsOneWidget);
+    expect(find.text(mockUserName), findsOneWidget);
 
-    final textWidget = tester.widget<Text>(find.text('Sophia Isabella'));
+    final textWidget = tester.widget<Text>(find.text(mockUserName));
     expect(textWidget.style!.color, equals(AppColors.primary)); 
 
-    expect(find.byType(Image), findsOneWidget); 
+    expect(find.byType(CircleAvatar), findsOneWidget); 
   });
   
   
@@ -101,7 +106,7 @@ void main() {
     await tester.pumpWidget(createHeaderWrapper(brightness: Brightness.dark));
     await tester.pumpAndSettle();
 
-    final textWidget = tester.widget<Text>(find.text('Sophia Isabella'));
+    final textWidget = tester.widget<Text>(find.text(mockUserName));
     expect(textWidget.style!.color, equals(AppColors.textWhite)); 
 
     expect(find.byType(CircleAvatar), findsOneWidget); 
