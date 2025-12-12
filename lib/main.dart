@@ -12,6 +12,8 @@ import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/observers/app_route_observer.dart';
 import 'package:team_18_final_project/core/routing/app_router.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
+import 'package:team_18_final_project/core/config/storage_keys_config.dart';
+import 'package:team_18_final_project/core/utils/theme_controller.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
@@ -84,8 +86,10 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
   late final IAppLockService _appLockService;
   late final IRootDetectionService _rootDetectionService;
   late final IAuditLogService _auditLogService;
+  late final ISecureStorage _secureStorage;
   StreamSubscription<bool>? _lockStateSub;
   StreamSubscription<bool>? _sessionStateSub;
+  ThemeMode _themeMode = ThemeMode.system;
 
   @override
   void initState() {
@@ -97,6 +101,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     _appLockService = sl<IAppLockService>();
     _rootDetectionService = sl<IRootDetectionService>();
     _auditLogService = sl<IAuditLogService>();
+    _secureStorage = sl<ISecureStorage>();
 
     // Initialize secure application controller for background blur
     _secureController = SecureApplicationController(SecureApplicationState());
@@ -108,6 +113,7 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
     _listenToAutoLock();
     _listenToSession();
     _checkRootAndWarn();
+    _loadThemeMode();
 
     // Update activity timestamp on app launch
     _appLockService.updateActivity();
@@ -133,6 +139,43 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
         appNavigatorKey.currentContext?.go(AppRoutes.login);
       }
     });
+  }
+
+  Future<void> _loadThemeMode() async {
+    final storedMode =
+        await _secureStorage.read(key: StorageKeysConfig.themeMode);
+    final modeString = storedMode.fold((_) => null, (value) => value);
+    final parsedMode = _parseThemeMode(modeString) ?? ThemeMode.system;
+    await _setThemeMode(parsedMode, persist: false);
+  }
+
+  Future<void> _setThemeMode(ThemeMode mode, {bool persist = true}) async {
+    if (!mounted) return;
+
+    setState(() {
+      _themeMode = mode;
+    });
+    AppTheme.setSystemUIOverlayStyle(mode);
+
+    if (persist) {
+      await _secureStorage.write(
+        key: StorageKeysConfig.themeMode,
+        value: mode.name,
+      );
+    }
+  }
+
+  ThemeMode? _parseThemeMode(String? modeString) {
+    switch (modeString) {
+      case 'light':
+        return ThemeMode.light;
+      case 'dark':
+        return ThemeMode.dark;
+      case 'system':
+        return ThemeMode.system;
+      default:
+        return null;
+    }
   }
 
   @override
@@ -231,20 +274,24 @@ class _FintechAppState extends State<FintechApp> with WidgetsBindingObserver {
               _appLockService.updateActivity();
               _sessionManager.updateActivity();
             },
-            child: MaterialApp.router(
-              title: AppConstants.appTitle,
-              debugShowCheckedModeBanner: false,
+            child: ThemeController(
+              themeMode: _themeMode,
+              setThemeMode: (mode) => _setThemeMode(mode),
+              child: MaterialApp.router(
+                title: AppConstants.appTitle,
+                debugShowCheckedModeBanner: false,
 
-              // Themes
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              themeMode: ThemeMode.system,
+                // Themes
+                theme: AppTheme.lightTheme,
+                darkTheme: AppTheme.darkTheme,
+                themeMode: _themeMode,
 
-              // Routing configuration
-              routerConfig: RouteGenerator.mainRoutingInOurApp,
+                // Routing configuration
+                routerConfig: RouteGenerator.mainRoutingInOurApp,
 
-              // SecureApplication blur/screenshot handling routed via observer
-              builder: (context, child) => child ?? const SizedBox(),
+                // SecureApplication blur/screenshot handling routed via observer
+                builder: (context, child) => child ?? const SizedBox(),
+              ),
             ),
           ),
         );

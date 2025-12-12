@@ -15,6 +15,9 @@ class AppRoutes {
   @Deprecated('Use myAccount')
   static const profile = myAccount;
 
+  static const billingPaymentSettings = '/billing-payment';
+  static const faqSupport = '/faq-support';
+
   static const coinDetails = '/coinDetails';
   static const buySell = '/buySell';
   static const payment = '/payment';

@@ -3,23 +3,16 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
-
-import 'package:team_18_final_project/core/config/app_constants.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_audit_log_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
-import 'package:team_18_final_project/core/security/interfaces/i_session_manager.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
-import 'package:team_18_final_project/features/auth/domain/repositories/auth_repository.dart';
+import 'package:team_18_final_project/core/utils/theme_controller.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -30,64 +23,57 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   String? _avatarPath;
-  bool _biometricEnabled = false;
-  bool _biometricAvailable = false;
-  int _autoLockSeconds = AppConstants.defaultAutoLockTimeout;
-  bool _loading = true;
-
+  String _displayName = 'Sophia Isabella';
+  bool _isLoading = true;
+  bool _darkModeEnabled = false;
   late final ISecureStorage _secureStorage;
-  late final IBiometricService _biometricService;
-  late final IAppLockService _appLockService;
-  late final IAuditLogService _auditLogService;
-  late final ISessionManager _sessionManager;
-  late final AuthRepository _authRepository;
 
   @override
   void initState() {
     super.initState();
     _secureStorage = sl<ISecureStorage>();
-    _biometricService = sl<IBiometricService>();
-    _appLockService = sl<IAppLockService>();
-    _auditLogService = sl<IAuditLogService>();
-    _sessionManager = sl<ISessionManager>();
-    _authRepository = sl<AuthRepository>();
     _loadData();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final controller = ThemeController.of(context);
+    final isDarkMode = controller.themeMode == ThemeMode.dark;
+    if (_darkModeEnabled != isDarkMode) {
+      setState(() {
+        _darkModeEnabled = isDarkMode;
+      });
+    }
+  }
+
   Future<void> _loadData() async {
-    // Load avatar path
     final avatarResult =
         await _secureStorage.read(key: StorageKeysConfig.avatarUrl);
-    final avatar = avatarResult.fold((failure) => null, (value) => value);
+    final displayNameResult =
+        await _secureStorage.read(key: StorageKeysConfig.userDisplayName);
+    final firstNameResult =
+        await _secureStorage.read(key: StorageKeysConfig.userFirstName);
+    final lastNameResult =
+        await _secureStorage.read(key: StorageKeysConfig.userLastName);
 
-    // Load biometric enabled
-    final enabledResult =
-        await _secureStorage.read(key: StorageKeysConfig.biometricEnabled);
-    final enabled =
-        enabledResult.fold((failure) => false, (value) => value == 'true');
+    final avatar = avatarResult.fold((_) => null, (value) => value);
+    final displayName = displayNameResult.fold((_) => null, (value) => value);
+    final firstName = firstNameResult.fold((_) => null, (value) => value);
+    final lastName = lastNameResult.fold((_) => null, (value) => value);
 
-    // Check biometric availability
-    final availableResult = await _biometricService.isAvailable();
-    final available =
-        availableResult.fold((failure) => false, (value) => value);
-
-    // Get auto-lock timeout
-    final timeoutResult = await _appLockService.getAutoLockTimeout();
-    final lockDuration = timeoutResult.fold(
-      (failure) => Duration(seconds: AppConstants.defaultAutoLockTimeout),
-      (duration) => duration,
-    );
-    final lock = lockDuration.inSeconds;
+    final combinedName = [
+      if (firstName != null) firstName,
+      if (lastName != null) lastName,
+    ].where((e) => e.isNotEmpty).join(' ');
 
     if (!mounted) return;
     setState(() {
       _avatarPath = avatar;
-      _biometricEnabled = enabled && available;
-      _biometricAvailable = available;
-      _autoLockSeconds = AppConstants.autoLockTimeoutOptions.contains(lock)
-          ? lock
-          : AppConstants.autoLockTimeoutOptions.first;
-      _loading = false;
+      _displayName = (displayName?.isNotEmpty ?? false)
+          ? displayName!
+          : (combinedName.isNotEmpty ? combinedName : _displayName);
+      _isLoading = false;
     });
   }
 
@@ -104,173 +90,209 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return const AssetImage(AppAssets.profileGirl);
   }
 
-  Future<void> _toggleBiometric(bool value) async {
-    if (!_biometricAvailable && value) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-            content: Text('Biometrics not available on this device')),
-      );
-      return;
-    }
-
-    await _secureStorage.write(
-      key: StorageKeysConfig.biometricEnabled,
-      value: value.toString(),
-    );
-
-    await _auditLogService.log(
-      event: 'Biometric auth ${value ? 'enabled' : 'disabled'}',
-      metadata: {'type': 'security'},
-    );
-
+  Future<void> _toggleDarkMode(bool value) async {
+    final controller = ThemeController.of(context);
+    await controller.setThemeMode(value ? ThemeMode.dark : ThemeMode.light);
+    if (!mounted) return;
     setState(() {
-      _biometricEnabled = value;
+      _darkModeEnabled = value;
     });
   }
 
-  Future<void> _updateLockTimeout(int seconds) async {
-    await _appLockService.setAutoLockTimeout(Duration(seconds: seconds));
-
-    await _secureStorage.write(
-      key: StorageKeysConfig.sessionTimeoutMinutes,
-      value: ((seconds / 60).ceil()).toString(),
+  void _showComingSoon() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('This option will be available soon.')),
     );
-
-    await _auditLogService.log(
-      event:
-          'Auto-lock timeout set to ${seconds == 0 ? 'Never' : '${seconds}s'}',
-      metadata: {'type': 'security'},
-    );
-
-    setState(() {
-      _autoLockSeconds = seconds;
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final textColor = isDark ? AppColors.textWhite : AppColors.textBlack;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final background =
+        isDark ? AppColors.darkBackground : AppColors.lightBackground;
+    final textColor = isDark ? AppColors.textWhite : AppColors.primary;
+    final subtitleColor = isDark ? AppColors.textGrayLight : AppColors.textGray;
+    final dividerColor = isDark ? AppColors.darkCard : AppColors.gray5;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(AppStrings.settings),
-      ),
-      body: _loading
-          ? const Center(child: CircularProgressIndicator())
-          : ListView(
-              padding: AppSpacing.paddingAll16,
-              children: [
-                Row(
+      backgroundColor: background,
+      body: SafeArea(
+        child: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : SingleChildScrollView(
+                padding: AppSpacing.paddingHV(horizontal: 24, vertical: 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    CircleAvatar(
-                      radius: AppSizing.w32,
-                      backgroundImage: _avatarProvider(),
+                    Text(
+                      AppStrings.settings,
+                      style: AppTextStyles.headlineLarge.copyWith(
+                        color: textColor,
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
-                    AppSpacing.gapW12,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          AppStrings.profile,
-                          style: AppTextStyles.titleMedium.copyWith(
-                            fontSize: 18.sp,
-                            fontWeight: FontWeight.w600,
-                            color: textColor,
+                    AppSpacing.vertical(32),
+                    Center(
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            radius: 52.r,
+                            backgroundColor:
+                                isDark ? AppColors.darkCard : AppColors.white,
+                            backgroundImage: _avatarProvider(),
                           ),
-                        ),
-                        TextButton(
-                          onPressed: () => context.push(AppRoutes.myAccount),
-                          child: const Text('View / edit profile'),
-                        ),
-                      ],
+                          AppSpacing.gapH16,
+                          Text(
+                            _displayName,
+                            style: AppTextStyles.headlineMedium.copyWith(
+                              color: textColor,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    AppSpacing.vertical(36),
+                    _SectionTitle(
+                      title: 'General',
+                      color: subtitleColor,
+                    ),
+                    AppSpacing.gapH12,
+                    _SettingsTile(
+                      icon: Icons.person,
+                      label: AppStrings.myAccount,
+                      textColor: textColor,
+                      isDark: isDark,
+                      onTap: () => context.push(AppRoutes.myAccount),
+                    ),
+                    Divider(color: dividerColor),
+                    _SettingsTile(
+                      icon: Icons.account_balance_wallet_outlined,
+                      label: AppStrings.billingPayment,
+                      textColor: textColor,
+                      isDark: isDark,
+                      onTap: () => context.push(AppRoutes.billingPaymentSettings),
+                    ),
+                    Divider(color: dividerColor),
+                    _SettingsTile(
+                      icon: Icons.help_outline_rounded,
+                      label: AppStrings.faqSupport,
+                      textColor: textColor,
+                      isDark: isDark,
+                      onTap: () => context.push(AppRoutes.faqSupport),
+                    ),
+                    AppSpacing.vertical(28),
+                    _SectionTitle(
+                      title: AppStrings.settings,
+                      color: subtitleColor,
+                    ),
+                    AppSpacing.gapH12,
+                    _SettingsTile(
+                      icon: Icons.language,
+                      label: AppStrings.language,
+                      textColor: textColor,
+                      isDark: isDark,
+                      onTap: _showComingSoon,
+                    ),
+                    Divider(color: dividerColor),
+                    _SettingsTile(
+                      icon: Icons.nightlight_round,
+                      label: AppStrings.darkMode,
+                      textColor: textColor,
+                      isDark: isDark,
+                      trailing: Switch.adaptive(
+                        value: _darkModeEnabled,
+                        activeColor: AppColors.primary,
+                        onChanged: _toggleDarkMode,
+                      ),
+                      onTap: () => _toggleDarkMode(!_darkModeEnabled),
                     ),
                   ],
                 ),
-                AppSpacing.gapH24,
-                Text(
-                  AppStrings.avatarDescription,
-                  style: AppTextStyles.bodyMedium.copyWith(
-                    fontSize: 14.sp,
-                    color: textColor,
-                  ),
-                ),
-                AppSpacing.gapH24,
-                Text(
-                  'Security',
-                  style: AppTextStyles.titleMedium.copyWith(
-                    fontSize: 16.sp,
-                    fontWeight: FontWeight.w700,
-                    color: textColor,
-                  ),
-                ),
-                SwitchListTile.adaptive(
-                  title: const Text('Enable Biometrics'),
-                  subtitle: Text(
-                    _biometricAvailable
-                        ? 'Use Face/Touch ID to unlock'
-                        : 'Biometrics not available',
-                  ),
-                  value: _biometricEnabled,
-                  onChanged: _toggleBiometric,
-                ),
-                ListTile(
-                  title: const Text('Auto-lock timeout'),
-                  subtitle: Text(
-                    _autoLockSeconds == 0
-                        ? 'Never'
-                        : _autoLockSeconds < 60
-                            ? 'After ${_autoLockSeconds}s'
-                            : 'After ${_autoLockSeconds ~/ 60} minutes',
-                  ),
-                  trailing: DropdownButton<int>(
-                    value: _autoLockSeconds,
-                    items: AppConstants.autoLockTimeoutOptions
-                        .map((m) => DropdownMenuItem(
-                              value: m,
-                              child: Text(
-                                m == 0
-                                    ? 'Never'
-                                    : m < 60
-                                        ? '$m s'
-                                        : '${m ~/ 60} min',
-                              ),
-                            ))
-                        .toList(),
-                    onChanged: (value) {
-                      if (value != null) _updateLockTimeout(value);
-                    },
-                  ),
-                ),
-                AppSpacing.gapH24,
-                ElevatedButton(
-                  onPressed: () async {
-                    final messenger = ScaffoldMessenger.of(context);
-                    final router = GoRouter.of(context);
+              ),
+      ),
+    );
+  }
+}
 
-                    await _auditLogService.log(
-                      event: 'User logged out from settings',
-                      metadata: {'type': 'auth'},
-                    );
+class _SettingsTile extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final Color textColor;
+  final bool isDark;
+  final Widget? trailing;
+  final VoidCallback? onTap;
 
-                    // Sign out: clears session and user data while preserving biometric credentials
-                    await _authRepository.signOut();
-                    await _sessionManager.endSession();
+  const _SettingsTile({
+    required this.icon,
+    required this.label,
+    required this.textColor,
+    required this.isDark,
+    this.trailing,
+    this.onTap,
+  });
 
-                    // Reset DI container AFTER signing out
-                    // This ensures biometric credentials are preserved before DI reset
-                    await resetDependencies();
-
-                    if (!mounted) return;
-                    router.go(AppRoutes.login);
-                    messenger.showSnackBar(
-                      const SnackBar(content: Text('Logged out successfully')),
-                    );
-                  },
-                  child: const Text('Logout'),
-                ),
-              ],
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 14).r,
+        child: Row(
+          children: [
+            Container(
+              height: 48.r,
+              width: 48.r,
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                borderRadius: BorderRadius.circular(24.r),
+              ),
+              child: Icon(
+                icon,
+                size: 24.r,
+                color: AppColors.textWhite,
+              ),
             ),
+            AppSpacing.horizontal(16),
+            Expanded(
+              child: Text(
+                label,
+                style: AppTextStyles.headlineSmall.copyWith(
+                  color: textColor,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            trailing ??
+                Icon(
+                  Icons.arrow_forward_ios_rounded,
+                  size: 18.r,
+                  color: isDark ? AppColors.textWhite : AppColors.primary,
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  final String title;
+  final Color color;
+
+  const _SectionTitle({required this.title, required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: AppTextStyles.titleMedium.copyWith(
+        fontSize: 18.sp,
+        fontWeight: FontWeight.w700,
+        color: color,
+      ),
     );
   }
 }

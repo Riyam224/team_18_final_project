@@ -140,6 +140,7 @@ class AppSpacing {
 
   static SizedBox get gapH2 => SizedBox(height: 2.h);
   static SizedBox get gapH4 => SizedBox(height: 4.h);
+  static SizedBox get gapH6 => SizedBox(height: 6.h);
   static SizedBox get gapH8 => SizedBox(height: 8.h);
   static SizedBox get gapH12 => SizedBox(height: 12.h);
   static SizedBox get gapH16 => SizedBox(height: 16.h);

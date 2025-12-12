@@ -48,6 +48,35 @@ class AppStrings {
   static const signUp = 'Sign Up';
   static const myAccount = 'My Account';
   static const manageYourProfile = 'Manage your profile';
+  static const billingPayment = 'Billing/Payment';
+  static const faqSupport = 'FAQ & Support';
+  static const language = 'Language';
+
+  // Billing/Payment Screen
+  static const paymentMethods = 'Payment Methods';
+  static const primaryCard = 'Primary Card';
+  static const backupCard = 'Backup Card';
+  static const cardVisa = 'Visa';
+  static const cardMastercard = 'Mastercard';
+  static const billing = 'Billing';
+  static const viewInvoices = 'View Invoices';
+  static const addNewPaymentMethod = 'Add new payment method';
+  static const managePaymentDetails = 'Manage payment details';
+  static const cardNumberHidden = '**** **** **** ';
+
+  // FAQ & Support Screen
+  static const popularQuestions = 'Popular questions';
+  static const needMoreHelp = 'Need more help?';
+  static const startChat = 'Start a chat';
+  static const supportResponseTime = 'Our team typically replies within a few hours.';
+  static const faqUpdateBillingQuestion = 'How do I update my billing method?';
+  static const faqUpdateBillingAnswer = 'Go to Billing/Payment in Settings and tap "Add new payment method".';
+  static const faqExportInvoicesQuestion = 'Can I export my invoices?';
+  static const faqExportInvoicesAnswer = 'Yes, download a PDF copy from the invoices list.';
+  static const faqContactSupportQuestion = 'How do I contact support?';
+  static const faqContactSupportAnswer = 'Use the contact form below or email support@fintech.app.';
+  static const darkMode = 'Dark Mode';
+  static const contactSupport = 'Contact Support';
   static const security = 'Security';
   static const enableBiometrics = 'Enable Biometrics';
   static const enableBiometricsHint = 'Use Face ID / Touch ID to unlock';

@@ -27,6 +27,8 @@ import 'package:team_18_final_project/features/market/presentation/screens/payme
 import 'package:team_18_final_project/features/onboarding/presentation/screens/onboarding_screen.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/screens/portfolio_screen.dart';
 import 'package:team_18_final_project/features/profile/presentation/screens/my_account_screen.dart';
+import 'package:team_18_final_project/features/settings/presentation/screens/billing_payment_screen.dart';
+import 'package:team_18_final_project/features/settings/presentation/screens/faq_support_screen.dart';
 import 'package:team_18_final_project/features/settings/presentation/screens/settings_screen.dart';
 import 'package:team_18_final_project/features/splash/presentation/screens/splash_screen.dart';
 import 'package:team_18_final_project/core/di/di.dart';
@@ -45,7 +47,7 @@ class RouteGenerator {
         Scaffold(body: Center(child: Text(AppStrings.notFound))),
 
     // INITIAL ROUTE
-    initialLocation: AppRoutes.splash,
+    initialLocation: AppRoutes.settings,
 
     // ==============================
     // 🔐 REDIRECT LOGIC
@@ -194,6 +196,14 @@ class RouteGenerator {
       // ==========================
       // NO-NAV SCREENS
       // ==========================
+      GoRoute(
+        path: AppRoutes.billingPaymentSettings,
+        builder: (_, __) => const BillingPaymentScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.faqSupport,
+        builder: (_, __) => const FaqSupportScreen(),
+      ),
       GoRoute(
         path: '${AppRoutes.coinDetails}/:id',
         builder: (_, state) {
