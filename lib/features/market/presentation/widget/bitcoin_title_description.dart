@@ -5,8 +5,11 @@ import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class BitcoinTitleDescription extends StatelessWidget {
+  final String description;
+
   const BitcoinTitleDescription({
     super.key,
+    required this.description,  
   });
 
   @override
@@ -19,19 +22,20 @@ class BitcoinTitleDescription extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppStrings.aboutBitcoin,
+          Text(AppStrings.aboutBitcoin,     
               style: theme.textTheme.titleSmall!.copyWith(
                   fontSize: 18.sp,
                   color: isDark ? AppColors.textWhite : AppColors.primary)),
           AppSpacing.vertical(22),
           Text(
             textAlign: TextAlign.left,
-            AppStrings.bitcoinDescription,
+            description, 
             style: theme.textTheme.bodyLarge!.copyWith(
               fontSize: 13.sp,
               color: isDark ? AppColors.textWhite : AppColors.gray2,
             ),
           ),
+          AppSpacing.vertical(30),     
         ],
       ),
     ));

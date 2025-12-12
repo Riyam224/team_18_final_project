@@ -64,6 +64,12 @@ import 'package:team_18_final_project/features/portfolio/domain/repositories/por
 import 'package:team_18_final_project/features/portfolio/domain/usecases/get_portfolio_overview_usecase.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/cubit/portfolio_cubit.dart';
 
+
+import 'package:team_18_final_project/features/market/data/services/market_api_service.dart';
+import 'package:team_18_final_project/features/market/data/repositories/market_repository.dart';
+import 'package:team_18_final_project/features/market/logic/coin_details_cubit.dart';
+
+
 final sl = GetIt.instance;
 
 enum AppEnvironment { prod, test }
@@ -110,6 +116,7 @@ Future<void> setupDependencies({
   await _setupPortfolio();
   await _setupTransactions();
   await _settings();
+  await _setupMarket();
 }
 
 Future<void> resetDependencies({
@@ -358,5 +365,21 @@ void _registerSecurityTest(SecurityOverrides overrides) {
   );
   sl.registerLazySingleton<IBlurService>(
     () => overrides.blur(secure),
+  );
+}
+
+
+
+Future<void> _setupMarket() async {
+  sl.registerLazySingleton<MarketApiService>(
+    () => MarketApiService(sl<Dio>()), 
+  );
+
+  sl.registerLazySingleton<MarketRepository>(
+    () => MarketRepository(sl<MarketApiService>()), 
+  );
+
+  sl.registerFactory<CoinDetailsCubit>(
+    () => CoinDetailsCubit(sl<MarketRepository>()), 
   );
 }
