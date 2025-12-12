@@ -29,7 +29,8 @@ class AppConstants {
 
   static const int defaultAutoLockTimeout = 60;
 
-  static const Duration marketDataCacheDuration = Duration(seconds: 30);
+  /// Cache duration for market data (3 minutes to reduce API rate limit issues)
+  static const Duration marketDataCacheDuration = Duration(minutes: 3);
 
   static const bool enableDebugLogging = true;
   static const bool enableNetworkLogging = true;

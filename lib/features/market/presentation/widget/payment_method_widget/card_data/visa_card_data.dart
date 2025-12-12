@@ -11,10 +11,10 @@ class VisaCardData extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-    final _isDark = _theme.brightness == Brightness.dark;
-    Color _backgroundColor =
-        _isDark ? AppColors.lightSurface : AppColors.lightSurface2;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    Color backgroundColor =
+        isDark ? AppColors.lightSurface : AppColors.lightSurface2;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -42,10 +42,10 @@ class VisaCardData extends StatelessWidget {
         ),
         AppSpacing.vertical(5),
         Text(AppStrings.cardNumber,
-            style: _theme.textTheme.titleLarge?.copyWith(
+            style: theme.textTheme.titleLarge?.copyWith(
                 letterSpacing: 2,
                 fontSize: 16.sp,
-                color: _backgroundColor,
+                color: backgroundColor,
                 fontWeight: FontWeight.w700)),
         AppSpacing.vertical(8),
         Row(
@@ -56,14 +56,14 @@ class VisaCardData extends StatelessWidget {
               children: [
                 Text(
                   AppStrings.validTill,
-                  style: _theme.textTheme.titleMedium?.copyWith(
-                      color: _isDark ? AppColors.gray0 : AppColors.gray5,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                      color: isDark ? AppColors.gray0 : AppColors.gray5,
                       fontSize: 8.sp),
                 ),
                 AppSpacing.vertical(2),
                 Text(AppStrings.cardExpiry,
-                    style: _theme.textTheme.titleLarge
-                        ?.copyWith(fontSize: 10.sp, color: _backgroundColor)),
+                    style: theme.textTheme.titleLarge
+                        ?.copyWith(fontSize: 10.sp, color: backgroundColor)),
               ],
             ),
           ],

@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_action_button.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class ConfirmBuyButton extends StatelessWidget {
-  const ConfirmBuyButton({super.key});
+  final VoidCallback onPressed;
+  final bool isLoading;
+
+  const ConfirmBuyButton({
+    super.key,
+    required this.onPressed,
+    this.isLoading = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +22,7 @@ class ConfirmBuyButton extends StatelessWidget {
         fontSize: 15.sp,
         borderRadiusGeometry: BorderRadius.circular(31),
         height: 45.h,
-        text: AppStrings.buttonBuyCrypto,
-        onPressed: () {});
+        text: isLoading ? 'Processing...' : 'Continue',
+        onPressed: isLoading ? () {} : onPressed);
   }
 }

@@ -192,8 +192,9 @@ class AuthCubit extends Cubit<AuthState> {
       (_) => 'none',
       (types) {
         if (types.contains(AvailableBiometricType.face)) return 'face';
-        if (types.contains(AvailableBiometricType.fingerprint))
+        if (types.contains(AvailableBiometricType.fingerprint)) {
           return 'fingerprint';
+        }
         return 'none';
       },
     );

@@ -53,7 +53,7 @@ class SecuritySection extends StatelessWidget {
                 .map(
                   (value) => DropdownMenuItem(
                     value: value,
-                    child: Text('${value} ${AppStrings.minutesShort}'),
+                    child: Text('$value ${AppStrings.minutesShort}'),
                   ),
                 )
                 .toList(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_action_button.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/custom_svg.dart';
@@ -10,15 +11,21 @@ class CurrencySelectorWithPrice extends StatefulWidget {
   final IconData? iconData;
   final Color? iconDataColor;
   final String paymentTitle;
-  final String? paymentPrice;
+  final String paymentPrice;
   final Widget? paymentIcon;
-  const CurrencySelectorWithPrice(
-      {super.key,
-      this.iconData,
-      required this.paymentTitle,
-      this.paymentPrice,
-      this.paymentIcon,
-      this.iconDataColor});
+  final String currency;
+  final Function(double)? onAmountChanged;
+
+  const CurrencySelectorWithPrice({
+    super.key,
+    this.iconData,
+    required this.paymentTitle,
+    required this.paymentPrice,
+    this.paymentIcon,
+    this.iconDataColor,
+    this.currency = 'USD',
+    this.onAmountChanged,
+  });
 
   @override
   State<CurrencySelectorWithPrice> createState() =>
@@ -26,7 +33,42 @@ class CurrencySelectorWithPrice extends StatefulWidget {
 }
 
 class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
-  String currency = "USD";
+  late TextEditingController _priceController;
+  late String _selectedCurrency;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedCurrency = widget.currency;
+    _priceController = TextEditingController(text: widget.paymentPrice);
+  }
+
+  @override
+  void didUpdateWidget(CurrencySelectorWithPrice oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Update controller if price changed externally
+    if (oldWidget.paymentPrice != widget.paymentPrice) {
+      _priceController.text = widget.paymentPrice;
+    }
+    if (oldWidget.currency != widget.currency) {
+      _selectedCurrency = widget.currency;
+    }
+  }
+
+  @override
+  void dispose() {
+    _priceController.dispose();
+    super.dispose();
+  }
+
+  void _onPriceChanged(String value) {
+    final cleaned = value.replaceAll(RegExp(r'[^\d.]'), '');
+    final numValue = double.tryParse(cleaned);
+    if (numValue != null && widget.onAmountChanged != null) {
+      widget.onAmountChanged!(numValue);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -35,17 +77,35 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.paymentTitle,
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontSize: 11.sp, color: AppColors.gray3),
-            ),
-            Text(widget.paymentPrice ?? AppStrings.paymentPriceYouPay,
-                style: theme.textTheme.headlineLarge),
-          ],
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                widget.paymentTitle,
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(fontSize: 11.sp, color: AppColors.gray3),
+              ),
+              TextField(
+                controller: _priceController,
+                style: theme.textTheme.headlineLarge,
+                keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                inputFormatters: [
+                  FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                ],
+                decoration: InputDecoration(
+                  border: InputBorder.none,
+                  isDense: true,
+                  contentPadding: EdgeInsets.zero,
+                  hintText: '0.00',
+                  hintStyle: theme.textTheme.headlineLarge?.copyWith(
+                    color: AppColors.gray3.withOpacity(0.5),
+                  ),
+                ),
+                onChanged: _onPriceChanged,
+              ),
+            ],
+          ),
         ),
         Row(
           children: [
@@ -70,9 +130,9 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
                 color: isDark ? AppColors.gray2 : AppColors.gray4,
                 assetsName: AppAssets.keyboardArrowDown,
               ),
-              value: currency,
+              value: _selectedCurrency,
               isDense: true,
-              underline: SizedBox.shrink(),
+              underline: const SizedBox.shrink(),
               menuMaxHeight: 150.h,
               items: AppStrings.currencies.map((currency) {
                 return DropdownMenuItem<String>(
@@ -86,8 +146,9 @@ class _CurrencySelectorWithPriceState extends State<CurrencySelectorWithPrice> {
                 );
               }).toList(),
               onChanged: (value) {
-                currency = value ?? "USD";
-                setState(() {});
+                setState(() {
+                  _selectedCurrency = value ?? "USD";
+                });
               },
             )
           ],

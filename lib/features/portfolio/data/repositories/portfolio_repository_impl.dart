@@ -12,14 +12,29 @@ class PortfolioRepositoryImpl implements PortfolioRepository {
   final PortfolioRemoteDataSource remote;
   final PortfolioLocalDataSource local;
   PortfolioOverview? _cache;
+  DateTime? _cacheTimestamp;
+
+  /// Cache duration for portfolio data (3 minutes to reduce API calls)
+  static const _cacheDuration = Duration(minutes: 3);
 
   PortfolioRepositoryImpl({
     required this.remote,
     required this.local,
   });
 
+  /// Checks if cached data is still valid
+  bool get _isCacheValid {
+    if (_cacheTimestamp == null || _cache == null) return false;
+    return DateTime.now().difference(_cacheTimestamp!) < _cacheDuration;
+  }
+
   @override
   Future<Either<Failure, PortfolioOverview>> fetchPortfolio({int? days}) async {
+    // Return cached data if still valid
+    if (days == null && _isCacheValid) {
+      return Right(_cache!);
+    }
+
     final seeds = local.getInitialHoldings();
     try {
       if (days != null) {
@@ -44,6 +59,7 @@ class PortfolioRepositoryImpl implements PortfolioRepository {
 
       final overview = PortfolioOverview(holdings: holdings);
       _cache = overview;
+      _cacheTimestamp = DateTime.now();
       return Right(overview);
     } catch (error) {
       final message = ApiErrorHandler.handleError(error);

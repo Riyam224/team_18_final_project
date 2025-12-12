@@ -8,6 +8,7 @@ import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_app_lock_service.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_biometric_service.dart';
 import 'package:team_18_final_project/features/auth/data/models/user_model.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_cubit.dart';
 import 'package:team_18_final_project/features/auth/presentation/cubits/auth_cubit/auth_state.dart';
@@ -46,11 +47,13 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
   final _formKey = GlobalKey<FormState>();
 
   late final IAppLockService _appLockService;
+  late final IBiometricService _biometricService;
 
   @override
   void initState() {
     super.initState();
     _appLockService = sl<IAppLockService>();
+    _biometricService = sl<IBiometricService>();
   }
 
   @override
@@ -133,36 +136,73 @@ class _RegisterScreenContentState extends State<_RegisterScreenContent> {
     return Scaffold(
       body: AuthBackground(
         child: BlocConsumer<AuthCubit, AuthState>(
-          listener: (context, state) {
+          listener: (context, state) async {
             if (state is AuthRegisterSuccess) {
-              // Show success dialog and navigate to biometric setup
-              showDialog(
-                context: context,
-                barrierDismissible: false,
-                builder: (dialogContext) => AlertDialog(
-                  title: const Text(AppStrings.registrationSuccessful),
-                  content: const Text(AppStrings.biometricSetupQuestion),
-                  actions: [
-                    TextButton(
-                      onPressed: () async {
-                        Navigator.of(dialogContext).pop();
-                        // Update activity timestamp to prevent app lock
-                        await _appLockService.updateActivity();
-                        if (context.mounted) {
-                          context.go(AppRoutes.home);
-                        }
-                      },
-                      child: const Text(AppStrings.skipButton),
+              // Check available biometric types
+              final biometricsResult =
+                  await _biometricService.getAvailableBiometrics();
+
+              biometricsResult.fold(
+                (failure) {
+                  // No biometrics available, go directly to home
+                  _appLockService.updateActivity();
+                  if (context.mounted) {
+                    context.go(AppRoutes.home);
+                  }
+                },
+                (types) {
+                  // Determine biometric type
+                  String? biometricType;
+                  if (types.contains(AvailableBiometricType.face)) {
+                    biometricType = 'face';
+                  } else if (types.contains(AvailableBiometricType.fingerprint)) {
+                    biometricType = 'fingerprint';
+                  }
+
+                  if (biometricType == null) {
+                    // No supported biometric, go to home
+                    _appLockService.updateActivity();
+                    if (context.mounted) {
+                      context.go(AppRoutes.home);
+                    }
+                    return;
+                  }
+
+                  // Show dialog asking if user wants to set up biometric
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (dialogContext) => AlertDialog(
+                      title: const Text(AppStrings.registrationSuccessful),
+                      content: const Text(AppStrings.biometricSetupQuestion),
+                      actions: [
+                        TextButton(
+                          onPressed: () async {
+                            Navigator.of(dialogContext).pop();
+                            // Update activity timestamp to prevent app lock
+                            await _appLockService.updateActivity();
+                            if (context.mounted) {
+                              context.go(AppRoutes.home);
+                            }
+                          },
+                          child: const Text(AppStrings.skipButton),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(dialogContext).pop();
+                            // Navigate to appropriate biometric setup screen
+                            if (biometricType == 'fingerprint') {
+                              context.push(AppRoutes.setFingerprintRegister);
+                            } else if (biometricType == 'face') {
+                              context.push(AppRoutes.setFaceIDRegister);
+                            }
+                          },
+                          child: const Text(AppStrings.setupButton),
+                        ),
+                      ],
                     ),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.of(dialogContext).pop();
-                        context.push(AppRoutes.setFingerprintRegister);
-                      },
-                      child: const Text(AppStrings.setupButton),
-                    ),
-                  ],
-                ),
+                  );
+                },
               );
             } else if (state is AuthError) {
               ScaffoldMessenger.of(context).showSnackBar(

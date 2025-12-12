@@ -16,8 +16,8 @@ class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-    final _isDark = _theme.brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Padding(
       padding: AppSpacing.paddingH16V45,
@@ -26,18 +26,18 @@ class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
         children: [
           Text(
             AppStrings.sendReceiptToYourEmail,
-            style: _theme.textTheme.headlineSmall!.copyWith(
+            style: theme.textTheme.headlineSmall!.copyWith(
                 fontSize: 12.sp,
-                color: _isDark ? AppColors.textWhite : AppColors.primary),
+                color: isDark ? AppColors.textWhite : AppColors.primary),
           ),
           Switch(
             focusColor: Colors.amber,
             inactiveTrackColor: AppColors.gray3,
             inactiveThumbColor: AppColors.darkBackground,
             activeThumbColor:
-                _isDark ? AppColors.darkBackground : AppColors.primary,
+                isDark ? AppColors.darkBackground : AppColors.primary,
             activeTrackColor:
-                _isDark ? AppColors.lightSurface : AppColors.primary,
+                isDark ? AppColors.lightSurface : AppColors.primary,
             value: isSendReceiptEnabled,
             onChanged: (value) {
               setState(() {
@@ -45,26 +45,26 @@ class _ReceiptEmailSwitchState extends State<ReceiptEmailSwitch> {
               });
             },
             mouseCursor: SystemMouseCursors.click,
-            trackOutlineColor: MaterialStateProperty.resolveWith<Color?>(
+            trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
               (states) {
-                if (states.contains(MaterialState.selected)) {
+                if (states.contains(WidgetState.selected)) {
                   return Colors.transparent;
                 }
                 return Colors.transparent;
               },
             ),
-            thumbIcon: MaterialStateProperty.resolveWith<Icon>(
+            thumbIcon: WidgetStateProperty.resolveWith<Icon>(
               (states) {
-                if (states.contains(MaterialState.selected)) {
+                if (states.contains(WidgetState.selected)) {
                   return Icon(Icons.circle,
-                      color: _isDark
+                      color: isDark
                           ? AppColors.darkBackground
                           : AppColors.lightSurface,
                       size: 30);
                 }
 
                 return Icon(Icons.circle,
-                    color: _isDark
+                    color: isDark
                         ? AppColors.darkBackground
                         : AppColors.lightSurface,
                     size: 30);
