@@ -6,13 +6,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/features/auth/data/datasources/firebase_user_service.dart';
 import 'package:team_18_final_project/features/auth/data/models/user_profile.dart';
 import 'package:team_18_final_project/features/auth/data/models/user_settings.dart';
+import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
+import 'package:team_18_final_project/core/config/storage_keys_config.dart';
 
 part 'profile_state.dart';
 
 class ProfileCubit extends Cubit<ProfileState> {
-  ProfileCubit(this._userService) : super(ProfileState.initial());
+  ProfileCubit(this._userService, this._secureStorage)
+      : super(ProfileState.initial());
 
   final FirebaseUserService _userService;
+  final ISecureStorage _secureStorage;
   StreamSubscription<UserProfile?>? _profileSub;
   StreamSubscription<UserSettings?>? _settingsSub;
 
@@ -24,6 +28,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final mergedSettings = await _mergeBiometricFlag(
         settings ?? state.settings,
       );
+      await _cacheAvatarPath(profile?.avatarUrl);
       emit(
         state.copyWith(
           isLoading: false,
@@ -41,9 +46,12 @@ class ProfileCubit extends Cubit<ProfileState> {
     _settingsSub?.cancel();
 
     _profileSub = _userService.watchProfile().listen(
-          (profile) => emit(
-            state.copyWith(profile: profile ?? state.profile),
-          ),
+          (profile) async {
+            await _cacheAvatarPath(profile?.avatarUrl);
+            emit(
+              state.copyWith(profile: profile ?? state.profile),
+            );
+          },
           onError: (e) => emit(state.copyWith(error: e.toString())),
         );
 
@@ -62,6 +70,7 @@ class ProfileCubit extends Cubit<ProfileState> {
     emit(state.copyWith(isSaving: true, error: null, profile: updated));
     try {
       await _userService.updateProfile(updated);
+      await _cacheAvatarPath(updated.avatarUrl);
       emit(state.copyWith(isSaving: false, profile: updated));
     } catch (e) {
       emit(state.copyWith(isSaving: false, error: e.toString()));
@@ -79,6 +88,7 @@ class ProfileCubit extends Cubit<ProfileState> {
       final url = await _userService.uploadAvatar(file);
       final updatedProfile = state.profile.copyWith(avatarUrl: url);
       await _userService.updateProfile(updatedProfile);
+      await _cacheAvatarPath(updatedProfile.avatarUrl);
       emit(state.copyWith(isSaving: false, profile: updatedProfile));
     } catch (e) {
       emit(state.copyWith(isSaving: false, error: e.toString()));
@@ -132,5 +142,20 @@ class ProfileCubit extends Cubit<ProfileState> {
       return settings.copyWith(biometricEnabled: localBiometricEnabled);
     }
     return settings;
+  }
+
+  Future<void> _cacheAvatarPath(String? avatarPath) async {
+    try {
+      if (avatarPath == null || avatarPath.isEmpty) {
+        await _secureStorage.delete(key: StorageKeysConfig.avatarUrl);
+      } else {
+        await _secureStorage.write(
+          key: StorageKeysConfig.avatarUrl,
+          value: avatarPath,
+        );
+      }
+    } catch (_) {
+      // Ignore caching errors; main profile update already succeeded.
+    }
   }
 }

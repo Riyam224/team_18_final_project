@@ -44,6 +44,13 @@ class _HomeScreenContentState extends State<HomeScreenContent> {
     _loadUserProfile();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Refresh avatar/name when coming back from profile edits.
+    _loadUserProfile();
+  }
+
   Future<void> _loadUserProfile() async {
     try {
       // Load user first name

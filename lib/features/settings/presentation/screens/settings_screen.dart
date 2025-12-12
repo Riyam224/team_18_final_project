@@ -46,6 +46,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
         _darkModeEnabled = isDarkMode;
       });
     }
+    _loadData(); // Refresh avatar/display name when returning from My Account.
   }
 
   Future<void> _loadData() async {
