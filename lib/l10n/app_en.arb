@@ -13,5 +13,15 @@
     "languageArabic": "Arabic",
     "languageSetSuccess": "Language set to {languageName} successfully",
     "languageSetSuccessDescription": "Message shown when the app language is successfully changed",
-    "defaultGuestName": "Guest"
+    "defaultGuestName": "Guest",
+    "coinDetailsTitle": "Coin Details",
+    "staticsTitle": "Statics",
+    "aboutCoinTitle": "About Bitcoin",
+    "buttonSell": "Sell",
+    "buttonBuy": "Buy",
+    "marketCap": "Market Cap",
+    "volume24h": "Volume 24h",
+    "availableSupply": "Available Supply",
+    "maxSupply": "Max Supply",
+    "currentPrice": "Current Price"
     }

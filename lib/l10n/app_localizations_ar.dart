@@ -51,4 +51,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get defaultGuestName => 'ضيف';
+
+  @override
+  String get coinDetailsTitle => 'تفاصيل العملة';
+
+  @override
+  String get staticsTitle => 'الإحصائيات';
+
+  @override
+  String get aboutCoinTitle => 'العملة حول';
+
+  @override
+  String get buttonSell => 'بيع';
+
+  @override
+  String get buttonBuy => 'شراء';
+
+  @override
+  String get marketCap => 'القيمة السوقية';
+
+  @override
+  String get volume24h => 'حجم التداول 24 ساعة';
+
+  @override
+  String get availableSupply => 'العرض المتاح';
+
+  @override
+  String get maxSupply => 'الحد الأقصى للعرض';
+
+  @override
+  String get currentPrice => 'السعر الحالي';
 }

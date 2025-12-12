@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/primary_appBar.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/market/logic/coin_details_cubit.dart';
 import 'package:team_18_final_project/features/market/logic/coin_details_state.dart';
@@ -39,7 +39,7 @@ class CoinDetailsScreen extends StatelessWidget {
         builder: (context, state) {
           final isDark = Theme.of(context).brightness == Brightness.dark;
           
-          String appBarTitle = AppStrings.coinDetails;
+          String appBarTitle = context.tr.coinDetailsTitle;
           if (state is CoinDetailsSuccess) {
             appBarTitle = state.coin.name;
           }
@@ -59,7 +59,7 @@ class CoinDetailsScreen extends StatelessWidget {
             size: 28,
           ),
         ),
-        title: Text(AppStrings.coinDetails,
+        title: Text(context.tr.coinDetailsTitle,
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   fontSize: 22.sp,
                   color: isDark ? AppColors.textWhite : AppColors.primary,
@@ -98,7 +98,7 @@ class CoinDetailsScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(left: 13).r,
                   child: Align(
                     alignment: AlignmentDirectional.bottomStart,
-                    child: Text(AppStrings.statics,
+                    child: Text(context.tr.staticsTitle,
                         style:
                             Theme.of(context).textTheme.headlineSmall!.copyWith(
                                   fontWeight: FontWeight.w600,

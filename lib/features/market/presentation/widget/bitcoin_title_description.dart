@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class BitcoinTitleDescription extends StatelessWidget {
@@ -22,7 +23,7 @@ class BitcoinTitleDescription extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(AppStrings.aboutBitcoin,     
+          Text(context.tr.aboutCoinTitle,     
               style: theme.textTheme.titleSmall!.copyWith(
                   fontSize: 18.sp,
                   color: isDark ? AppColors.textWhite : AppColors.primary)),

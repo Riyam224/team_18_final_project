@@ -178,6 +178,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Guest'**
   String get defaultGuestName;
+
+  /// No description provided for @coinDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Coin Details'**
+  String get coinDetailsTitle;
+
+  /// No description provided for @staticsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Statics'**
+  String get staticsTitle;
+
+  /// No description provided for @aboutCoinTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About Coin'**
+  String get aboutCoinTitle;
+
+  /// No description provided for @buttonSell.
+  ///
+  /// In en, this message translates to:
+  /// **'Sell'**
+  String get buttonSell;
+
+  /// No description provided for @buttonBuy.
+  ///
+  /// In en, this message translates to:
+  /// **'Buy'**
+  String get buttonBuy;
+
+  /// No description provided for @marketCap.
+  ///
+  /// In en, this message translates to:
+  /// **'Market Cap'**
+  String get marketCap;
+
+  /// No description provided for @volume24h.
+  ///
+  /// In en, this message translates to:
+  /// **'Volume 24h'**
+  String get volume24h;
+
+  /// No description provided for @availableSupply.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Supply'**
+  String get availableSupply;
+
+  /// No description provided for @maxSupply.
+  ///
+  /// In en, this message translates to:
+  /// **'Max Supply'**
+  String get maxSupply;
+
+  /// No description provided for @currentPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Current Price'**
+  String get currentPrice;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

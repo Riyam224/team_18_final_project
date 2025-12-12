@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:team_18_final_project/core/common_ui/widgets/bottom_action_button.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 
 class TradeBottomBar extends StatelessWidget {
@@ -25,7 +25,7 @@ class TradeBottomBar extends StatelessWidget {
             height: 45.h,
             backgroundColor: isDark ? AppColors.darkBrown : AppColors.lightPink,
             borderRadiusGeometry: BorderRadius.circular(31),
-            text: AppStrings.sell,
+            text: context.tr.buttonSell,
             onPressed: () {},
           ),
           BottomActionButton.text(
@@ -35,7 +35,7 @@ class TradeBottomBar extends StatelessWidget {
             backgroundColor:
                 isDark ? AppColors.lightSurface : AppColors.primary,
             borderRadiusGeometry: BorderRadius.circular(31),
-            text: AppStrings.buy,
+            text: context.tr.buttonBuy,
             onPressed: () {},
           )
         ],

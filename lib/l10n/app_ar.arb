@@ -13,5 +13,15 @@
     "languageArabic": "العربية",
     "languageSetSuccess": "تم تعيين اللغة إلى {languageName} بنجاح",
     "languageSetSuccessDescription": "رسالة تظهر عند تغيير لغة التطبيق بنجاح",
-    "defaultGuestName": "ضيف"
+    "defaultGuestName": "ضيف",
+    "coinDetailsTitle": "تفاصيل العملة",
+    "staticsTitle": "الإحصائيات",
+    "aboutCoinTitle": "حول البيت كوين",
+    "buttonSell": "بيع",
+    "buttonBuy": "شراء",
+    "marketCap": "القيمة السوقية",
+    "volume24h": "حجم التداول 24 ساعة",
+    "availableSupply": "العرض المتاح",
+    "maxSupply": "الحد الأقصى للعرض",
+    "currentPrice": "السعر الحالي"
 }

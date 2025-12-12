@@ -51,4 +51,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get defaultGuestName => 'Guest';
+
+  @override
+  String get coinDetailsTitle => 'Coin Details';
+
+  @override
+  String get staticsTitle => 'Statics';
+
+  @override
+  String get aboutCoinTitle => 'About Coin';
+
+  @override
+  String get buttonSell => 'Sell';
+
+  @override
+  String get buttonBuy => 'Buy';
+
+  @override
+  String get marketCap => 'Market Cap';
+
+  @override
+  String get volume24h => 'Volume 24h';
+
+  @override
+  String get availableSupply => 'Available Supply';
+
+  @override
+  String get maxSupply => 'Max Supply';
+
+  @override
+  String get currentPrice => 'Current Price';
 }
