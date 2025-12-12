@@ -273,6 +273,38 @@ class AppStrings {
   static const String topGainers = 'Top Gainers';
   static const String viewAll = 'View all';
 
+  // Billing & Payments
+  static const String billingPayment = 'Billing/Payment';
+  static const String paymentMethods = 'Payment Methods';
+  static const String billing = 'Billing';
+  static const String primaryCard = 'Primary Card';
+  static const String backupCard = 'Backup Card';
+  static const String cardNumberHidden = '**** **** **** ';
+  static const String cardVisa = 'Visa';
+  static const String cardMastercard = 'Mastercard';
+  static const String viewInvoices = 'View Invoices';
+  static const String addNewPaymentMethod = 'Add New Payment Method';
+  static const String managePaymentDetails = 'Manage Payment Details';
+
+  // FAQ / Support
+  static const String faqSupport = 'FAQ & Support';
+  static const String popularQuestions = 'Popular Questions';
+  static const String needMoreHelp = 'Need more help?';
+  static const String faqUpdateBillingQuestion =
+      'How do I update my billing method?';
+  static const String faqUpdateBillingAnswer =
+      'Go to Billing/Payment in Settings, select your primary card, and tap “Edit” to update details or add a new method.';
+  static const String faqExportInvoicesQuestion = 'Can I export my invoices?';
+  static const String faqExportInvoicesAnswer =
+      'Yes. From Billing/Payment, choose “View Invoices” and tap the export icon to download a PDF or send it to your email.';
+  static const String faqContactSupportQuestion = 'How do I contact support?';
+  static const String faqContactSupportAnswer =
+      'Use the “Start Chat” button in the support section or email support@team18.app. Our team typically responds within 15 minutes.';
+  static const String contactSupport = 'Contact Support';
+  static const String supportResponseTime =
+      'We usually respond within 15 minutes.';
+  static const String startChat = 'Start Chat';
+
 // constants used in theme_cubit.dart and settings
   static const String themeKeyLightValue = 'light';
   static const String themeKeyDarkValue = 'dark';

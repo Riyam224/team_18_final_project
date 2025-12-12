@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/features/auth/data/models/user_profile.dart';
 import 'package:team_18_final_project/features/profile/presentation/cubit/profile_cubit.dart';
 import 'package:team_18_final_project/features/profile/presentation/widgets/avatar_section.dart';
@@ -115,7 +117,7 @@ class _MyAccountViewState extends State<_MyAccountView> {
         title: const Text(AppStrings.myAccount),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () => context.go(AppRoutes.settings),
         ),
       ),
       body: BlocConsumer<ProfileCubit, ProfileState>(

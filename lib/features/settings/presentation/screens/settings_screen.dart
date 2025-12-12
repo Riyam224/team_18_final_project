@@ -9,11 +9,9 @@ import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/security/interfaces/i_secure_storage.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
-
 import 'package:team_18_final_project/features/settings/presentation/widgets/settings_list_tile.dart';
 import 'package:team_18_final_project/features/settings/presentation/widgets/settings_header.dart';
 import 'package:team_18_final_project/features/settings/presentation/widgets/theme_switcher.dart';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:team_18_final_project/features/settings/logic/language_cubit.dart';
 import 'package:go_router/go_router.dart';
@@ -27,8 +25,7 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-
-  String _userName = ''; 
+  String _userName = '';
   String? _avatarPath;
 
   late final ISecureStorage _secureStorage;
@@ -36,17 +33,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    _secureStorage = sl<ISecureStorage>();  
-    WidgetsBinding.instance.addPostFrameCallback((_) { 
-        if (mounted && _userName.isEmpty) {
-            setState(() {
-                _userName = AppLocalizations.of(context)?.defaultGuestName ?? AppStrings.fallbackGuestName;
-            });
-        }
+    _secureStorage = sl<ISecureStorage>();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && _userName.isEmpty) {
+        setState(() {
+          _userName = AppLocalizations.of(context)?.defaultGuestName ??
+              AppStrings.fallbackGuestName;
+        });
+      }
     });
-    _loadUserProfile(); 
+    _loadUserProfile();
   }
-
 
   Future<void> _loadUserProfile() async {
     try {
@@ -91,7 +88,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     }
   }
 
-
   String? _extractFirstName(String? value) {
     if (value == null) return null;
     final trimmed = value.trim();
@@ -107,22 +103,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return first;
   }
 
-
-
-
-
-List<Map<String, String>> getAvailableLanguages(BuildContext context) {
-  return [
-    {
-      'name': context.tr.languageEnglish, 
-      'code': 'en'
-    },
-    {
-      'name': context.tr.languageArabic,  
-      'code': 'ar'
-    },
-  ];
-}
+  List<Map<String, String>> getAvailableLanguages(BuildContext context) {
+    return [
+      {'name': context.tr.languageEnglish, 'code': 'en'},
+      {'name': context.tr.languageArabic, 'code': 'ar'},
+    ];
+  }
 
   void _showLanguageSelectionDialog(BuildContext context, bool isDark) {
     final theme = Theme.of(context);
@@ -160,18 +146,19 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
                               isDark ? AppColors.textWhite : AppColors.primary)
                       : null,
                   onTap: () {
-                    langCubit.changeLanguage(lang['code'] ?? 'en',);
+                    langCubit.changeLanguage(
+                      lang['code'] ?? 'en',
+                    );
 
                     Navigator.of(dialogContext).pop();
 
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
-                          content: Text(
-                            context.tr.languageSetSuccess(
-                                  lang['name'] ?? AppStrings.fallbackLanguageName
-                              ), 
-                          ),
-                          ),
+                        content: Text(
+                          context.tr.languageSetSuccess(
+                              lang['name'] ?? AppStrings.fallbackLanguageName),
+                        ),
+                      ),
                     );
                   },
                 );
@@ -214,8 +201,8 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-                SettingsHeader(
-                userName: _userName, 
+              SettingsHeader(
+                userName: _userName,
                 avatarPath: _avatarPath,
               ),
               Padding(
@@ -227,12 +214,12 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
                         style: AppTextStyles.titleLargesemiBold
                             .copyWith(color: sectionTitleColor)),
                     SettingsListTile(
-                      title:context.tr.myAccountTitle,
+                      title: context.tr.myAccountTitle,
                       titleTextStyle: AppTextStyles.titleLargesemiBold
                           .copyWith(color: sectionTitleColor),
                       iconPath: AppAssets.settingsAccount,
                       onTap: () {
-                        context.pushNamed(AppRoutes.home);
+                        context.go(AppRoutes.myAccount);
                       },
                       chevronPath: AppAssets.settingsArrow,
                     ),
@@ -243,7 +230,7 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
                       iconPath: AppAssets.settingsBilling,
                       showDivider: true,
                       onTap: () {
-                        context.pushNamed(AppRoutes.payment);
+                        context.go(AppRoutes.billingPaymentSettings);
                       },
                       chevronPath: AppAssets.settingsArrow,
                     ),
@@ -253,7 +240,7 @@ List<Map<String, String>> getAvailableLanguages(BuildContext context) {
                           .copyWith(color: sectionTitleColor),
                       iconPath: AppAssets.settingsFAQ,
                       showDivider: false,
-                      onTap: () {},
+                      onTap: () => context.go(AppRoutes.faqSupport),
                       chevronPath: AppAssets.settingsArrow,
                     ),
                     AppSpacing.gapH12,
