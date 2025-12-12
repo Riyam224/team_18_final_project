@@ -11,10 +11,7 @@ class MockAppLocalizations implements AppLocalizations {
   
   final Locale locale; 
   @override String get localeName => locale.toString();
-
-  MockAppLocalizations(this.locale); 
-  
-  @override String get name => 'Sophia Isabella'; 
+  MockAppLocalizations(this.locale);  
   @override String get settingsTitle => 'Settings'; 
   @override String get generalSection => 'General';
   @override String get myAccountTitle => 'My Account';
@@ -26,6 +23,16 @@ class MockAppLocalizations implements AppLocalizations {
   @override String get languageEnglish => 'English';
   @override String get languageArabic => 'Arabic';
   @override String get cancelButton => 'Cancel';
+  @override String get defaultGuestName => 'Guest';
+  @override
+  String languageSetSuccess(Object languageName) {
+    return 'Language set to $languageName successfully'; 
+  }
+  
+  @override
+  // TODO: implement languageSetSuccessDescription
+  String get languageSetSuccessDescription => throw UnimplementedError();
+
 
   List<Locale> get supportedLocales => const [Locale('en'), Locale('ar')]; 
 }

@@ -5,7 +5,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
 import 'package:team_18_final_project/features/settings/presentation/widgets/settings_header.dart';
-
 import 'package:team_18_final_project/l10n/app_localizations.dart'; 
 
 class MockAppLocalizations implements AppLocalizations {
@@ -15,8 +14,6 @@ class MockAppLocalizations implements AppLocalizations {
 
 
   MockAppLocalizations(this.locale);  
-  @override String get name => 'Sophia Isabella'; 
-  
   @override String get settingsTitle => 'Settings'; 
   @override String get generalSection => 'General';
   @override String get myAccountTitle => 'My Account';
@@ -28,6 +25,15 @@ class MockAppLocalizations implements AppLocalizations {
   @override String get languageEnglish => 'English';
   @override String get languageArabic => 'Arabic';
   @override String get cancelButton => 'Cancel';
+  @override String get defaultGuestName => 'Guest';
+  @override
+  String languageSetSuccess(Object languageName) {
+    return 'Language set to $languageName successfully'; 
+  }
+  
+  @override
+  // TODO: implement languageSetSuccessDescription
+  String get languageSetSuccessDescription => throw UnimplementedError();
 }
 
 class MockAppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
@@ -71,7 +77,7 @@ void main() {
             )
           ),
           
-          home: const Scaffold(body: SettingsHeader()), 
+          home:  Scaffold(body: SettingsHeader(userName: 'Test User',)), 
         );
       },
     );
