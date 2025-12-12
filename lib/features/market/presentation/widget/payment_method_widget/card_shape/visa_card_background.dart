@@ -8,8 +8,8 @@ class VisaCardBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-    final _isDark = _theme.brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Stack(
       children: [
@@ -26,7 +26,7 @@ class VisaCardBackground extends StatelessWidget {
                   borderRadius: BorderRadiusGeometry.only(
                     topLeft: Radius.circular(250),
                   ),
-                  color: _isDark
+                  color: isDark
                       ? Color.fromARGB(221, 154, 76, 202).withOpacity(0.3)
                       : Color.fromARGB(221, 88, 44, 116).withOpacity(0.4),
                 ),
@@ -45,7 +45,7 @@ class VisaCardBackground extends StatelessWidget {
               borderRadius: BorderRadiusGeometry.only(
                 topRight: Radius.circular(200),
               ),
-              color: _isDark
+              color: isDark
                   ? Color.fromARGB(221, 154, 76, 202).withOpacity(0.3)
                   : Color.fromARGB(119, 2, 22, 94).withOpacity(0.2),
             ),
@@ -63,7 +63,7 @@ class VisaCardBackground extends StatelessWidget {
                 bottomLeft: Radius.circular(250),
                 bottomRight: Radius.circular(250),
               ),
-              color: _isDark
+              color: isDark
                   ? Color.fromARGB(255, 60, 29, 114).withOpacity(0.4)
                   : Color(0xFF7C3AED).withOpacity(0.2),
             ),

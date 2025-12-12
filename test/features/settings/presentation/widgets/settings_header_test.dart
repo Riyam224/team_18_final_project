@@ -31,6 +31,16 @@ class MockAppLocalizations implements AppLocalizations {
   @override String get languageArabic => 'Arabic';
   @override String get cancelButton => 'Cancel';
   @override String get defaultGuestName => 'Guest';
+  @override String get coinDetailsTitle =>  'Coin Details';
+  @override String get staticsTitle =>  'Statics';
+  @override String get aboutCoinTitle =>  'About Bitcoin';
+  @override String get buttonSell =>  'Sell';
+  @override String get buttonBuy =>   'Buy';
+  @override String get marketCap =>   'Market Cap';
+  @override String get volume24h =>   'Volume 24h';
+  @override String get availableSupply =>   'Available Supply';
+  @override String get maxSupply =>  'Max Supply';
+  @override String get currentPrice =>   'Current Price';
   @override
   String languageSetSuccess(Object languageName) {
     return 'Language set to $languageName successfully'; 

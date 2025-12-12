@@ -63,10 +63,19 @@ import 'package:team_18_final_project/features/portfolio/data/repositories/portf
 import 'package:team_18_final_project/features/portfolio/domain/repositories/portfolio_repository.dart';
 import 'package:team_18_final_project/features/portfolio/domain/usecases/get_portfolio_overview_usecase.dart';
 import 'package:team_18_final_project/features/portfolio/presentation/cubit/portfolio_cubit.dart';
+import 'package:team_18_final_project/features/market/data/data_sources/market_api_service.dart';
+import 'package:team_18_final_project/features/market/data/repositories/market_repository_impl.dart';
+import 'package:team_18_final_project/features/market/domain/repositories/market_repository.dart';
+import 'package:team_18_final_project/features/market/domain/usecases/get_coin_details_usecase.dart';
+import 'package:team_18_final_project/features/market/domain/usecases/get_market_coins_usecase.dart';
+import 'package:team_18_final_project/features/market/domain/usecases/get_market_coins_by_ids_usecase.dart';
+import 'package:team_18_final_project/features/market/domain/usecases/search_coins_usecase.dart';
+import 'package:team_18_final_project/features/market/presentation/cubit/buy_sell_cubit.dart';
+import 'package:team_18_final_project/features/market/presentation/cubit/market_cubit.dart';
 
 
-import 'package:team_18_final_project/features/market/data/services/market_api_service.dart';
-import 'package:team_18_final_project/features/market/data/repositories/market_repository.dart';
+import 'package:team_18_final_project/features/market/data/services/market_api_service.dart' hide MarketApiService;
+import 'package:team_18_final_project/features/market/data/repositories/market_repository.dart' hide MarketRepository;
 import 'package:team_18_final_project/features/market/logic/coin_details_cubit.dart';
 
 
@@ -113,6 +122,7 @@ Future<void> setupDependencies({
   await _setupSecurity(env, securityOverrides);
   await _setupAuth();
   await _setupHome();
+  await _setupMarket();
   await _setupPortfolio();
   await _setupTransactions();
   await _settings();
@@ -243,6 +253,51 @@ Future<void> _setupHome() async {
     ),
   );
 }
+
+// Future<void> _setupMarket() async {
+//   // Register API Service
+//   sl.registerLazySingleton<MarketApiService>(
+//     () => MarketApiService(sl<Dio>()),
+//   );
+
+//   // Register Repository
+//   sl.registerLazySingleton<MarketRepository>(
+//     () => MarketRepositoryImpl(sl<MarketApiService>()),
+//   );
+
+//   // Register Use Cases
+//   sl.registerLazySingleton(
+//       () => GetMarketCoinsUseCase(sl<MarketRepository>()));
+//   sl.registerLazySingleton(() => SearchCoinsUseCase(sl<MarketRepository>()));
+//   sl.registerLazySingleton(() => GetCoinDetailsUseCase(sl<MarketRepository>()));
+//   sl.registerLazySingleton(
+//       () => GetMarketCoinsByIdsUseCase(sl<MarketRepository>()));
+
+//   // Register Cubits
+//   sl.registerFactory(
+//     () => MarketCubit(
+//       getMarketCoinsUseCase: sl<GetMarketCoinsUseCase>(),
+//       searchCoinsUseCase: sl<SearchCoinsUseCase>(),
+//       getMarketCoinsByIdsUseCase: sl<GetMarketCoinsByIdsUseCase>(),
+//     ),
+//   );
+
+//   sl.registerFactory(
+//     () => BuySellCubit(
+//       getCoinDetailsUseCase: sl<GetCoinDetailsUseCase>(),
+//       addTransactionUseCase: sl<AddTransactionUseCase>(),
+//     ),
+//   );
+// }
+
+
+
+
+
+
+
+
+
 
 Future<void> _setupPortfolio() async {
   sl.registerLazySingleton<PortfolioApiService>(
@@ -375,11 +430,11 @@ Future<void> _setupMarket() async {
     () => MarketApiService(sl<Dio>()), 
   );
 
-  sl.registerLazySingleton<MarketRepository>(
-    () => MarketRepository(sl<MarketApiService>()), 
-  );
+  // sl.registerLazySingleton<MarketRepository>(
+  //   () => MarketRepository(sl<MarketApiService>()), 
+  // );
 
-  sl.registerFactory<CoinDetailsCubit>(
-    () => CoinDetailsCubit(sl<MarketRepository>()), 
-  );
+  // sl.registerFactory<CoinDetailsCubit>(
+  //   () => CoinDetailsCubit(sl<MarketRepository>()), 
+  // );
 }

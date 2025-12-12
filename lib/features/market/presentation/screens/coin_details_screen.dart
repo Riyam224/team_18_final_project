@@ -117,12 +117,14 @@ class CoinDetailsScreen extends StatelessWidget {
           BitcoinTitleDescription(description: state.coin.description),
         ],
       ),
+
     )
   : const SizedBox(), 
 
-            bottomNavigationBar: const TradeBottomBar(),
+            bottomNavigationBar:  TradeBottomBar(coinId: coinId),
           );
         },),
+
     );
   }
 }

@@ -18,8 +18,8 @@ class CreditCardOptionsRow extends StatefulWidget {
 class _CreditCardOptionsRowState extends State<CreditCardOptionsRow> {
   @override
   Widget build(BuildContext context) {
-    final _theme = Theme.of(context);
-    final _isDark = _theme.brightness == Brightness.dark;
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Column(
       children: [
@@ -30,8 +30,8 @@ class _CreditCardOptionsRowState extends State<CreditCardOptionsRow> {
             return BottomActionButton(
                 backgroundColor:
                     (index == widget.checkCreditCardState.getSelectedCardIndex)
-                        ? (_isDark ? AppColors.primary : AppColors.darkSurface)
-                        : _isDark
+                        ? (isDark ? AppColors.primary : AppColors.darkSurface)
+                        : isDark
                             ? AppColors.lightSurface
                             : AppColors.primary,
                 borderRadiusGeometry: BorderRadius.circular(12).r,
@@ -47,10 +47,10 @@ class _CreditCardOptionsRowState extends State<CreditCardOptionsRow> {
                       ? null
                       : (index ==
                               widget.checkCreditCardState.getSelectedCardIndex)
-                          ? (_isDark
+                          ? (isDark
                               ? AppColors.textWhite
                               : AppColors.textWhite)
-                          : _isDark
+                          : isDark
                               ? AppColors.textDark
                               : AppColors.textWhite,
                   assetsName: AppStrings.cards[index],

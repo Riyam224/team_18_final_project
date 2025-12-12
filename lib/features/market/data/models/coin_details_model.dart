@@ -16,10 +16,12 @@ class CoinDetailsModel {
     chartData = newChartData;
   }
 
+
   CoinDetailsModel({
     required this.id,
     required this.symbol,
     required this.name,
+
     required this.imageUrl,
     required this.currentPrice,
     required this.priceChangePercentage24h,

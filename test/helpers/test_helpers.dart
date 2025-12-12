@@ -1,4 +1,5 @@
 /// Common test helpers and utilities
+library;
 
 /// Mock data constants for testing
 class TestData {
