@@ -3,8 +3,8 @@ name: Flutter CI + Firebase Distribution (Android Debug)
 on:
   push:
     branches:
-      - feature/ci_cd_setup_v3   # Run CI/CD only on your branch
-  workflow_dispatch:             # Allow manual trigger from Actions tab
+      - feature/ci_cd_setup_v3
+  workflow_dispatch:
 
 jobs:
   build-and-distribute:
@@ -22,9 +22,16 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # - name: Flutter Analyze
-      #   run: flutter analyze
-      # Commented out because warnings fail CI. Enable later if needed.
+      - name: Auto-increment version number
+        run: |
+          VERSION_NAME="1.0.0"
+          BUILD_NUMBER=${GITHUB_RUN_NUMBER}
+          echo "Updating pubspec.yaml to version: $VERSION_NAME+$BUILD_NUMBER"
+
+          sed -i '' "s/^version: .*/version: $VERSION_NAME+$BUILD_NUMBER/" pubspec.yaml
+
+          echo "Updated pubspec.yaml:"
+          cat pubspec.yaml
 
       - name: Run Tests with Coverage
         run: flutter test --coverage
@@ -54,4 +61,4 @@ jobs:
           firebase appdistribution:distribute build/app/outputs/flutter-apk/app-debug.apk \
             --app "1:1007099232554:android:abd7cba411c33721a01e53" \
             --groups "testers" \
-            --release-notes "Automated Debug Build from GitHub Actions"
+            --release-notes "Automated Debug Build #${GITHUB_RUN_NUMBER} from GitHub Actions"
