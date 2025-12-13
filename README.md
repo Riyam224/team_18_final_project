@@ -10,7 +10,7 @@
 [![License](https://img.shields.io/badge/license-Educational-blue)](./LICENSE)
 [![Platform](https://img.shields.io/badge/platform-iOS%20%7C%20Android%20%7C%20Web-lightgrey)](https://flutter.dev)
 
-[Features](#-features) • [Screenshots](#-screenshots) • [Architecture](#-architecture) • [Getting Started](#-getting-started) • [Documentation](#-documentation)
+[Features](#-features) • [Demos](#-live-demos) • [Architecture](#-architecture) • [Getting Started](#-getting-started) • [Documentation](#-documentation)
 
 </div>
 
@@ -28,6 +28,22 @@
 - 💼 **Portfolio Management** - Track holdings with visual analytics
 - 🧪 **Comprehensive Testing** - 122+ test cases with extensive coverage
 - 🎨 **Modern UI/UX** - Material 3 design with light/dark theme support
+
+---
+
+## 📱 Live Demos
+
+<div align="center">
+
+### iOS Demo
+<img src="demos/ios_demo.gif" width="300" alt="iOS Demo" />
+
+### Android Demo
+<img src="demos/android_demo.gif" width="300" alt="Android Demo" />
+
+*Real device demos showcasing smooth animations, biometric authentication, and real-time market data*
+
+</div>
 
 ---
 
@@ -70,34 +86,58 @@
 - **Intuitive Navigation** - Bottom navigation with smooth transitions
 - **Error Handling** - User-friendly error messages and recovery
 - **Pull-to-Refresh** - Easy data updates across all screens
-
----
-
-## 📱 Screenshots
-
-<div align="center">
-
-### Light Mode
-
-| Home Screen | Portfolio | Market | Profile |
-|------------|-----------|---------|---------|
-| <img src="docs/images/home-light.png" width="200"/> | <img src="docs/images/portfolio-light.png" width="200"/> | <img src="docs/images/market-light.png" width="200"/> | <img src="docs/images/profile-light.png" width="200"/> |
-
-### Dark Mode
-
-| Home Screen | Biometric Login | Transaction History | Settings |
-|------------|-----------------|---------------------|----------|
-| <img src="docs/images/home-dark.png" width="200"/> | <img src="docs/images/biometric.png" width="200"/> | <img src="docs/images/transactions.png" width="200"/> | <img src="docs/images/settings.png" width="200"/> |
-
-*Screenshots showcase the production-ready UI with Material 3 design*
-
-</div>
+- **Localization** - Multi-language support (Arabic/English)
 
 ---
 
 ## 🏗️ Architecture
 
-### Clean Architecture Layers
+### Clean Architecture Implementation
+
+```mermaid
+flowchart TB
+    subgraph Presentation["📱 Presentation Layer"]
+        UI[Screens & Widgets]
+        Cubit[State Management\nCubit/BLoC]
+        UI --> Cubit
+    end
+
+    subgraph Domain["🎯 Domain Layer"]
+        UseCase[Use Cases\nBusiness Logic]
+        Entity[Entities]
+        Repo[Repository\nInterfaces]
+        UseCase --> Repo
+        UseCase --> Entity
+    end
+
+    subgraph Data["💾 Data Layer"]
+        RepoImpl[Repository\nImplementations]
+        DataSource[Data Sources\nAPI/Local]
+        Model[Models & DTOs]
+        RepoImpl --> DataSource
+        DataSource --> Model
+    end
+
+    subgraph Core["⚙️ Core Layer"]
+        DI[Dependency\nInjection]
+        Security[Security\nServices]
+        Network[Networking\nDio/Retrofit]
+        Config[Configuration]
+    end
+
+    Cubit --> UseCase
+    RepoImpl -.implements.-> Repo
+    Data --> Core
+    Domain --> Core
+    Presentation --> Core
+
+    style Presentation fill:#e1f5ff
+    style Domain fill:#fff4e1
+    style Data fill:#f0e1ff
+    style Core fill:#e1ffe1
+```
+
+### Layer Breakdown
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -119,6 +159,44 @@
 │                     Core Layer                           │
 │  (DI, Security, Networking, Config, Common Utilities)   │
 └─────────────────────────────────────────────────────────┘
+```
+
+### Security Architecture
+
+```mermaid
+flowchart LR
+    subgraph Auth["Authentication Flow"]
+        Login[Login Screen]
+        Bio[Biometric Verify]
+        Session[Session Manager]
+    end
+
+    subgraph Security["Security Services"]
+        Encrypt[AES-256\nEncryption]
+        Storage[Secure\nStorage]
+        AppLock[App Lock\nService]
+        Audit[Audit\nLogging]
+    end
+
+    subgraph Protection["Protection"]
+        Screenshot[Screenshot\nPrevention]
+        Blur[Background\nBlur]
+        Root[Root/Jailbreak\nDetection]
+    end
+
+    Login --> Bio
+    Bio --> Session
+    Session --> Encrypt
+    Encrypt --> Storage
+    Session --> AppLock
+    AppLock --> Audit
+    Session --> Screenshot
+    Screenshot --> Blur
+    Blur --> Root
+
+    style Auth fill:#ffe1e1
+    style Security fill:#e1ffe1
+    style Protection fill:#e1e1ff
 ```
 
 ### Project Structure
@@ -282,20 +360,22 @@ dependencies:
 
 | Document | Description |
 |----------|-------------|
-| [Architecture Guide](docs/ARCHITECTURE.md) | Clean Architecture implementation |
+| [Architecture Guide](docs/ARCHITECTURE.md) | Clean Architecture implementation with diagrams |
+| [Core Architecture](docs/CORE_ARCHITECTURE_GUIDE.md) | Core layer services and utilities |
 | [Security Features](docs/SECURITY_FEATURES_OVERVIEW.md) | Enterprise security stack |
 | [Authentication Flow](docs/AUTH_FLOW.md) | Auth & biometric system |
 | [Features Guide](docs/FEATURES_COMPLETE_GUIDE.md) | All features documentation |
-| [Testing Guide](docs/TESTING_GUIDE.md) | Testing strategy & coverage |
+| [Testing Guide](docs/TESTING.md) | Complete testing strategy, structure & philosophy |
 | [API Integration](docs/API_INTEGRATION.md) | CoinGecko API usage |
 | [Code Quality](docs/CODE_QUALITY_IMPROVEMENTS.md) | Clean code practices |
 | [Module Docs](docs/FEATURE_DOCUMENTS/) | Per-module documentation |
+| [Documentation Index](docs/DOCUMENTATION_INDEX.md) | Complete documentation navigation guide |
 
 ### Quick Links
 
 - 🏗️ **New to the project?** → Start with [Architecture Guide](docs/ARCHITECTURE.md)
 - 🔐 **Working on security?** → Read [Security Features](docs/SECURITY_FEATURES_OVERVIEW.md)
-- 🧪 **Writing tests?** → Check [Testing Guide](docs/TESTING_GUIDE.md)
+- 🧪 **Writing tests?** → Check [Testing Guide](docs/TESTING.md)
 - 🎨 **Adding features?** → Follow [Features Guide](docs/FEATURES_COMPLETE_GUIDE.md)
 
 ---
@@ -331,73 +411,31 @@ This application implements **defense-in-depth security**:
 
 ---
 
-## 🧪 Testing
+## 🌍 Supported Platforms
 
-### Test Coverage: 122+ Tests ✅
-
-```
-✅ Validators           86 tests    (Email, Password, Name, Phone)
-✅ Use Cases           24 tests    (Login, Register, Biometric)
-✅ State Management    12 tests    (Auth Cubit)
-✅ Integration Tests    -          (End-to-end flows)
-```
-
-### Test Categories
-
-- **Unit Tests** - Business logic, validators, use cases
-- **Widget Tests** - UI components, screens
-- **Integration Tests** - Complete user flows
-- **Security Tests** - Security service mocks
-
-### Running Tests
-
-```bash
-# All tests
-flutter test
-
-# Specific test file
-flutter test test/features/auth/domain/validation/email_validator_test.dart
-
-# With coverage
-flutter test --coverage
-
-# Watch mode
-flutter test --watch
-```
-
-**→ [Testing Documentation](docs/TESTING_GUIDE.md)**
+| Platform | Status | Min Version |
+|----------|--------|-------------|
+| 📱 iOS | ✅ Supported | iOS 12.0+ |
+| 🤖 Android | ✅ Supported | Android 5.0+ (API 21) |
+| 🌐 Web | ⚠️ Beta | Modern browsers |
+| 💻 macOS | 📋 Planned | macOS 10.14+ |
+| 🪟 Windows | 📋 Planned | Windows 10+ |
 
 ---
 
-## 🎨 Features Showcase
+## 📊 Project Statistics
 
-### Market Overview
-
-- Real-time global crypto statistics
-- Total market cap, 24h volume
-- BTC dominance percentage
-- Active cryptocurrencies count
-
-### Trending Coins
-
-- Discover hot cryptocurrencies
-- CoinGecko trending algorithm
-- Price changes and trends
-- Quick access to coin details
-
-### Portfolio Management
-
-- Track your investments
-- Visual allocation charts
-- Performance analytics
-- Historical value tracking
-
-### Transaction History
-
-- Complete transaction logs
-- Encrypted storage
-- Categorized transactions
-- Export capabilities
+```
+📁 Project Size:        302 Dart files
+🧪 Test Coverage:       122+ passing tests
+🔐 Security Features:   8 major security layers
+📱 Screens:             20+ unique screens
+🎨 Custom Widgets:      50+ reusable components
+📚 Documentation:       10+ comprehensive docs
+⚡ API Integration:     CoinGecko REST API
+🏗️ Architecture:        Clean Architecture (strict)
+🌍 Languages:           English, Arabic
+```
 
 ---
 
@@ -448,48 +486,6 @@ We welcome contributions! Please follow these guidelines:
 - ✅ Document public APIs
 - ✅ Write tests for new features
 
-### Branch Strategy
-
-- `main` - Production-ready code
-- `develop` - Active development
-- `feature/*` - New features
-- `bugfix/*` - Bug fixes
-- `hotfix/*` - Urgent production fixes
-
----
-
-## 📈 Project Status
-
-### Current Version: 1.0.0
-
-### Feature Status
-
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Authentication | ✅ Complete | Email/password + biometric |
-| Home Dashboard | ✅ Complete | Market overview + trending |
-| Market Data | ✅ Complete | Live prices via CoinGecko |
-| Portfolio | ✅ Complete | Holdings + analytics |
-| Transactions | ✅ Complete | Encrypted history |
-| Security Stack | ✅ Complete | Full security suite |
-| Theme System | ✅ Complete | Light/dark mode |
-| Profile & Settings | ✅ Complete | User preferences |
-| Trading Simulator | 🚧 In Progress | Buy/sell simulation |
-| Advanced Charts | 📋 Planned | Technical analysis |
-| Push Notifications | 📋 Planned | Price alerts |
-
----
-
-## 🌍 Supported Platforms
-
-| Platform | Status | Min Version |
-|----------|--------|-------------|
-| 📱 iOS | ✅ Supported | iOS 12.0+ |
-| 🤖 Android | ✅ Supported | Android 5.0+ (API 21) |
-| 🌐 Web | ⚠️ Beta | Modern browsers |
-| 💻 macOS | 📋 Planned | macOS 10.14+ |
-| 🪟 Windows | 📋 Planned | Windows 10+ |
-
 ---
 
 ## 📞 Support & Resources
@@ -508,7 +504,6 @@ We welcome contributions! Please follow these guidelines:
 | Build errors | Run `flutter clean && flutter pub get && flutter run` |
 | API not working | Add `COINGECKO_API_KEY` or use without API key |
 | Firebase errors | Verify `google-services.json` and `GoogleService-Info.plist` |
-| Tests failing | Check test dependencies: `flutter pub get` |
 | Biometric not working | Enable biometric authentication in device settings |
 | Theme issues | Clear app data and restart |
 
@@ -551,21 +546,6 @@ Permission is granted for educational and learning purposes.
 - **CoinGecko** - For cryptocurrency data API
 - **Clean Architecture Community** - For architectural guidance
 - **Open Source Contributors** - For excellent packages
-
----
-
-## 📊 Statistics
-
-```
-📁 Project Size:        302 Dart files
-🧪 Test Coverage:       122+ passing tests
-🔐 Security Features:   8 major security layers
-📱 Screens:             20+ unique screens
-🎨 Custom Widgets:      50+ reusable components
-📚 Documentation:       15+ comprehensive docs
-⚡ API Integration:     CoinGecko REST API
-🏗️ Architecture:        Clean Architecture (strict)
-```
 
 ---
 
