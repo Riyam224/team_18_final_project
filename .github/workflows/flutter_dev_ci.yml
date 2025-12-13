@@ -3,7 +3,7 @@ name: Flutter CI + Firebase Distribution (Android Debug)
 on:
   push:
     branches:
-      - feature/ci_cd_setup_v3
+      - develop
   workflow_dispatch:
 
 jobs:
@@ -32,6 +32,13 @@ jobs:
 
           echo "Updated pubspec.yaml:"
           cat pubspec.yaml
+
+      # ✅ ADDED STEP (only improvement you asked for)
+      - name: Commit version bump
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git commit -am "chore: bump version to $VERSION_NAME+$BUILD_NUMBER"
 
       - name: Run Tests with Coverage
         run: flutter test --coverage
