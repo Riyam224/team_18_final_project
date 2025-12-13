@@ -7,6 +7,7 @@ import 'package:team_18_final_project/core/constants/app_spacing.dart';
 import 'package:team_18_final_project/core/di/di.dart';
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/features/market/domain/entities/coin_details.dart';
 import 'package:team_18_final_project/features/market/presentation/cubit/buy_sell_cubit.dart';
 import 'package:team_18_final_project/features/market/presentation/cubit/buy_sell_state.dart';
 import 'package:team_18_final_project/features/market/presentation/screens/payment_screen.dart';
@@ -16,16 +17,19 @@ import 'package:team_18_final_project/features/market/presentation/widget/buy_cr
 
 class BuySellScreen extends StatelessWidget {
   final String coinId;
+  final CoinDetailsEntity? initialCoin;
 
   const BuySellScreen({
     super.key,
     required this.coinId,
+    this.initialCoin,
   });
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => sl<BuySellCubit>()..loadCoinDetails(coinId),
+      create: (_) =>
+          sl<BuySellCubit>()..initialize(coinId, initialCoin: initialCoin),
       child: BuySellScreenContent(coinId: coinId),
     );
   }

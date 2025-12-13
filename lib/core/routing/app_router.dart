@@ -24,6 +24,7 @@ import 'package:team_18_final_project/features/auth/presentation/screens/securit
 import 'package:team_18_final_project/features/auth/presentation/screens/security_screens/root_warning_screen.dart';
 import 'package:team_18_final_project/features/home/presentation/cubit/home_cubit.dart';
 import 'package:team_18_final_project/features/home/presentation/screens/home_screen.dart';
+import 'package:team_18_final_project/features/market/domain/entities/coin_details.dart';
 import 'package:team_18_final_project/features/market/presentation/screens/buy_sell_screen.dart';
 import 'package:team_18_final_project/features/market/presentation/screens/coin_details_screen.dart';
 import 'package:team_18_final_project/features/market/presentation/screens/market_screen.dart';
@@ -217,7 +218,10 @@ class RouteGenerator {
         path: '${AppRoutes.buySell}/:id',
         builder: (_, state) {
           final id = state.pathParameters['id']!;
-          return BuySellScreen(coinId: id);
+          final coin = state.extra is CoinDetailsEntity
+              ? state.extra as CoinDetailsEntity
+              : null;
+          return BuySellScreen(coinId: id, initialCoin: coin);
         },
       ),
       GoRoute(

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:team_18_final_project/features/market/domain/entities/coin_details.dart';
 import 'package:team_18_final_project/features/market/domain/usecases/get_coin_details_usecase.dart';
 import 'package:team_18_final_project/features/transactions/domain/usecases/add_transaction_usecase.dart';
 import 'package:team_18_final_project/features/transactions/domain/entities/transaction_record.dart';
@@ -25,6 +26,18 @@ class BuySellCubit extends Cubit<BuySellState> {
     debugPrint('[BuySellCubit] created');
   }
 
+  /// Initializes the screen using cached coin data when available, then refreshes from API.
+  Future<void> initialize(String coinId, {CoinDetailsEntity? initialCoin}) async {
+    if (initialCoin != null) {
+      emit(_buildLoadedState(initialCoin));
+      // Refresh quietly to avoid showing an error screen if the network is down.
+      await _refreshCoinDetailsSilently(coinId);
+      return;
+    }
+
+    await loadCoinDetails(coinId);
+  }
+
   /// Loads coin details and initializes conversion calculations
   Future<void> loadCoinDetails(String coinId) async {
     debugPrint('[BuySellCubit] loadCoinDetails: $coinId');
@@ -44,21 +57,7 @@ class BuySellCubit extends Cubit<BuySellState> {
           debugPrint(
               '[BuySellCubit] loadCoinDetails success - ${coinDetails.name} at \$${coinDetails.currentPrice}');
 
-          // Calculate initial conversion
-          final exchangeRate = 1.0 / coinDetails.currentPrice;
-          final cryptoAmount = defaultFiatAmount * exchangeRate;
-          final feeAmount = defaultFiatAmount * (defaultFeePercentage / 100);
-          final totalAmount = defaultFiatAmount + feeAmount;
-
-          emit(BuySellLoaded(
-            coin: coinDetails,
-            fiatAmount: defaultFiatAmount,
-            cryptoAmount: cryptoAmount,
-            feePercentage: defaultFeePercentage,
-            feeAmount: feeAmount,
-            totalAmount: totalAmount,
-            exchangeRate: exchangeRate,
-          ));
+          emit(_buildLoadedState(coinDetails));
         },
       );
     } catch (e) {
@@ -165,5 +164,38 @@ class BuySellCubit extends Cubit<BuySellState> {
 
     debugPrint('[BuySellCubit] refreshPrice');
     await loadCoinDetails(currentState.coin.id);
+  }
+
+  BuySellLoaded _buildLoadedState(CoinDetailsEntity coin) {
+    final safePrice = coin.currentPrice == 0 ? 1 : coin.currentPrice;
+    final exchangeRate = 1.0 / safePrice;
+    final cryptoAmount = defaultFiatAmount * exchangeRate;
+    final feeAmount = defaultFiatAmount * (defaultFeePercentage / 100);
+    final totalAmount = defaultFiatAmount + feeAmount;
+
+    return BuySellLoaded(
+      coin: coin,
+      fiatAmount: defaultFiatAmount,
+      cryptoAmount: cryptoAmount,
+      feePercentage: defaultFeePercentage,
+      feeAmount: feeAmount,
+      totalAmount: totalAmount,
+      exchangeRate: exchangeRate,
+    );
+  }
+
+  Future<void> _refreshCoinDetailsSilently(String coinId) async {
+    try {
+      final result = await getCoinDetailsUseCase(coinId);
+      if (isClosed) return;
+
+      result.fold(
+        (failure) => debugPrint(
+            '[BuySellCubit] silent refresh failed: ${failure.message}'),
+        (coinDetails) => emit(_buildLoadedState(coinDetails)),
+      );
+    } catch (e) {
+      debugPrint('[BuySellCubit] silent refresh unexpected error: $e');
+    }
   }
 }

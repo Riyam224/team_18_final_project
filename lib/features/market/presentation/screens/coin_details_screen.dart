@@ -80,7 +80,16 @@ class _CoinDetailsScreenContent extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         },
       ),
-      bottomNavigationBar: TradeBottomBar(coinId: coinId),
+      bottomNavigationBar:
+          BlocBuilder<CoinDetailsCubit, CoinDetailsState>(
+        builder: (context, state) {
+          final coin = state is CoinDetailsLoaded ? state.coin : null;
+          return TradeBottomBar(
+            coinId: coinId,
+            coin: coin,
+          );
+        },
+      ),
     );
   }
 

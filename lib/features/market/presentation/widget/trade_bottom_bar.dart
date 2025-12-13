@@ -6,13 +6,16 @@ import 'package:team_18_final_project/core/extension/app_extension.dart';
 
 import 'package:team_18_final_project/core/routing/route_names.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/features/market/domain/entities/coin_details.dart';
 
 class TradeBottomBar extends StatelessWidget {
   final String coinId;
+  final CoinDetailsEntity? coin;
 
   const TradeBottomBar({
     super.key,
     required this.coinId,
+    this.coin,
   });
 
   @override
@@ -42,7 +45,10 @@ class TradeBottomBar extends StatelessWidget {
                 backgroundColor: isDark ? AppColors.darkBrown : AppColors.lightPink,
                 borderRadiusGeometry: BorderRadius.circular(100.r),
                 text: context.tr.buttonSell,
-                onPressed: () => context.push(RoutePaths.buySellRoute(coinId)),
+                onPressed: () => context.push(
+                  RoutePaths.buySellRoute(coinId),
+                  extra: coin,
+                ),
               ),
             ),
             SizedBox(width: 16.w),
@@ -55,7 +61,10 @@ class TradeBottomBar extends StatelessWidget {
                     isDark ? AppColors.lightSurface : AppColors.primary,
                 borderRadiusGeometry: BorderRadius.circular(100.r),
                 text: context.tr.buttonBuy,
-                onPressed: () => context.push(RoutePaths.buySellRoute(coinId)),
+                onPressed: () => context.push(
+                  RoutePaths.buySellRoute(coinId),
+                  extra: coin,
+                ),
               ),
             ),
           ],
