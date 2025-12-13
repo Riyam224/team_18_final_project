@@ -137,7 +137,7 @@ class AppStrings {
   static const noTrendingCoinsAvailable = 'No trending coins available';
   static const noTopGainersAvailable = 'No top gainers available';
 
-  static String greetingTemplate(String userName) => "Hi $userName";
+  static String greetingTemplate(String userName) => "مرحبا $userName";
 
   static const registrationSuccessful = 'Registration Successful';
   static const biometricSetupQuestion =

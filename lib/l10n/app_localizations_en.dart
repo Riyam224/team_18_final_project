@@ -42,6 +42,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageArabic => 'Arabic';
 
   @override
+  String homeGreeting(Object userName) {
+    return 'Hi $userName';
+  }
+
+  @override
   String languageSetSuccess(Object languageName) {
     return 'Language set to $languageName successfully';
   }

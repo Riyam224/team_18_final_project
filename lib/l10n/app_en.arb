@@ -11,6 +11,7 @@
   "cancelButton": "Cancel",
   "languageEnglish": "English",
   "languageArabic": "Arabic",
+  "homeGreeting": "Hi {userName}",
   "languageSetSuccess": "Language set to {languageName} successfully",
   "languageSetSuccessDescription": "Message shown when the app language is successfully changed",
   "defaultGuestName": "Guest",

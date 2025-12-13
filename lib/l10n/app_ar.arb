@@ -11,6 +11,7 @@
   "cancelButton": "إلغاء",
   "languageEnglish": "الإنجليزية",
   "languageArabic": "العربية",
+  "homeGreeting": "مرحبا {userName}",
   "languageSetSuccess": "تم تعيين اللغة إلى {languageName} بنجاح",
   "languageSetSuccessDescription": "رسالة تظهر عند تغيير لغة التطبيق بنجاح",
   "defaultGuestName": "ضيف",

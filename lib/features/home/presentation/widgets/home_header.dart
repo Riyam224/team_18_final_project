@@ -5,8 +5,8 @@ import 'package:team_18_final_project/core/config/app_text_styles.dart';
 import 'package:team_18_final_project/core/constants/app_assets.dart';
 import 'package:team_18_final_project/core/constants/app_sizing.dart';
 import 'package:team_18_final_project/core/constants/app_spacing.dart';
-import 'package:team_18_final_project/core/constants/app_strings.dart';
 import 'package:team_18_final_project/core/utils/app_colors.dart';
+import 'package:team_18_final_project/core/extension/app_extension.dart';
 
 class HomeHeader extends StatelessWidget {
   final String userName;
@@ -51,7 +51,7 @@ class HomeHeader extends StatelessWidget {
             Row(
               children: [
                 Text(
-                  AppStrings.greetingTemplate(userName),
+                  context.tr.homeGreeting(userName),
                   style: AppTextStyles.headlineMedium.copyWith(
                     color: isDark ? AppColors.textWhite : AppColors.textBlack,
                   ),

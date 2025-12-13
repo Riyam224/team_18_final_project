@@ -164,6 +164,12 @@ abstract class AppLocalizations {
   /// **'Arabic'**
   String get languageArabic;
 
+  /// No description provided for @homeGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'Hi {userName}'**
+  String homeGreeting(Object userName);
+
   /// No description provided for @languageSetSuccess.
   ///
   /// In en, this message translates to:
